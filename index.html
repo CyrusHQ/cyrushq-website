@@ -868,22 +868,15 @@
 
       <!-- GHL FORM EMBED -->
       <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(212,168,67,0.2); border-radius:14px; padding:2rem;">
-        <p style="font-size:0.875rem; color:#8a9ab5; margin-bottom:1.25rem;">Enter your email to get instant access — free, no credit card required.</p>
-        <!-- REPLACE THIS BLOCK WITH YOUR GHL FORM EMBED CODE -->
-        <div id="ghl-form-placeholder" style="min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem;">
-          <form id="leadmagnets-form" style="display:flex; gap:0.75rem; width:100%; max-width:460px; flex-wrap:wrap; justify-content:center;" onsubmit="handleLeadMagnetSubmit(event)">
-            <input type="email" id="lm-email" placeholder="Your email address" required
-              style="flex:1; min-width:220px; background:#0a1628; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:0.75rem 1rem; color:#eef2f7; font-size:0.9rem; font-family:inherit; outline:none;"
-            />
-            <button type="submit"
-              style="background:#d4a843; color:#000; font-weight:800; font-size:0.9rem; padding:0.75rem 1.5rem; border-radius:8px; border:none; cursor:pointer; white-space:nowrap; font-family:inherit;">
-              Get Free Guide →
-            </button>
-          </form>
-          <p id="lm-success" style="display:none; color:#22c55e; font-size:0.875rem; font-weight:600;">✓ Check your email — guide is on its way!</p>
-          <p style="font-size:0.75rem; color:#4a5a78;">No spam. Unsubscribe anytime.</p>
-        </div>
-        <!-- END GHL EMBED -->
+        <p style="font-size:0.875rem; color:#8a9ab5; margin-bottom:1.25rem;">Enter your details to get instant access — free, no credit card required.</p>
+        <iframe
+          src="https://api.recaptureleads.com/widget/form/uBPk1EIAMQzhadR2Je3F"
+          style="width:100%; min-height:320px; border:none; border-radius:8px; background:transparent;"
+          scrolling="no"
+          id="ghl-lead-magnet-form"
+        ></iframe>
+        <script src="https://link.msgsndr.com/js/form_embed.js"><\/script>
+        <p style="font-size:0.75rem; color:#4a5a78; margin-top:0.75rem;">No spam. Unsubscribe anytime.</p>
       </div>
 
       <div style="margin-top:1.5rem; text-align:center;">
@@ -891,19 +884,6 @@
       </div>
     </div>
   </section>
-
-  <script>
-    function handleLeadMagnetSubmit(e) {
-      e.preventDefault();
-      const email = document.getElementById('lm-email').value;
-      // Redirect to guide + show success
-      document.getElementById('leadmagnets-form').style.display = 'none';
-      document.getElementById('lm-success').style.display = 'block';
-      // Open the guide
-      setTimeout(() => { window.open('/lead-magnet', '_blank'); }, 800);
-      // TODO: Replace above with actual GHL form POST when embed code is available
-    }
-  <\/script>
 
   <!-- X CTA STRIP -->
   <div class="x-strip">
