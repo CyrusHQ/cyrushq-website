@@ -38,19 +38,27 @@ async function verifyStripeSignature(rawBody, signature, secret) {
 }
 
 async function sendDeliveryEmail(customerEmail, customerName, product) {
-  const GHL_API_KEY = process.env.GHL_API_KEY;
+  // Decode hex-encoded GHL key
+  const hexKey = process.env.GHL_API_KEY || '';
+  const GHL_API_KEY = hexKey.match(/^[0-9a-f]+$/i)
+    ? Buffer.from(hexKey, 'hex').toString('utf8').trim()
+    : hexKey.trim();
   const GHL_LOCATION_ID = 'FitEZb4RfLdF1TkKxZEC';
+  const GHL_BASE = 'https://services.leadconnectorhq.com';
+  const GHL_HEADERS = {
+    'Authorization': `Bearer ${GHL_API_KEY}`,
+    'Content-Type': 'application/json',
+    'Version': '2021-07-28'
+  };
 
   // Upsert contact in GHL
-  const contactRes = await fetch('https://rest.gohighlevel.com/v1/contacts/', {
+  const contactRes = await fetch(`${GHL_BASE}/contacts/`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${GHL_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
+    headers: GHL_HEADERS,
     body: JSON.stringify({
       email: customerEmail,
-      firstName: customerName || 'Friend',
+      firstName: (customerName || 'Friend').split(' ')[0],
+      lastName: (customerName || '').split(' ').slice(1).join(' ') || '',
       locationId: GHL_LOCATION_ID,
       tags: [product.tag, 'cyrushq-customer']
     })
@@ -102,17 +110,14 @@ async function sendDeliveryEmail(customerEmail, customerName, product) {
 </div>
   `.trim();
 
-  const emailRes = await fetch(`https://rest.gohighlevel.com/v1/conversations/messages`, {
+  const emailRes = await fetch(`${GHL_BASE}/conversations/messages`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${GHL_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
+    headers: GHL_HEADERS,
     body: JSON.stringify({
       type: 'Email',
       contactId,
       subject: `Your ${product.name} — Download Inside 👑`,
-      body: emailBody,
+      html: emailBody,
       from: 'hello@cyrushq.ai',
       to: customerEmail
     })
