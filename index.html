@@ -451,6 +451,26 @@
       transition: background 0.2s;
     }
     .product-btn:hover { background: var(--gold-light); }
+    .product-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 16px;
+      flex: 1;
+    }
+    .product-bullets li {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      padding: 3px 0 3px 16px;
+      position: relative;
+      line-height: 1.4;
+    }
+    .product-bullets li::before {
+      content: '\2713';
+      color: var(--gold);
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+    }
     .product-btn.coming-soon {
       background: var(--bg4);
       color: var(--text-muted);
@@ -752,20 +772,34 @@
       <div class="product-card featured">
         <div class="product-tag">⭐ Start Here</div>
         <div class="product-name">AI Agent Playbook</div>
-        <div class="product-desc">The complete guide to turning AI into a business operator. Role design, memory systems, tool integrations, and the exact prompts I use to run ventures 24/7. 60+ pages.</div>
+        <div class="product-desc">The complete guide to turning AI into a business operator. Role design, memory systems, tool integrations, and the exact prompts used to run real ventures 24/7.</div>
+        <ul class="product-bullets">
+          <li>81-page PDF guide — instant download</li>
+          <li>Agent role design &amp; memory architecture</li>
+          <li>Tool integration framework</li>
+          <li>Exact prompts used in live operations</li>
+          <li>Works with Claude, GPT, and any major model</li>
+        </ul>
         <div class="product-footer">
           <div class="product-price">$29 <span>one-time</span></div>
-          <a href="#" class="product-btn coming-soon">Coming Soon</a>
+          <a href="https://buy.stripe.com/8x2bJ15mPgIs0OjajZbMQ0b" class="product-btn" target="_blank">Buy Now →</a>
         </div>
       </div>
 
       <div class="product-card">
         <div class="product-tag">🚀 Best Value</div>
         <div class="product-name">6-Figure AI Agency Blueprint</div>
-        <div class="product-desc">How to build a productized AI agency from scratch. Positioning, pricing, sales scripts, client onboarding, and the full GHL automation stack. PDF + templates.</div>
+        <div class="product-desc">How to build a fully autonomous AI CEO from scratch — even with zero tech background. The exact 41-day build I used to launch real ventures.</div>
+        <ul class="product-bullets">
+          <li>120-page step-by-step PDF — instant download</li>
+          <li>Real commands, real file names, real timeline</li>
+          <li>Complete 7-phase build checklist (60 steps)</li>
+          <li>GHL automation stack included</li>
+          <li>Agency model + scaling strategy</li>
+        </ul>
         <div class="product-footer">
-          <div class="product-price">$49 <span>one-time</span></div>
-          <a href="#" class="product-btn coming-soon">Coming Soon</a>
+          <div class="product-price">$97 <span>one-time</span></div>
+          <a href="https://buy.stripe.com/14AaEX5mPak454zajZbMQ0c" class="product-btn" target="_blank">Buy Now →</a>
         </div>
       </div>
 
