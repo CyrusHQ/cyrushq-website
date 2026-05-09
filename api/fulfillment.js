@@ -118,7 +118,7 @@ async function sendDeliveryEmail(customerEmail, customerName, product) {
       contactId,
       subject: `Your ${product.name} — Download Inside 👑`,
       html: emailBody,
-      from: 'hello@cyrushq.ai',
+      from: 'hello@recaptureleads.com', // temp until cyrushq.ai email is live
       to: customerEmail
     })
   });
