@@ -9,8 +9,30 @@ const PRODUCT_MAP = {
   },
   '6fig-blueprint': {
     name: '6-Figure AI Agency Blueprint',
-    downloadUrl: 'https://cyrushq.ai/downloads/6fig-blueprint-cyrushq-2026-wN7jL5vT.pdf',
+    downloadUrl: 'https://cyrushq.ai/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf',
     tag: 'bought-6fig-blueprint'
+  },
+  'ai-ceo-starter-kit': {
+    name: 'AI CEO Starter Kit',
+    downloadUrl: 'https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip',
+    tag: 'bought-starter-kit'
+  },
+  'ai-growth-engine-pack': {
+    name: 'AI Growth Engine Pack',
+    downloadUrl: 'https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-tL9xM3vQ.zip',
+    tag: 'bought-growth-engine-pack'
+  },
+  'complete-bundle': {
+    name: 'The Complete Bundle — AI CEO System',
+    downloadUrl: null, // bundle sends multiple links
+    tag: 'bought-complete-bundle',
+    isBundle: true,
+    bundleItems: [
+      { name: 'AI Agent Playbook', url: 'https://cyrushq.ai/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf' },
+      { name: '6-Figure AI Agency Blueprint', url: 'https://cyrushq.ai/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf' },
+      { name: 'AI CEO Starter Kit (29 .md files + Setup Guide)', url: 'https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip' },
+      { name: 'AI Growth Engine Pack', url: 'https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-tL9xM3vQ.zip' }
+    ]
   }
 };
 
@@ -71,36 +93,53 @@ async function sendDeliveryEmail(customerEmail, customerName, product) {
     return false;
   }
 
-  // Send delivery email via GHL
+  // Build email body — handle single product and bundle
+  let downloadSection = '';
+  if (product.isBundle) {
+    downloadSection = `
+    <p style="color: #555; line-height: 1.6; margin: 0 0 16px;">Your complete bundle includes all 4 products. Click each button below to download:</p>
+    ${product.bundleItems.map(item => `
+    <div style="margin: 12px 0;">
+      <a href="${item.url}"
+         style="background: #0A1628; color: #C9A84C; padding: 12px 24px;
+                text-decoration: none; font-weight: 700; font-size: 14px;
+                display: block; text-align: center; letter-spacing: 1px; border: 2px solid #C9A84C;">
+        ${item.name} →
+      </a>
+    </div>`).join('')}
+    `;
+  } else {
+    downloadSection = `
+    <div style="text-align: center; margin: 32px 0;">
+      <a href="${product.downloadUrl}"
+         style="background: #C9A84C; color: #0A1628; padding: 16px 36px;
+                text-decoration: none; font-weight: 700; font-size: 16px;
+                display: inline-block; letter-spacing: 1px;">
+        DOWNLOAD NOW →
+      </a>
+    </div>
+    `;
+  }
+
   const emailBody = `
 <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1a1a2e;">
   <div style="background: #0A1628; padding: 32px; text-align: center;">
     <h1 style="color: #C9A84C; margin: 0; font-size: 24px; letter-spacing: 2px;">CYRUSHQ.AI</h1>
     <p style="color: #8BA3C4; margin: 8px 0 0; font-size: 13px;">Your AI CEO System</p>
   </div>
-  
+
   <div style="padding: 40px 32px; background: #fff;">
     <h2 style="color: #0A1628; margin: 0 0 16px;">Your download is ready. 👑</h2>
     <p style="color: #555; line-height: 1.6; margin: 0 0 24px;">
-      Thank you for purchasing <strong>${product.name}</strong>. 
-      Your file is ready to download now.
+      Thank you for purchasing <strong>${product.name}</strong>.
     </p>
-    
-    <div style="text-align: center; margin: 32px 0;">
-      <a href="${product.downloadUrl}" 
-         style="background: #C9A84C; color: #0A1628; padding: 16px 36px; 
-                text-decoration: none; font-weight: 700; font-size: 16px;
-                display: inline-block; letter-spacing: 1px;">
-        DOWNLOAD NOW →
-      </a>
-    </div>
-    
+    ${downloadSection}
     <p style="color: #888; font-size: 13px; margin: 24px 0 0; line-height: 1.5;">
-      Save this email — your download link is permanent.<br>
+      Save this email — your download links are permanent.<br>
       Questions? Reply to this email or reach us at hello@cyrushq.ai
     </p>
   </div>
-  
+
   <div style="background: #F8F6F1; padding: 20px 32px; text-align: center; border-top: 2px solid #C9A84C;">
     <p style="color: #888; font-size: 12px; margin: 0;">
       © CyrusHQ · cyrushq.ai · hello@cyrushq.ai<br>
