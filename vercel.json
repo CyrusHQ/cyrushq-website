@@ -1,7 +1,10 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/lead-magnet", "destination": "/ai-agents", "permanent": true }
+  ],
   "rewrites": [
-    { "source": "/lead-magnet", "destination": "/lead-magnet.html" },
+    { "source": "/ai-agents", "destination": "/lead-magnet.html" },
     { "source": "/thank-you", "destination": "/thank-you.html" },
     { "source": "/api/fulfillment", "destination": "/api/fulfillment.js" }
   ]
