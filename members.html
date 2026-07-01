@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Portal — Build Your AI CEO | CyrusHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0A1628;
+      --navy-mid: #112240;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --success: #16a34a;
+      --bonus-bg: #fffdf5;
+      --bonus-border: #C9A84C;
+    }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── PASSWORD GATE ─── */
+    #gate {
+      position: fixed; inset: 0;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    #gate.hidden { display: none; }
+
+    .gate-box {
+      background: var(--navy-mid);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 12px;
+      padding: 48px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .gate-logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: var(--gold);
+      font-size: 22px;
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+    }
+    .gate-sub {
+      color: #8BA3C4;
+      font-size: 13px;
+      margin-bottom: 32px;
+    }
+    .gate-box h2 {
+      color: var(--white);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .gate-box p {
+      color: #8BA3C4;
+      font-size: 14px;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    .gate-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 15px;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .gate-input:focus { border-color: var(--gold); }
+    .gate-input::placeholder { letter-spacing: 1px; color: #4a6080; }
+    .gate-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .gate-btn:hover { background: var(--gold-light); }
+    .gate-error {
+      color: #f87171;
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ─── HEADER ─── */
+    .site-header {
+      background: var(--navy);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--gold);
+    }
+    .header-logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: var(--gold);
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+    .header-title {
+      color: #8BA3C4;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .header-lock {
+      color: #8BA3C4;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ─── MAIN LAYOUT ─── */
+    .portal-wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .welcome-banner {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 36px;
+      border-left: 4px solid var(--gold);
+    }
+    .welcome-banner h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: var(--gold);
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+    .welcome-banner p {
+      color: #8BA3C4;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ─── MODULE CARDS ─── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .module-card {
+      background: var(--white);
+      border-radius: 12px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .module-card.bonus {
+      border-color: var(--bonus-border);
+      background: var(--bonus-bg);
+    }
+
+    .module-header {
+      background: var(--navy);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .module-card.bonus .module-header {
+      background: linear-gradient(135deg, #0A1628 60%, #1a2a10);
+    }
+    .module-badge {
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .module-card.bonus .module-badge {
+      background: #4ade80;
+      color: #14532d;
+    }
+    .module-title {
+      color: var(--white);
+      font-size: 16px;
+      font-weight: 600;
+      flex: 1;
+    }
+    .module-toggle {
+      color: var(--gold);
+      font-size: 20px;
+      transition: transform 0.25s;
+      line-height: 1;
+    }
+    .module-header.open .module-toggle { transform: rotate(180deg); }
+
+    .module-body {
+      display: none;
+      padding: 28px 24px;
+    }
+    .module-body.open { display: block; }
+
+    /* ─── VIDEO EMBED ─── */
+    .video-section { margin-bottom: 28px; }
+    .video-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      background: var(--navy);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    .video-placeholder {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #4a6080;
+      font-size: 14px;
+      gap: 10px;
+    }
+    .video-placeholder .icon { font-size: 32px; }
+    .video-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .video-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── DOWNLOADS ─── */
+    .downloads-section { margin-top: 24px; }
+    .downloads-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .downloads-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px; height: 14px;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+    .download-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .download-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .download-btn:hover {
+      border-color: var(--gold);
+      background: #fff8e8;
+    }
+    .download-icon { font-size: 18px; }
+    .download-name { flex: 1; }
+    .download-arrow { color: var(--gold); font-size: 16px; }
+
+    /* ─── DIVIDER ─── */
+    .section-divider {
+      margin: 36px 0 24px;
+    }
+
+    /* ─── FOOTER ─── */
+    .portal-footer {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .site-header { padding: 14px 16px; }
+      .header-title { display: none; }
+      .portal-wrap { padding: 24px 12px 60px; }
+      .welcome-banner { padding: 24px 20px; }
+      .welcome-banner h1 { font-size: 22px; }
+      .module-header { padding: 16px 18px; }
+      .module-body { padding: 20px 16px; }
+      .gate-box { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── PASSWORD GATE ─── -->
+  <div id="gate">
+    <div class="gate-box">
+      <div class="gate-logo">CYRUSHQ.AI</div>
+      <div class="gate-sub">Build Your AI CEO — Course Portal</div>
+      <h2>Welcome Back 👑</h2>
+      <p>Enter your course password to access your training and downloads.</p>
+      <input type="password" id="pwInput" class="gate-input" placeholder="Enter password" autocomplete="off">
+      <button class="gate-btn" onclick="checkPassword()">Access My Course →</button>
+      <div class="gate-error" id="gateError">Incorrect password. Check your welcome email.</div>
+    </div>
+  </div>
+
+  <!-- ─── HEADER ─── -->
+  <header class="site-header">
+    <a href="https://cyrushq.ai" class="header-logo">CYRUSHQ.AI</a>
+    <span class="header-title">Build Your AI CEO — Course Portal</span>
+    <span class="header-lock">🔒 Members Only</span>
+  </header>
+
+  <!-- ─── PORTAL ─── -->
+  <main class="portal-wrap">
+
+    <div class="welcome-banner">
+      <h1>Your AI CEO is waiting. 👑</h1>
+      <p>Work through the modules in order for the best result. Most students have a live AI CEO by the end of the weekend. Each module includes a video and a downloadable resource — use them together.</p>
+    </div>
+
+    <!-- INTRO -->
+    <div class="section-label">Getting Started</div>
+
+    <div class="module-card">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-badge">INTRO</span>
+        <span class="module-title">Welcome — What You're About to Build</span>
+        <span class="module-toggle">▾</span>
+      </div>
+      <div class="module-body">
+        <div class="video-section">
+          <div class="video-wrap" id="vid-intro">
+            <!-- REPLACE: paste Vimeo embed code here -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 1 -->
+    <div class="section-divider">
+      <div class="section-label">Core Training</div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-badge">MODULE 1</span>
+        <span class="module-title">Identity — Who Is Your AI CEO?</span>
+        <span class="module-toggle">▾</span>
+      </div>
+      <div class="module-body">
+
+        <div class="video-section">
+          <div class="video-label">Video 1 of 3</div>
+          <div class="video-wrap" id="vid-1a">
+            <!-- REPLACE: Vimeo embed for 01a -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Setting the Foundation</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 2 of 3</div>
+          <div class="video-wrap" id="vid-1b">
+            <!-- REPLACE: Vimeo embed for 01b -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Building Your AI CEO Identity Files</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 3 of 3</div>
+          <div class="video-wrap" id="vid-1c">
+            <!-- REPLACE: Vimeo embed for 01c -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Your Workspace Setup</div>
+        </div>
+
+        <div class="downloads-section">
+          <div class="downloads-title">Module 1 Downloads</div>
+          <div class="download-list">
+            <a href="/downloads/module-1/Module-1-Identity-Files-Core.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">Identity Files — Core Pack</span>
+              <span class="download-arrow">↓</span>
+            </a>
+            <a href="/downloads/module-1/Module-1-Identity-Files-Operational.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">Identity Files — Operational Pack</span>
+              <span class="download-arrow">↓</span>
+            </a>
+            <a href="/downloads/module-1/Module-1-Workspace-Path.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">Workspace Path Guide</span>
+              <span class="download-arrow">↓</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODULE 2 -->
+    <div class="module-card">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-badge">MODULE 2</span>
+        <span class="module-title">API Keys — Connecting Your AI Brain</span>
+        <span class="module-toggle">▾</span>
+      </div>
+      <div class="module-body">
+
+        <div class="video-section">
+          <div class="video-label">Video 1 of 2</div>
+          <div class="video-wrap" id="vid-2a">
+            <!-- REPLACE: Vimeo embed for 02a -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Anthropic API Key Setup</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 2 of 2</div>
+          <div class="video-wrap" id="vid-2b">
+            <!-- REPLACE: Vimeo embed for 02b -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">OpenAI API Key Setup + Verification</div>
+        </div>
+
+        <div class="downloads-section">
+          <div class="downloads-title">Module 2 Downloads</div>
+          <div class="download-list">
+            <a href="/downloads/module-2/Module-2-API-Key-Setup-Checklist.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">API Key Setup Checklist</span>
+              <span class="download-arrow">↓</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODULE 3 -->
+    <div class="module-card">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-badge">MODULE 3</span>
+        <span class="module-title">Discord — Building Your AI CEO's Home Base</span>
+        <span class="module-toggle">▾</span>
+      </div>
+      <div class="module-body">
+
+        <div class="video-section">
+          <div class="video-label">Video 1 of 2</div>
+          <div class="video-wrap" id="vid-3a">
+            <!-- REPLACE: Vimeo embed for 03a -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Why Discord + Server Setup</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 2 of 2</div>
+          <div class="video-wrap" id="vid-3b">
+            <!-- REPLACE: Vimeo embed for 03b -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Bot Creation + Channel IDs</div>
+        </div>
+
+        <div class="downloads-section">
+          <div class="downloads-title">Module 3 Downloads</div>
+          <div class="download-list">
+            <a href="/downloads/module-3/Module-3-Discord-Setup-Checklist.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">Discord Setup Checklist</span>
+              <span class="download-arrow">↓</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODULE 4 -->
+    <div class="module-card">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-badge">MODULE 4</span>
+        <span class="module-title">OpenClaw — Installing Your AI CEO</span>
+        <span class="module-toggle">▾</span>
+      </div>
+      <div class="module-body">
+
+        <div class="video-section">
+          <div class="video-label">Video 1 of 4</div>
+          <div class="video-wrap" id="vid-4a">
+            <!-- REPLACE: Vimeo embed for 04a -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Install OpenClaw + Node.js</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 2 of 4</div>
+          <div class="video-wrap" id="vid-4b">
+            <!-- REPLACE: Vimeo embed for 04b -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Config File + First Start</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 3 of 4</div>
+          <div class="video-wrap" id="vid-4c">
+            <!-- REPLACE: Vimeo embed for 04c -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Connecting Discord → Config</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 4 of 4</div>
+          <div class="video-wrap" id="vid-4d">
+            <!-- REPLACE: Vimeo embed for 04d -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">First Contact — Your AI CEO is Alive</div>
+          <div class="video-desc">This is the moment. By the end of this video your AI CEO will be running live on your Discord.</div>
+        </div>
+
+        <div class="downloads-section">
+          <div class="downloads-title">Module 4 Downloads</div>
+          <div class="download-list">
+            <a href="/downloads/module-4/Module-4-OpenClaw-Config-Template.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">OpenClaw Config Template</span>
+              <span class="download-arrow">↓</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODULE 5 -->
+    <div class="module-card">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-badge">MODULE 5</span>
+        <span class="module-title">Monetize — Turning Your AI CEO into Income</span>
+        <span class="module-toggle">▾</span>
+      </div>
+      <div class="module-body">
+
+        <div class="video-section">
+          <div class="video-label">Video 1 of 2</div>
+          <div class="video-wrap" id="vid-5a">
+            <!-- REPLACE: Vimeo embed for 05a -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">3 Income Streams You Can Launch This Week</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 2 of 2</div>
+          <div class="video-wrap" id="vid-5b">
+            <!-- REPLACE: Vimeo embed for 05b -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Expanding Your AI Agent Toolkit</div>
+        </div>
+
+        <div class="downloads-section">
+          <div class="downloads-title">Module 5 Downloads</div>
+          <div class="download-list">
+            <a href="/downloads/module-5/Module-5-Three-Income-Streams.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">3 Income Streams Playbook</span>
+              <span class="download-arrow">↓</span>
+            </a>
+            <a href="/downloads/module-5/Module-5b-Agent-Tools-Expansion-Guide.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">Agent Tools Expansion Guide</span>
+              <span class="download-arrow">↓</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BONUS MODULE 6 — CRON JOBS -->
+    <div class="section-divider">
+      <div class="section-label">⚡ Bonus Module — Cron Job Add-On</div>
+    </div>
+
+    <div class="module-card bonus">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-badge">BONUS</span>
+        <span class="module-title">Cron Jobs — Automate Your AI CEO 24/7</span>
+        <span class="module-toggle">▾</span>
+      </div>
+      <div class="module-body">
+
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; padding: 14px 16px; background: #fff8e8; border-radius: 8px; border-left: 3px solid var(--gold);">
+          ⚡ <strong>Cron Job Add-On purchased.</strong> These videos unlock automated schedules so your AI CEO works around the clock — even while you sleep.
+        </p>
+
+        <div class="video-section">
+          <div class="video-label">Video 1 of 3</div>
+          <div class="video-wrap" id="vid-bonus1">
+            <!-- REPLACE: Vimeo embed for bonus-01 -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">What Is a Cron Job?</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 2 of 3</div>
+          <div class="video-wrap" id="vid-bonus2">
+            <!-- REPLACE: Vimeo embed for bonus-02 -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Method 1 — AI Sets It Up For You</div>
+        </div>
+
+        <div class="video-section">
+          <div class="video-label">Video 3 of 3</div>
+          <div class="video-wrap" id="vid-bonus3">
+            <!-- REPLACE: Vimeo embed for bonus-03 -->
+            <div class="video-placeholder">
+              <span class="icon">🎬</span>
+              <span>Video coming soon</span>
+            </div>
+          </div>
+          <div class="video-title">Method 2 — Terminal Setup</div>
+        </div>
+
+        <div class="downloads-section">
+          <div class="downloads-title">Bonus Module Downloads</div>
+          <div class="download-list">
+            <a href="/downloads/module-6-bonus/Module-6-20-Power-Cron-Jobs.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">20 Power Cron Jobs for Your AI CEO</span>
+              <span class="download-arrow">↓</span>
+            </a>
+            <a href="/downloads/module-6-bonus/Module-6-Cron-Command-Cheatsheet.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">Cron Command Cheatsheet</span>
+              <span class="download-arrow">↓</span>
+            </a>
+            <a href="/downloads/module-6-bonus/Module-6-Cron-Prompts-Pack.pdf" download class="download-btn">
+              <span class="download-icon">📄</span>
+              <span class="download-name">Cron Prompts Pack</span>
+              <span class="download-arrow">↓</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="portal-footer">
+      © 2026 CyrusHQ · <a href="mailto:hello@cyrushq.ai" style="color:var(--gold); text-decoration:none;">hello@cyrushq.ai</a><br>
+      Build wisely. Lead calmly. Create systems that endure.
+    </div>
+
+  </main>
+
+  <script>
+    const CORRECT_PASSWORD = 'CyrusAICEO2026';
+
+    function checkPassword() {
+      const input = document.getElementById('pwInput').value.trim();
+      if (input === CORRECT_PASSWORD) {
+        sessionStorage.setItem('course_access', 'granted');
+        document.getElementById('gate').classList.add('hidden');
+      } else {
+        document.getElementById('gateError').style.display = 'block';
+        document.getElementById('pwInput').value = '';
+        document.getElementById('pwInput').focus();
+      }
+    }
+
+    // Allow Enter key
+    document.getElementById('pwInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    // Check session on load
+    window.addEventListener('DOMContentLoaded', function() {
+      if (sessionStorage.getItem('course_access') === 'granted') {
+        document.getElementById('gate').classList.add('hidden');
+      }
+    });
+
+    // Module accordion toggle
+    function toggleModule(header) {
+      const body = header.nextElementSibling;
+      const isOpen = body.classList.contains('open');
+      header.classList.toggle('open', !isOpen);
+      body.classList.toggle('open', !isOpen);
+    }
+
+    // Auto-open Module 1 on load
+    window.addEventListener('DOMContentLoaded', function() {
+      const firstHeader = document.querySelectorAll('.module-header')[1]; // skip intro
+      if (firstHeader) {
+        firstHeader.classList.add('open');
+        firstHeader.nextElementSibling.classList.add('open');
+      }
+    });
+  </script>
+
+</body>
+</html>

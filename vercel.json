@@ -13,6 +13,7 @@
     { "source": "/api/fulfillment",       "destination": "/api/fulfillment.js" },
     { "source": "/api/checkout-course",   "destination": "/api/checkout-course.js" },
     { "source": "/api/upsell-course",     "destination": "/api/upsell-course.js" },
-    { "source": "/api/course-webhook",    "destination": "/api/course-webhook.js" }
+    { "source": "/api/course-webhook",    "destination": "/api/course-webhook.js" },
+    { "source": "/members",               "destination": "/members.html" }
   ]
 }

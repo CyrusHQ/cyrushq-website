@@ -111,9 +111,14 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       Most students have a live AI CEO by the end of the weekend.
     </p>
 
-    <p style="color:#888; font-size:13px; margin-top:24px; line-height:1.5;">
+    <div style="background:#f8f6f1; border:1px solid #e5e7eb; border-radius:8px; padding:16px 20px; margin-top:20px;">
+      <p style="color:#1a1a2e; font-size:13px; font-weight:700; margin:0 0 6px;">🔑 Your Course Password</p>
+      <p style="color:#C9A84C; font-size:18px; font-weight:700; letter-spacing:2px; margin:0 0 6px;">CyrusAICEO2026</p>
+      <p style="color:#888; font-size:12px; margin:0;">You'll need this each time you visit your course portal.</p>
+    </div>
+    <p style="color:#888; font-size:13px; margin-top:20px; line-height:1.5;">
       Questions? Just reply to this email — we're fast.<br>
-      If you don't see the portal button working, copy and paste: cyrushq.ai/members
+      Portal URL: <a href="https://cyrushq.ai/members" style="color:#C9A84C;">cyrushq.ai/members</a>
     </p>
   </div>
 
