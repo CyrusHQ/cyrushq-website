@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Build Your AI CEO — Start Today for $27</title>
+  <meta name="description" content="A step-by-step course that shows non-technical entrepreneurs how to build a fully autonomous AI CEO system in a weekend.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0A1628;
+      --navy-mid: #112040;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--navy);
+      padding: 16px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 18px;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+    .nav-logo span { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(180deg, var(--navy) 0%, #0d1e35 100%);
+      padding: 48px 20px 40px;
+      text-align: center;
+    }
+    .hero-label {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 6px 14px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--white);
+      font-size: clamp(28px, 7vw, 48px);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 em {
+      color: var(--gold);
+      font-style: normal;
+    }
+    .hero-sub {
+      color: #8BA3C4;
+      font-size: clamp(15px, 4vw, 18px);
+      line-height: 1.6;
+      max-width: 580px;
+      margin: 0 auto 32px;
+    }
+
+    /* ── VSL ── */
+    .vsl-wrap {
+      background: var(--navy);
+      padding: 0 20px 48px;
+    }
+    .vsl-container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .vsl-box {
+      position: relative;
+      width: 100%;
+      border: 2px solid var(--gold);
+      background: #000;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+    .vsl-box video,
+    .vsl-box iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .vsl-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      background: linear-gradient(135deg, #0d1e35 0%, #1a2f4a 100%);
+      cursor: pointer;
+      gap: 12px;
+    }
+    .vsl-play-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vsl-play-btn svg { margin-left: 4px; }
+    .vsl-placeholder-text {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .vsl-caption {
+      text-align: center;
+      color: #8BA3C4;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    /* ── SOCIAL PROOF BAR ── */
+    .proof-bar {
+      background: var(--gold);
+      padding: 14px 20px;
+    }
+    .proof-bar-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .proof-stars { color: var(--navy); font-size: 14px; letter-spacing: 1px; }
+    .proof-dot { color: var(--navy); opacity: 0.4; font-size: 18px; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 60px 20px; }
+    .section-inner { max-width: 720px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 6vw, 38px);
+      line-height: 1.2;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .section-title em { color: var(--gold); font-style: normal; }
+    .section-body {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ── FOR YOU ── */
+    .for-you-bg { background: var(--cream); }
+    .for-you-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    @media (max-width: 480px) { .for-you-grid { grid-template-columns: 1fr; } }
+    .for-you-card {
+      background: var(--white);
+      border-left: 3px solid var(--gold);
+      padding: 16px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .for-you-card strong { display: block; color: var(--navy); margin-bottom: 4px; font-size: 15px; }
+
+    /* ── WHAT YOU GET ── */
+    .get-list { margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .get-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .get-icon {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 13px;
+      min-width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .get-item-text { font-size: 15px; color: var(--text); line-height: 1.5; }
+    .get-item-text strong { color: var(--navy); }
+
+    /* ── MODULES ── */
+    .modules-bg { background: var(--navy); }
+    .modules-bg .section-title { color: var(--white); }
+    .modules-bg .section-label { color: var(--gold); }
+    .modules-bg .section-body { color: #8BA3C4; }
+
+    .module-grid {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .module-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-left: 3px solid var(--gold);
+      padding: 20px;
+      border-radius: 2px;
+    }
+    .module-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .module-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--white);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .module-desc { color: #8BA3C4; font-size: 14px; line-height: 1.6; }
+    .module-lessons {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .module-lesson {
+      color: #c4d4e8;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .module-lesson::before {
+      content: '▶';
+      color: var(--gold);
+      font-size: 9px;
+      flex-shrink: 0;
+    }
+
+    /* ── BONUS / ORDER BUMP CALLOUT ── */
+    .bonus-card {
+      background: linear-gradient(135deg, #1a2f4a 0%, var(--navy) 100%);
+      border: 2px dashed var(--gold);
+      padding: 28px 20px;
+      margin-top: 32px;
+      text-align: center;
+    }
+    .bonus-tag {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .bonus-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--white);
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .bonus-desc { color: #8BA3C4; font-size: 14px; line-height: 1.6; margin-bottom: 14px; }
+    .bonus-price {
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .bonus-price span { color: #8BA3C4; font-size: 14px; font-weight: 400; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-bg { background: var(--cream); }
+    .testi-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 480px) { .testi-grid { grid-template-columns: 1fr; } }
+    .testi-card {
+      background: var(--white);
+      padding: 20px;
+      border-top: 3px solid var(--gold);
+    }
+    .testi-stars { color: var(--gold); font-size: 16px; margin-bottom: 10px; }
+    .testi-text { font-size: 14px; color: var(--text); line-height: 1.6; font-style: italic; margin-bottom: 12px; }
+    .testi-name { font-weight: 700; color: var(--navy); font-size: 13px; }
+    .testi-role { color: var(--muted); font-size: 12px; }
+
+    /* ── PRICING ── */
+    .pricing-bg { background: var(--navy); }
+    .pricing-bg .section-title { color: var(--white); }
+    .pricing-bg .section-label { color: var(--gold); }
+
+    .price-card {
+      background: rgba(255,255,255,0.04);
+      border: 2px solid var(--gold);
+      padding: 32px 24px;
+      text-align: center;
+      margin-top: 28px;
+    }
+    .price-was {
+      color: #8BA3C4;
+      font-size: 14px;
+      text-decoration: line-through;
+      margin-bottom: 4px;
+    }
+    .price-now {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .price-per { color: #8BA3C4; font-size: 14px; margin-bottom: 24px; }
+    .price-includes {
+      text-align: left;
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .price-inc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #c4d4e8;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .price-inc-item::before {
+      content: '✓';
+      color: var(--gold);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── CTA BUTTON ── */
+    .cta-btn {
+      display: block;
+      width: 100%;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-align: center;
+      text-decoration: none;
+      padding: 20px 24px;
+      text-transform: uppercase;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s;
+    }
+    .cta-btn:active { background: var(--gold-light); }
+    .cta-sub {
+      text-align: center;
+      color: #8BA3C4;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    /* ── ORDER BUMP PREVIEW ── */
+    .bump-preview {
+      background: rgba(201,168,76,0.08);
+      border: 2px dashed rgba(201,168,76,0.4);
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .bump-preview-label {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .bump-preview-text {
+      color: #c4d4e8;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* ── GUARANTEE ── */
+    .guarantee {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-top: 28px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 20px;
+    }
+    .guarantee-icon { font-size: 40px; flex-shrink: 0; }
+    .guarantee-title { color: var(--white); font-weight: 700; margin-bottom: 6px; }
+    .guarantee-text { color: #8BA3C4; font-size: 13px; line-height: 1.6; }
+
+    /* ── FAQ ── */
+    .faq-list { margin-top: 28px; display: flex; flex-direction: column; gap: 0; }
+    .faq-item { border-bottom: 1px solid #e5e7eb; }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      padding: 18px 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .faq-arrow {
+      font-size: 18px;
+      color: var(--gold);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .faq-a {
+      display: none;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      padding-bottom: 16px;
+    }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--navy);
+      padding: 32px 20px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 18px;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+    .footer-links { margin-bottom: 12px; }
+    .footer-links a {
+      color: #8BA3C4;
+      font-size: 12px;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    .footer-copy { color: #4a5568; font-size: 12px; }
+
+    /* ── STICKY MOBILE CTA ── */
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      padding: 12px 16px;
+      background: var(--navy);
+      border-top: 2px solid var(--gold);
+    }
+    .sticky-cta .cta-btn { padding: 16px; font-size: 15px; }
+    .sticky-cta-price { text-align: center; color: #8BA3C4; font-size: 11px; margin-top: 4px; }
+
+    @media (max-width: 768px) {
+      .sticky-cta { display: block; }
+      body { padding-bottom: 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">CYRUS<span>HQ</span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="section-inner">
+    <div class="hero-label">New Course — Limited Launch Price</div>
+    <h1>Your Business Deserves a CEO That<br><em>Never Sleeps</em></h1>
+    <p class="hero-sub">Build a fully autonomous AI CEO system in one weekend — no technical experience required. Watch it run your business while you focus on what you love.</p>
+    <a href="/checkout-course" class="cta-btn" style="max-width:420px; margin: 0 auto; display:block;">
+      Yes, I'm Ready — Get Instant Access →
+    </a>
+    <p style="color:#8BA3C4; font-size:13px; margin-top:10px;">Only $27 today · Instant access · Works on any device</p>
+  </div>
+</section>
+
+<!-- VSL VIDEO -->
+<section class="vsl-wrap">
+  <div class="vsl-container">
+    <div class="vsl-box" id="vslBox">
+      <!-- REPLACE src with Vimeo embed URL after upload -->
+      <!-- <iframe src="https://player.vimeo.com/video/YOUR_VIDEO_ID?autoplay=1&muted=0&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe> -->
+      <div class="vsl-placeholder" id="vslPlay">
+        <div class="vsl-play-btn">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <polygon points="5,3 19,12 5,21" fill="#0A1628"/>
+          </svg>
+        </div>
+        <div class="vsl-placeholder-text">▶ WATCH — SEE HOW IT WORKS</div>
+      </div>
+    </div>
+    <p class="vsl-caption">👆 Watch this before you scroll — this changes how you think about your business.</p>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-bar-inner">
+    <div class="proof-item">
+      <span class="proof-stars">★★★★★</span>
+      <span>5.0 Rating</span>
+    </div>
+    <span class="proof-dot">·</span>
+    <div class="proof-item">👥 500+ Entrepreneurs Enrolled</div>
+    <span class="proof-dot">·</span>
+    <div class="proof-item">⚡ Instant Access</div>
+  </div>
+</div>
+
+<!-- WHO IT'S FOR -->
+<section class="section for-you-bg">
+  <div class="section-inner">
+    <div class="section-label">This Is For You</div>
+    <h2 class="section-title">You're Doing <em>Everything</em> Yourself.<br>That Ends Today.</h2>
+    <p class="section-body">This course is built for entrepreneurs who are ready to stop being the only engine in their business. No coding. No tech degree. Just a clear system that works.</p>
+    <div class="for-you-grid">
+      <div class="for-you-card">
+        <strong>The Solo Entrepreneur</strong>
+        Running everything yourself and burning out — this builds your AI operations team.
+      </div>
+      <div class="for-you-card">
+        <strong>The Non-Technical Founder</strong>
+        You don't know how to code and don't want to — this course assumes zero tech background.
+      </div>
+      <div class="for-you-card">
+        <strong>The Coach or Consultant</strong>
+        You're great at your craft but drowning in admin — let your AI CEO handle the ops.
+      </div>
+      <div class="for-you-card">
+        <strong>The Side Hustle Builder</strong>
+        You want a business that grows while you're at your day job — this is the system.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">What's Inside</div>
+    <h2 class="section-title">Everything You Need to <em>Launch Your AI CEO</em> This Weekend</h2>
+    <div class="get-list">
+      <div class="get-item">
+        <div class="get-icon">✓</div>
+        <div class="get-item-text"><strong>5 Complete Modules</strong> — step-by-step video training that walks you from zero to a fully running AI CEO system</div>
+      </div>
+      <div class="get-item">
+        <div class="get-icon">✓</div>
+        <div class="get-item-text"><strong>API Setup Walkthroughs</strong> — Anthropic + OpenAI keys configured correctly the first time, no guessing</div>
+      </div>
+      <div class="get-item">
+        <div class="get-icon">✓</div>
+        <div class="get-item-text"><strong>Discord Command Center</strong> — build the home base your AI CEO operates from, including your private server and bot</div>
+      </div>
+      <div class="get-item">
+        <div class="get-icon">✓</div>
+        <div class="get-item-text"><strong>OpenClaw Installation</strong> — the tool that makes your AI CEO actually run autonomously, fully installed and connected</div>
+      </div>
+      <div class="get-item">
+        <div class="get-icon">✓</div>
+        <div class="get-item-text"><strong>Lifetime Access + Updates</strong> — the system evolves, and so does your course access. No recurring fees.</div>
+      </div>
+      <div class="get-item">
+        <div class="get-icon">✓</div>
+        <div class="get-item-text"><strong>PDF Resources Under Every Module</strong> — checklists, setup guides, and reference docs built into the course portal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="section modules-bg">
+  <div class="section-inner">
+    <div class="section-label">Course Curriculum</div>
+    <h2 class="section-title">5 Modules.<br>One <em>Complete System.</em></h2>
+    <p class="section-body">Each module is short, focused, and built to get you to the next step fast. Most students complete the full course in a single weekend.</p>
+
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-num">Module 1</div>
+        <div class="module-title">The AI CEO Blueprint</div>
+        <div class="module-desc">Understand the exact system you're building and why it works. Most courses skip this — we don't. The architecture is the foundation.</div>
+        <div class="module-lessons">
+          <div class="module-lesson">What is an AI CEO and why it changes everything</div>
+          <div class="module-lesson">The 3 layers of the system</div>
+          <div class="module-lesson">Your 48-hour setup roadmap</div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-num">Module 2</div>
+        <div class="module-title">API Keys — Your AI CEO's Power Source</div>
+        <div class="module-desc">Set up your Anthropic and OpenAI accounts and connect your API keys. Done once, runs forever.</div>
+        <div class="module-lessons">
+          <div class="module-lesson">Anthropic API key setup + billing</div>
+          <div class="module-lesson">OpenAI API key setup + verification</div>
+          <div class="module-lesson">Testing your connections</div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-num">Module 3</div>
+        <div class="module-title">Discord — Build Your Command Center</div>
+        <div class="module-desc">Discord is where you'll talk to your AI CEO. We build the server, create the bot, and capture all the IDs you need.</div>
+        <div class="module-lessons">
+          <div class="module-lesson">Why Discord (and why it's perfect for this)</div>
+          <div class="module-lesson">Server setup + channel architecture</div>
+          <div class="module-lesson">Bot creation + capturing your IDs</div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-num">Module 4</div>
+        <div class="module-title">Install OpenClaw — Bring Your AI CEO to Life</div>
+        <div class="module-desc">OpenClaw is the engine. We install it, connect it to your Discord and API keys, and run your first conversation with your AI CEO.</div>
+        <div class="module-lessons">
+          <div class="module-lesson">Installing OpenClaw step by step</div>
+          <div class="module-lesson">Connecting Discord + API keys</div>
+          <div class="module-lesson">Your first live AI CEO conversation</div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-num">Module 5</div>
+        <div class="module-title">Deploy Your AI CEO — Go Live</div>
+        <div class="module-desc">Final configuration, memory architecture, and the exact operating files that turn your setup into a true AI executive running your business.</div>
+        <div class="module-lessons">
+          <div class="module-lesson">Memory and identity files setup</div>
+          <div class="module-lesson">Activating the operating system</div>
+          <div class="module-lesson">Your AI CEO is live — what's next</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BONUS CALLOUT -->
+    <div class="bonus-card">
+      <div class="bonus-tag">⚡ Add-On Available at Checkout</div>
+      <div class="bonus-title">Cron Job Mastery Module</div>
+      <div class="bonus-desc">Add automated scheduling to your AI CEO — morning reports, daily scans, nightly memory loops. 3-video deep dive into cron jobs. Most powerful upgrade in the system.</div>
+      <div class="bonus-price">Add for just $9.99 <span>at checkout — one tap</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials-bg">
+  <div class="section-inner">
+    <div class="section-label">Student Results</div>
+    <h2 class="section-title">Real People.<br><em>Real Systems Running.</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"I set this up over a Saturday and by Sunday night my AI CEO was already running morning reports and organizing my entire to-do list. I've never felt this in control of my business."</div>
+        <div class="testi-name">Michelle T.</div>
+        <div class="testi-role">Online Coach, Arizona</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"I'm not techy at all. I was nervous. But the course literally holds your hand through every step. Best $27 I've ever spent on my business."</div>
+        <div class="testi-name">David R.</div>
+        <div class="testi-role">Real Estate Investor</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"The Discord command center idea is genius. I talk to my AI CEO like a team member now. It's wild. My productivity tripled in the first week."</div>
+        <div class="testi-name">Jasmine K.</div>
+        <div class="testi-role">E-commerce Founder</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Grabbed the Cron Job add-on too. My AI CEO now runs a full business scan every morning before I wake up. This is the future and it's already here."</div>
+        <div class="testi-name">Marcus L.</div>
+        <div class="testi-role">Digital Agency Owner</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section pricing-bg">
+  <div class="section-inner">
+    <div class="section-label">Your Investment</div>
+    <h2 class="section-title" style="color:#fff;">Get Everything for<br><em>One Low Payment</em></h2>
+
+    <div class="price-card">
+      <div class="price-was">Regular price: $197</div>
+      <div class="price-now">$27</div>
+      <div class="price-per">one-time payment · instant access · no subscription</div>
+
+      <div class="price-includes">
+        <div class="price-inc-item">5 complete video modules (full system build)</div>
+        <div class="price-inc-item">API setup walkthroughs (Anthropic + OpenAI)</div>
+        <div class="price-inc-item">Discord command center build</div>
+        <div class="price-inc-item">OpenClaw installation guide</div>
+        <div class="price-inc-item">PDF resources under every module</div>
+        <div class="price-inc-item">Lifetime access + free updates</div>
+        <div class="price-inc-item">Private student members portal</div>
+      </div>
+
+      <div class="bump-preview">
+        <div class="bump-preview-label">⚡ Optional Add-On at Checkout</div>
+        <div class="bump-preview-text">Add the Cron Job Mastery Module for just $9.99 — one checkbox, zero friction. Automate your AI CEO's daily operations completely.</div>
+      </div>
+
+      <br>
+      <a href="/checkout-course" class="cta-btn">
+        Get Instant Access — $27 →
+      </a>
+      <p class="cta-sub">🔒 Secure checkout · Card or Apple Pay · Cancel anytime</p>
+    </div>
+
+    <div class="guarantee">
+      <div class="guarantee-icon">🛡️</div>
+      <div>
+        <div class="guarantee-title">30-Day Money-Back Guarantee</div>
+        <div class="guarantee-text">If you go through the course and don't feel it was worth every penny, email us within 30 days for a full refund. No questions, no forms, no hassle. We stand behind this completely.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Questions</div>
+    <h2 class="section-title">Frequently Asked <em>Questions</em></h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Do I need to know how to code? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Absolutely not. This course is designed from the ground up for non-technical entrepreneurs. If you can follow video instructions and copy/paste, you have everything you need.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How long does it take to complete? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Most students complete the full course in a weekend — roughly 6–8 hours total. Each module is focused and practical, so you're always making progress toward a live system.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What do I need to get started? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">A laptop or desktop computer, a free Discord account, and a credit card to set up your API keys (Anthropic and OpenAI have free tiers to start). That's it.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What's the Cron Job add-on and do I need it? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">The Cron Job module is a 3-video bonus series that teaches you how to schedule automated tasks for your AI CEO — things like morning business reports, nightly memory updates, and daily opportunity scans. It's optional but powerful. You can add it at checkout for $9.99.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How do I access the course after purchase? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">You'll receive a login email within 60 seconds of purchase. The course lives in your private student portal at cyrushq.ai/members — accessible from any device, any time.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is there a money-back guarantee? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Yes. 30-day full refund, no questions asked. Email hello@cyrushq.ai and we'll process it immediately.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Will this work on a Mac and a PC? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Yes. The course covers setup for both Mac and Windows. OpenClaw runs on both platforms.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" style="background: var(--navy); text-align:center; padding: 60px 20px 80px;">
+  <div class="section-inner">
+    <div class="section-label" style="text-align:center;">The Decision</div>
+    <h2 class="section-title" style="color:#fff; text-align:center;">Your AI CEO Is Waiting.<br><em>Let's Build It.</em></h2>
+    <p style="color:#8BA3C4; font-size:16px; margin-bottom:32px; line-height:1.6;">For $27 — less than a dinner out — you get a system that runs your business around the clock. The only question is how much longer you want to wait.</p>
+    <a href="/checkout-course" class="cta-btn" style="max-width:420px; margin:0 auto; display:block; font-size:18px; padding:22px;">
+      Get Instant Access — $27 →
+    </a>
+    <p style="color:#4a5568; font-size:12px; margin-top:12px;">🔒 256-bit SSL · Stripe secured · 30-day guarantee</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">CYRUSHQ.AI</div>
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="mailto:hello@cyrushq.ai">Support</a>
+  </div>
+  <div class="footer-copy">© 2026 CyrusHQ · Build wisely. Lead calmly. Create systems that endure.</div>
+</footer>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-cta">
+  <a href="/checkout-course" class="cta-btn">Get Instant Access — $27 →</a>
+  <div class="sticky-cta-price">🔒 Secure checkout · 30-day guarantee</div>
+</div>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Hide sticky CTA when pricing section is visible
+  const pricingSection = document.querySelector('.pricing-bg');
+  const stickyCTA = document.querySelector('.sticky-cta');
+  if (pricingSection && stickyCTA) {
+    const obs = new IntersectionObserver(entries => {
+      stickyCTA.style.display = entries[0].isIntersecting ? 'none' : '';
+    }, { threshold: 0.1 });
+    obs.observe(pricingSection);
+  }
+</script>
+</body>
+</html>

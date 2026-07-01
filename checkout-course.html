@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Checkout — Build Your AI CEO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0A1628;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --red: #dc2626;
+      --green: #16a34a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--navy);
+      padding: 14px 20px;
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+    }
+    .header-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 18px;
+      letter-spacing: 3px;
+    }
+    .header-logo span { color: var(--white); }
+    .header-secure {
+      color: #8BA3C4;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    /* ── LAYOUT ── */
+    .checkout-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 720px) {
+      .checkout-wrap { grid-template-columns: 1fr; padding: 16px 16px 40px; }
+      .order-summary { order: -1; }
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px;
+    }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--navy);
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--white);
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus { border-color: var(--gold); }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Stripe Element */
+    .stripe-element-wrap {
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      padding: 13px 14px;
+      background: var(--white);
+      transition: border-color 0.15s;
+    }
+    .stripe-element-wrap.focused { border-color: var(--gold); }
+
+    /* ── ORDER BUMP ── */
+    .order-bump {
+      margin-top: 20px;
+      border: 2px dashed var(--gold);
+      border-radius: 3px;
+      padding: 18px;
+      background: #fffdf5;
+    }
+    .bump-check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .bump-checkbox {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      accent-color: var(--gold);
+      cursor: pointer;
+      margin-top: 2px;
+    }
+    .bump-label { cursor: pointer; }
+    .bump-tag {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 3px 8px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+    .bump-title { font-weight: 700; color: var(--navy); font-size: 15px; margin-bottom: 5px; }
+    .bump-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .bump-price { font-weight: 700; color: var(--gold); font-size: 15px; margin-top: 6px; }
+
+    /* ── SUBMIT ── */
+    .submit-btn {
+      display: block;
+      width: 100%;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-align: center;
+      padding: 19px 24px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: background 0.15s, opacity 0.15s;
+      border-radius: 2px;
+    }
+    .submit-btn:active { background: var(--gold-light); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .secure-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ── ERROR ── */
+    .error-msg {
+      display: none;
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 3px;
+    }
+    .error-msg.visible { display: block; }
+
+    /* ── ORDER SUMMARY ── */
+    .order-summary {}
+    .summary-items { margin-bottom: 16px; }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item-name { font-size: 14px; color: var(--text); line-height: 1.4; flex: 1; }
+    .summary-item-name small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .summary-item-price { font-weight: 700; color: var(--navy); font-size: 14px; white-space: nowrap; }
+    .summary-bump-row {
+      display: none;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-bump-row.visible { display: flex; justify-content: space-between; align-items: center; }
+    .summary-bump-name { font-size: 13px; color: var(--gold); font-weight: 600; }
+    .summary-bump-price { font-size: 13px; color: var(--gold); font-weight: 700; }
+
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 2px solid var(--navy);
+      margin-top: 4px;
+    }
+    .summary-total-label { font-weight: 700; color: var(--navy); font-size: 15px; }
+    .summary-total-price { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold); font-weight: 700; }
+
+    .guarantee-badge {
+      margin-top: 16px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 3px;
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .guarantee-badge .icon { font-size: 24px; flex-shrink: 0; }
+    .guarantee-badge .text { font-size: 12px; color: #166534; line-height: 1.5; }
+    .guarantee-badge .text strong { display: block; margin-bottom: 2px; }
+
+    .payment-icons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .pay-icon {
+      background: #f3f4f6;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* ── LOADING OVERLAY ── */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,22,40,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .loading-overlay.active { display: flex; }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { color: var(--white); font-size: 15px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">CYRUS<span>HQ</span></div>
+  <div class="header-secure">🔒 Secure Checkout — 256-bit SSL Encryption</div>
+</header>
+
+<div class="checkout-wrap">
+  <!-- LEFT: FORM -->
+  <div class="checkout-form">
+    <div class="card">
+      <div class="card-title">Your Information</div>
+      <div class="form-group">
+        <label class="form-label" for="fullName">Full Name</label>
+        <input class="form-input" type="text" id="fullName" placeholder="Jane Smith" autocomplete="name" inputmode="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input class="form-input" type="email" id="email" placeholder="jane@example.com" autocomplete="email" inputmode="email">
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">Payment Details</div>
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <div class="stripe-element-wrap" id="cardNumberWrap">
+          <div id="cardNumber"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <div class="stripe-element-wrap" id="cardExpiryWrap">
+            <div id="cardExpiry"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Security Code</label>
+          <div class="stripe-element-wrap" id="cardCvcWrap">
+            <div id="cardCvc"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER BUMP -->
+      <div class="order-bump">
+        <div class="bump-check-row">
+          <input type="checkbox" class="bump-checkbox" id="cronBump" checked>
+          <label class="bump-label" for="cronBump">
+            <div class="bump-tag">⚡ Special One-Time Offer</div>
+            <div class="bump-title">Yes! Add the Cron Job Mastery Module</div>
+            <div class="bump-desc">3-video series that teaches you how to automate your AI CEO's daily operations — morning reports, nightly memory loops, opportunity scans. The most powerful upgrade in the system.</div>
+            <div class="bump-price">Add for just $9.99 — already checked for you ✓</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+        Complete My Order →
+      </button>
+      <div class="secure-row">
+        🔒 Payments secured by Stripe · Your card is never stored
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: ORDER SUMMARY -->
+  <div class="order-summary">
+    <div class="card">
+      <div class="card-title">Order Summary</div>
+      <div class="summary-items">
+        <div class="summary-item">
+          <div class="summary-item-name">
+            Build Your AI CEO
+            <small>5-module video course · Lifetime access</small>
+          </div>
+          <div class="summary-item-price">$27.00</div>
+        </div>
+        <div class="summary-bump-row visible" id="summaryBump">
+          <div class="summary-bump-name">⚡ Cron Job Mastery Module</div>
+          <div class="summary-bump-price">$9.99</div>
+        </div>
+      </div>
+      <div class="summary-total-row">
+        <div class="summary-total-label">Total Today</div>
+        <div class="summary-total-price" id="totalPrice">$36.99</div>
+      </div>
+    </div>
+
+    <div class="guarantee-badge">
+      <div class="icon">🛡️</div>
+      <div class="text">
+        <strong>30-Day Money-Back Guarantee</strong>
+        Not satisfied? Email us within 30 days for a full refund. No forms, no questions.
+      </div>
+    </div>
+
+    <div class="payment-icons">
+      <span class="pay-icon">VISA</span>
+      <span class="pay-icon">MC</span>
+      <span class="pay-icon">AMEX</span>
+      <span class="pay-icon">Apple Pay</span>
+      <span class="pay-icon">Google Pay</span>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Processing your order...</div>
+</div>
+
+<script>
+const PUBLISHABLE_KEY = 'pk_live_51THvcRDl0ECsHFXrPLACEHOLDER'; // Replace with actual key
+const stripe = Stripe(PUBLISHABLE_KEY);
+const elements = stripe.elements();
+
+const style = {
+  base: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '15px',
+    color: '#1a1a2e',
+    '::placeholder': { color: '#9ca3af' }
+  },
+  invalid: { color: '#dc2626' }
+};
+
+const cardNumber = elements.create('cardNumber', { style });
+const cardExpiry = elements.create('cardExpiry', { style });
+const cardCvc   = elements.create('cardCvc',    { style });
+
+cardNumber.mount('#cardNumber');
+cardExpiry.mount('#cardExpiry');
+cardCvc.mount('#cardCvc');
+
+// Focus border highlight
+[
+  [cardNumber, 'cardNumberWrap'],
+  [cardExpiry, 'cardExpiryWrap'],
+  [cardCvc,    'cardCvcWrap']
+].forEach(([el, id]) => {
+  el.on('focus', () => document.getElementById(id).classList.add('focused'));
+  el.on('blur',  () => document.getElementById(id).classList.remove('focused'));
+});
+
+// Order bump toggle
+const bump = document.getElementById('cronBump');
+const summaryBump = document.getElementById('summaryBump');
+const totalPrice  = document.getElementById('totalPrice');
+
+function updateTotal() {
+  const total = bump.checked ? 36.99 : 27.00;
+  totalPrice.textContent = '$' + total.toFixed(2);
+  summaryBump.classList.toggle('visible', bump.checked);
+}
+bump.addEventListener('change', updateTotal);
+
+async function handleSubmit() {
+  const btn = document.getElementById('submitBtn');
+  const err = document.getElementById('errorMsg');
+  const overlay = document.getElementById('loadingOverlay');
+
+  const name  = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+
+  err.classList.remove('visible');
+
+  if (!name) { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+
+  btn.disabled = true;
+  overlay.classList.add('active');
+
+  try {
+    // Create payment method
+    const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardNumber,
+      billing_details: { name, email }
+    });
+
+    if (pmError) {
+      showError(pmError.message);
+      btn.disabled = false;
+      overlay.classList.remove('active');
+      return;
+    }
+
+    // Create checkout session
+    const res = await fetch('/api/checkout-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        paymentMethodId: paymentMethod.id,
+        email,
+        name,
+        hasCronBump: bump.checked
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      showError(data.error);
+      btn.disabled = false;
+      overlay.classList.remove('active');
+      return;
+    }
+
+    if (data.requiresAction) {
+      const { error: actionError } = await stripe.confirmCardPayment(data.clientSecret);
+      if (actionError) {
+        showError(actionError.message);
+        btn.disabled = false;
+        overlay.classList.remove('active');
+        return;
+      }
+    }
+
+    // Success — redirect to upsell
+    window.location.href = data.redirectUrl || '/upgrade';
+
+  } catch (e) {
+    showError('Something went wrong. Please try again or contact hello@cyrushq.ai');
+    btn.disabled = false;
+    overlay.classList.remove('active');
+  }
+}
+
+function showError(msg) {
+  const err = document.getElementById('errorMsg');
+  err.textContent = msg;
+  err.classList.add('visible');
+  document.getElementById('loadingOverlay').classList.remove('active');
+  err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+</script>
+</body>
+</html>

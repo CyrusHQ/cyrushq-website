@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Welcome to Build Your AI CEO 👑</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0A1628;
+      --gold: #C9A84C;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--gold);
+      padding: 14px 20px;
+      text-align: center;
+    }
+    .header-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--navy);
+      font-size: 18px;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 52px 20px 36px;
+      text-align: center;
+    }
+    .check-circle {
+      width: 72px;
+      height: 72px;
+      background: rgba(201,168,76,0.15);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 7vw, 40px);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    h1 em { color: var(--gold); font-style: normal; }
+    .hero-sub {
+      color: #8BA3C4;
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    /* ── EMAIL NOTE ── */
+    .email-note {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.3);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .email-note-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; color: var(--gold); }
+    .email-note-body { font-size: 13px; color: #8BA3C4; line-height: 1.6; }
+
+    /* ── NEXT STEPS ── */
+    .steps-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .steps-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--gold);
+    }
+    .step-list { display: flex; flex-direction: column; gap: 16px; }
+    .step-item { display: flex; gap: 16px; align-items: flex-start; }
+    .step-num {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 13px;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-content {}
+    .step-title { font-weight: 700; font-size: 15px; margin-bottom: 3px; }
+    .step-desc { font-size: 13px; color: #8BA3C4; line-height: 1.5; }
+
+    /* ── LOGIN BUTTON ── */
+    .login-btn {
+      display: block;
+      width: 100%;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-align: center;
+      padding: 20px 24px;
+      text-transform: uppercase;
+      text-decoration: none;
+      margin-bottom: 12px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .login-note {
+      text-align: center;
+      font-size: 12px;
+      color: #4a5568;
+      margin-bottom: 24px;
+    }
+
+    /* ── UPSELL CONFIRMATION ── */
+    .upsell-confirm {
+      display: none;
+      background: rgba(22,163,74,0.1);
+      border: 1px solid rgba(22,163,74,0.3);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .upsell-confirm.visible { display: block; }
+    .upsell-confirm-title { color: #4ade80; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+    .upsell-confirm-body { color: #86efac; font-size: 13px; line-height: 1.5; }
+
+    /* ── SHARE ── */
+    .share-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px;
+      text-align: center;
+    }
+    .share-title { font-weight: 700; font-size: 15px; margin-bottom: 10px; }
+    .share-sub { color: #8BA3C4; font-size: 13px; margin-bottom: 14px; }
+    .share-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .share-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 18px;
+      text-decoration: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 24px 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 16px;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+    .footer-text { color: #4a5568; font-size: 12px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">CYRUSHQ.AI</div>
+</header>
+
+<div class="hero">
+  <div class="check-circle">✓</div>
+  <h1>You're In. Your <em>AI CEO</em><br>Journey Starts Now.</h1>
+  <p class="hero-sub">Your purchase was successful. Check your email — your access link is on its way.</p>
+</div>
+
+<div class="content">
+
+  <!-- UPSELL CONFIRMATION (shown when ?upsell=1) -->
+  <div class="upsell-confirm" id="upsellConfirm">
+    <div class="upsell-confirm-title">✅ AI CEO Starter Kit Added!</div>
+    <div class="upsell-confirm-body">Your 29 operating files will be delivered in the same email. Check your inbox — it's all there.</div>
+  </div>
+
+  <!-- EMAIL NOTE -->
+  <div class="email-note">
+    <div class="email-note-title">📧 Check Your Email</div>
+    <div class="email-note-body">Your login link was just sent from hello@cyrushq.ai. Check your inbox (and spam folder just in case). It arrives within 60 seconds.</div>
+  </div>
+
+  <!-- NEXT STEPS -->
+  <div class="steps-card">
+    <div class="steps-title">👑 Your Next 3 Steps</div>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Open Your Login Email</div>
+          <div class="step-desc">From hello@cyrushq.ai — contains your personal access link to the student portal. Arrives within 60 seconds.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Start Module 1</div>
+          <div class="step-desc">The Blueprint module is under 20 minutes. Watch it first — it gives you the full picture before you start building.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Block Time This Weekend</div>
+          <div class="step-desc">Most students finish the entire system in one weekend. Block 6–8 hours and you'll have a live AI CEO by Sunday night.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN BUTTON -->
+  <a href="/members" class="login-btn">Go to My Course Portal →</a>
+  <div class="login-note">Or use the link in your email for direct access</div>
+
+  <!-- SHARE -->
+  <div class="share-card">
+    <div class="share-title">Tell a Fellow Entrepreneur</div>
+    <div class="share-sub">Know someone who needs to stop doing everything themselves? Share this.</div>
+    <div class="share-btns">
+      <a class="share-btn" href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a class="share-btn" href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a>
+      <a class="share-btn" onclick="copyLink(this)">Copy Link</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">CYRUSHQ.AI</div>
+  <div class="footer-text">
+    Questions? Email hello@cyrushq.ai — we reply fast.<br>
+    © 2026 CyrusHQ · Build wisely. Lead calmly. Create systems that endure.
+  </div>
+</footer>
+
+<script>
+  // Show upsell confirmation
+  if (new URLSearchParams(window.location.search).get('upsell') === '1') {
+    document.getElementById('upsellConfirm').classList.add('visible');
+  }
+
+  function copyLink(btn) {
+    navigator.clipboard.writeText('https://cyrushq.ai/course').then(() => {
+      btn.textContent = 'Copied! ✓';
+      setTimeout(() => { btn.textContent = 'Copy Link'; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>

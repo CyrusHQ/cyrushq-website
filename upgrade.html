@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Special One-Time Offer — AI CEO Starter Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0A1628;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--gold);
+      padding: 14px 20px;
+      text-align: center;
+    }
+    .header-text {
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 48px 20px 32px;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .congrats-tag {
+      display: inline-block;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 6px 16px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 7vw, 44px);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    h1 em { color: var(--gold); font-style: normal; }
+    .hero-sub {
+      color: #8BA3C4;
+      font-size: clamp(15px, 4vw, 17px);
+      line-height: 1.6;
+      max-width: 560px;
+      margin: 0 auto 12px;
+    }
+    .timer-note {
+      color: #e8c96a;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    /* ── PRODUCT CARD ── */
+    .product-card {
+      background: rgba(255,255,255,0.05);
+      border: 2px solid var(--gold);
+      padding: 28px 24px;
+      margin-bottom: 24px;
+    }
+    .product-label {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+    .product-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 5vw, 30px);
+      margin-bottom: 10px;
+    }
+    .product-desc {
+      color: #8BA3C4;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .kit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 480px) { .kit-grid { grid-template-columns: 1fr; } }
+    .kit-item {
+      background: rgba(255,255,255,0.04);
+      border-left: 2px solid var(--gold);
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #c4d4e8;
+      line-height: 1.4;
+    }
+    .kit-item strong { display: block; color: var(--white); font-size: 12px; letter-spacing: 0.5px; margin-bottom: 2px; }
+
+    .price-section { text-align: center; padding: 20px 0; }
+    .price-was { color: #8BA3C4; font-size: 15px; text-decoration: line-through; margin-bottom: 4px; }
+    .price-now {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .price-note { color: #8BA3C4; font-size: 13px; }
+
+    /* ── WHAT'S INSIDE ── */
+    .inside-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .inside-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: #c4d4e8;
+      line-height: 1.5;
+    }
+    .inside-check {
+      color: var(--gold);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── ACCEPT BUTTON ── */
+    .accept-btn {
+      display: block;
+      width: 100%;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-align: center;
+      padding: 20px 24px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 12px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .accept-btn:active { background: var(--gold-light); }
+    .accept-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .accept-note {
+      text-align: center;
+      color: #8BA3C4;
+      font-size: 12px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    /* ── DECLINE ── */
+    .decline-wrap { text-align: center; }
+    .decline-link {
+      color: #4a5568;
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .decline-link:active { color: #6b7280; }
+
+    /* ── LOADING ── */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,22,40,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .loading-overlay.active { display: flex; }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { color: var(--white); font-size: 15px; font-weight: 600; }
+
+    .error-msg {
+      display: none;
+      color: #fca5a5;
+      font-size: 13px;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(220,38,38,0.1);
+      border: 1px solid rgba(220,38,38,0.3);
+      text-align: center;
+    }
+    .error-msg.visible { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-text">⚡ Wait — Your Order Is Processing. This Offer Is Only Available Right Now.</div>
+</div>
+
+<div class="hero">
+  <div class="congrats-tag">🎉 Order Confirmed — One More Thing</div>
+  <h1>Grab the <em>29-File Operating System</em> That Runs a Live AI CEO Business</h1>
+  <p class="hero-sub">You just built the foundation. Now get the exact operating files powering a real AI CEO — plug in and run in minutes.</p>
+  <p class="timer-note">⚠️ This offer disappears when you leave this page.</p>
+</div>
+
+<div class="content">
+  <div class="product-card">
+    <div class="product-label">Special Post-Purchase Offer</div>
+    <div class="product-title">AI CEO Starter Kit</div>
+    <div class="product-desc">29 plug-and-play .md files — the exact operating system powering a live, revenue-generating AI CEO. You've just learned how to build the system. These files make it run like a seasoned executive from day one.</div>
+
+    <div class="kit-grid">
+      <div class="kit-item"><strong>Identity + Soul Files</strong>SOUL.md, IDENTITY.md, USER.md — your AI CEO's personality and purpose</div>
+      <div class="kit-item"><strong>Memory Architecture</strong>MEMORY.md — structured long-term recall system</div>
+      <div class="kit-item"><strong>Daily Operations</strong>HEARTBEAT.md, DAILY_OPERATIONS_LOOP.md, EXECUTION_PROTOCOL.md</div>
+      <div class="kit-item"><strong>Venture Engine</strong>VENTURE_ENGINE.md + 8 venture strategy files</div>
+      <div class="kit-item"><strong>Sales System</strong>VENTURE_OUTREACH_SEQUENCE.md, VENTURE_SALES_SCRIPTS.md</div>
+      <div class="kit-item"><strong>Full Setup Guide</strong>Step-by-step PDF to install every file in under 30 minutes</div>
+    </div>
+
+    <div class="inside-list">
+      <div class="inside-item"><span class="inside-check">✓</span>29 pre-written configuration files — copy, paste, done</div>
+      <div class="inside-item"><span class="inside-check">✓</span>The same files running a live AI CEO generating real revenue</div>
+      <div class="inside-item"><span class="inside-check">✓</span>Setup guide included — deployed in 30 minutes or less</div>
+      <div class="inside-item"><span class="inside-check">✓</span>Works with any AI model — Claude, GPT, and others</div>
+      <div class="inside-item"><span class="inside-check">✓</span>Instant digital download — in your email immediately</div>
+    </div>
+
+    <div class="price-section">
+      <div class="price-was">Regular price: $97</div>
+      <div class="price-now">$47</div>
+      <div class="price-note">One-time charge · Instant delivery · One click to add</div>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <button class="accept-btn" id="acceptBtn" onclick="handleAccept()">
+      Yes! Add the Starter Kit for $47 →
+    </button>
+    <div class="accept-note">One click — we'll charge the same card you just used. No new form needed.</div>
+
+    <div class="decline-wrap">
+      <button class="decline-link" onclick="handleDecline()">No thanks, I don't want the operating files. Take me to my course.</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Adding to your order...</div>
+</div>
+
+<script>
+  function getSessionId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('session_id') || '';
+  }
+
+  async function handleAccept() {
+    const btn = document.getElementById('acceptBtn');
+    const overlay = document.getElementById('loadingOverlay');
+    const err = document.getElementById('errorMsg');
+    err.classList.remove('visible');
+    btn.disabled = true;
+    overlay.classList.add('active');
+
+    try {
+      const res = await fetch('/api/upsell-course', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: getSessionId(), product: 'starter-kit' })
+      });
+      const data = await res.json();
+
+      if (data.error) {
+        err.textContent = data.error;
+        err.classList.add('visible');
+        btn.disabled = false;
+        overlay.classList.remove('active');
+        return;
+      }
+
+      document.getElementById('loadingText').textContent = 'Starter Kit added! Redirecting...';
+      setTimeout(() => { window.location.href = '/course-thankyou?upsell=1'; }, 1500);
+
+    } catch (e) {
+      err.textContent = 'Something went wrong. Email hello@cyrushq.ai and we\'ll sort it out.';
+      err.classList.add('visible');
+      btn.disabled = false;
+      overlay.classList.remove('active');
+    }
+  }
+
+  function handleDecline() {
+    window.location.href = '/course-thankyou';
+  }
+</script>
+</body>
+</html>
