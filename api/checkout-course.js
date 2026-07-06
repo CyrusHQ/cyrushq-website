@@ -36,10 +36,17 @@ export default async function handler(req, res) {
       const custBody = new URLSearchParams({ email, name });
       const custRes  = await fetch(`${STRIPE_BASE}/customers`, { method: 'POST', headers, body: custBody });
       const custData = await custRes.json();
+      if (custData.error) {
+        console.error('Stripe customer creation error:', JSON.stringify(custData.error));
+        return res.status(500).json({ error: custData.error.message || 'Could not create customer.' });
+      }
       customerId = custData.id;
     }
 
-    if (!customerId) return res.status(500).json({ error: 'Could not create customer.' });
+    if (!customerId) {
+      console.error('Customer search result:', JSON.stringify(custSearch));
+      return res.status(500).json({ error: 'Could not create customer — check Stripe API key permissions.' });
+    }
 
     // 2. Attach payment method to customer
     await fetch(`${STRIPE_BASE}/payment_methods/${paymentMethodId}/attach`, {
