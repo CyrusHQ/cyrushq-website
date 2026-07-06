@@ -8,6 +8,12 @@ export default async function handler(req, res) {
 
   if (!sessionId) return res.status(400).json({ error: 'Missing session ID.' });
 
+  // Test mode bypass — session_id = "test_bypass"
+  if (sessionId === 'test_bypass') {
+    console.log('[TEST MODE] Upsell bypass — skipping Stripe');
+    return res.status(200).json({ success: true });
+  }
+
   const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
   const STRIPE_BASE   = 'https://api.stripe.com/v1';
   const headers = {

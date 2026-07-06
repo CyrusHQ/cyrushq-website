@@ -413,6 +413,8 @@
 </div>
 
 <script>
+const IS_TEST_MODE = new URLSearchParams(window.location.search).get('mode') === 'test';
+
 const PUBLISHABLE_KEY = 'pk_live_51THvcRDl0ECsHFXrVol78CShFLEfSIOWydlEiYVBt4Ft93mxrLMsi2rZbv3iyD7GssSGhGYswFdevj4HdxeDO5qs00IkMzXLzo';
 const stripe = Stripe(PUBLISHABLE_KEY);
 const elements = stripe.elements();
@@ -431,19 +433,36 @@ const cardNumber = elements.create('cardNumber', { style });
 const cardExpiry = elements.create('cardExpiry', { style });
 const cardCvc   = elements.create('cardCvc',    { style });
 
-cardNumber.mount('#cardNumber');
-cardExpiry.mount('#cardExpiry');
-cardCvc.mount('#cardCvc');
+if (IS_TEST_MODE) {
+  // Inject test mode banner
+  document.body.insertAdjacentHTML('afterbegin',
+    '<div id="testBanner" style="background:#f59e0b;color:#1a1a2e;text-align:center;padding:10px 16px;font-weight:700;font-size:13px;letter-spacing:.5px;position:sticky;top:0;z-index:9999;">🧪 TEST MODE — No real charges · Enter any email and click Complete My Order</div>'
+  );
+  // Replace card section with a test notice (no real card needed)
+  document.addEventListener('DOMContentLoaded', () => {
+    const cardWrap = document.getElementById('cardNumberWrap').closest('.card');
+    const paymentTitle = cardWrap.querySelector('.card-title');
+    paymentTitle.insertAdjacentHTML('afterend',
+      '<div style="background:#fef3c7;border:1.5px solid #f59e0b;border-radius:4px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#92400e;">🧪 <strong>Test Mode Active</strong> — No credit card required. Click the button below to simulate a successful purchase and walk through the full funnel.</div>'
+    );
+    document.getElementById('cardNumberWrap').closest('.form-group').style.display = 'none';
+    document.getElementById('cardExpiryWrap').closest('.form-row') && (document.getElementById('cardExpiryWrap').closest('.form-row').style.display = 'none');
+  });
+} else {
+  cardNumber.mount('#cardNumber');
+  cardExpiry.mount('#cardExpiry');
+  cardCvc.mount('#cardCvc');
 
-// Focus border highlight
-[
-  [cardNumber, 'cardNumberWrap'],
-  [cardExpiry, 'cardExpiryWrap'],
-  [cardCvc,    'cardCvcWrap']
-].forEach(([el, id]) => {
-  el.on('focus', () => document.getElementById(id).classList.add('focused'));
-  el.on('blur',  () => document.getElementById(id).classList.remove('focused'));
-});
+  // Focus border highlight
+  [
+    [cardNumber, 'cardNumberWrap'],
+    [cardExpiry, 'cardExpiryWrap'],
+    [cardCvc,    'cardCvcWrap']
+  ].forEach(([el, id]) => {
+    el.on('focus', () => document.getElementById(id).classList.add('focused'));
+    el.on('blur',  () => document.getElementById(id).classList.remove('focused'));
+  });
+}
 
 // Order bump toggle
 const bump = document.getElementById('cronBump');
@@ -472,6 +491,14 @@ async function handleSubmit() {
 
   btn.disabled = true;
   overlay.classList.add('active');
+
+  // ── TEST MODE BYPASS ──────────────────────────────────────
+  if (IS_TEST_MODE) {
+    await new Promise(r => setTimeout(r, 1800)); // simulate processing
+    window.location.href = `/upgrade?session_id=test_bypass&email=${encodeURIComponent(email)}&test=1`;
+    return;
+  }
+  // ─────────────────────────────────────────────────────────
 
   try {
     // Create payment method
