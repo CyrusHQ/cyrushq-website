@@ -52,7 +52,8 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
     body: JSON.stringify({ email, firstName, lastName, locationId: GHL_LOCATION_ID, tags })
   });
   const contactData = await contactRes.json();
-  const contactId   = contactData.contact?.id;
+  // GHL returns contact.id on create, or meta.contactId on duplicate
+  const contactId = contactData.contact?.id || contactData.meta?.contactId;
 
   if (!contactId) {
     console.error('GHL contact upsert failed:', JSON.stringify(contactData));
