@@ -4,6 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You — CyrusHQ</title>
+  <!-- Meta Pixel: fires Purchase event; reads ?value= and ?product= from Stripe redirect URL -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '898060140812365');
+    fbq('track', 'PageView');
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var value = parseFloat(params.get('value')) || 0;
+      var currency = params.get('currency') || 'USD';
+      var product = params.get('product') || 'cyrushq-product';
+      var eventData = { currency: currency, content_type: 'product', content_ids: [product] };
+      if (value > 0) eventData.value = value;
+      fbq('track', 'Purchase', eventData);
+    })();
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=898060140812365&ev=Purchase&noscript=1"/></noscript>
+  <!-- End Meta Pixel -->
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
