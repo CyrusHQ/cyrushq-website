@@ -607,11 +607,11 @@
       <div class="stat-label">Active Ventures</div>
     </div>
     <div class="stat-item">
-      <div class="stat-value" id="stat-revenue">$34.84</div>
-      <div class="stat-label">Revenue Generated</div>
+      <div class="stat-value" id="stat-revenue">4</div>
+      <div class="stat-label">Products Launched</div>
     </div>
     <div class="stat-item">
-      <div class="stat-value" id="stat-days">83</div>
+      <div class="stat-value" id="stat-days">118</div>
       <div class="stat-label">Days Operational</div>
     </div>
     <div class="stat-item">
@@ -637,30 +637,39 @@
     <div class="chart-card">
       <div class="chart-card-header">
         <div>
-          <div class="chart-title">Portfolio Revenue</div>
-          <div class="chart-value" id="total-revenue">$34.84 Total</div>
+          <div class="chart-title">Portfolio Output</div>
+          <div class="chart-value" id="total-revenue">4 Revenue Products</div>
         </div>
-        <div class="chart-delta">↑ Growing</div>
+        <div class="chart-delta">↑ Expanding</div>
       </div>
-      <div class="chart-area">
-        <svg class="chart-svg" viewBox="0 0 800 140" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <!-- Revenue curve - will grow over time -->
-          <path d="M0,130 C100,128 150,125 200,120 C300,110 350,100 400,85 C500,60 600,40 700,20 L700,140 L0,140 Z"
-                fill="url(#chartGrad)" />
-          <path d="M0,130 C100,128 150,125 200,120 C300,110 350,100 400,85 C500,60 600,40 700,20"
-                fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- Month markers -->
-          <text x="10" y="135" fill="#555" font-size="11" font-family="JetBrains Mono">Feb</text>
-          <text x="200" y="135" fill="#555" font-size="11" font-family="JetBrains Mono">Mar</text>
-          <text x="400" y="135" fill="#555" font-size="11" font-family="JetBrains Mono">Apr</text>
-          <text x="600" y="135" fill="#555" font-size="11" font-family="JetBrains Mono">May</text>
-        </svg>
+      <div class="chart-area" style="padding: 1.5rem 0.5rem 0.5rem;">
+        <div style="font-size:0.65rem;letter-spacing:0.12em;color:#c9a84c;text-transform:uppercase;margin-bottom:1.2rem;font-family:'JetBrains Mono',monospace;">Commercial Infrastructure</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:#c9a84c;font-size:1rem;">✓</span>
+            <span style="font-size:0.85rem;color:#e0e0e0;">Brand &amp; Positioning Complete</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:#c9a84c;font-size:1rem;">✓</span>
+            <span style="font-size:0.85rem;color:#e0e0e0;">Product Suite Complete — 4 Live Products</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:#c9a84c;font-size:1rem;">✓</span>
+            <span style="font-size:0.85rem;color:#e0e0e0;">Sales Funnels Live</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:#c9a84c;font-size:1rem;">✓</span>
+            <span style="font-size:0.85rem;color:#e0e0e0;">Payment Infrastructure Live</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:#c9a84c;font-size:1rem;">✓</span>
+            <span style="font-size:0.85rem;color:#e0e0e0;">Meta Advertising Active</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="color:#c9a84c;font-size:1rem;">✓</span>
+            <span style="font-size:0.85rem;color:#e0e0e0;">Lead Generation Active</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -678,8 +687,8 @@
             <div class="v-metric-value positive">In Sales</div>
           </div>
           <div>
-            <div class="v-metric-label">MRR</div>
-            <div class="v-metric-value gold" id="rl-mrr">$0</div>
+            <div class="v-metric-label">Sales System</div>
+            <div class="v-metric-value positive">Active</div>
           </div>
           <div>
             <div class="v-metric-label">Built In</div>
@@ -1023,11 +1032,20 @@
       requestAnimationFrame(step);
     }
 
+    // Auto-calculate days operational from launch date
+    const launchDate = new Date('2026-03-25');
+    const today = new Date();
+    const daysOp = Math.floor((today - launchDate) / 86400000);
+    const daysEl = document.getElementById('stat-days');
+    if (daysEl) daysEl.textContent = daysOp;
+
     // Intersection observer to trigger animations when stats visible
     const statsObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           animateCounter(document.getElementById('stat-ventures'), 2);
+          animateCounter(document.getElementById('stat-revenue'), 4);
+          animateCounter(document.getElementById('stat-days'), daysOp);
           statsObserver.disconnect();
         }
       });
