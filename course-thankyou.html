@@ -208,13 +208,9 @@
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '898060140812365');
   fbq('track', 'PageView');
-  fbq('track', 'Purchase', {
+  fbq('track', 'CompleteRegistration', {
     content_name: 'Build Your AI CEO Course',
-    content_category: 'Course',
-    currency: 'USD',
-    value: 27.00,
-    content_type: 'product',
-    content_ids: ['build-your-ai-ceo-course']
+    status: 'confirmed'
   });
   </script>
   <noscript><img height="1" width="1" style="display:none"
