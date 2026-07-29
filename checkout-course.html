@@ -367,18 +367,7 @@
         </div>
       </div>
 
-      <!-- ORDER BUMP -->
-      <div class="order-bump">
-        <div class="bump-check-row">
-          <input type="checkbox" class="bump-checkbox" id="cronBump" checked>
-          <label class="bump-label" for="cronBump">
-            <div class="bump-tag">⚡ Special One-Time Offer</div>
-            <div class="bump-title">Yes! Add the Cron Job Mastery Module</div>
-            <div class="bump-desc">3-video series that teaches you how to automate your AI CEO's daily operations — morning reports, nightly memory loops, opportunity scans. The most powerful upgrade in the system.</div>
-            <div class="bump-price">Add for just $9.99 — already checked for you ✓</div>
-          </label>
-        </div>
-      </div>
+
 
       <div class="error-msg" id="errorMsg"></div>
 
@@ -403,10 +392,7 @@
           </div>
           <div class="summary-item-price">$27.00</div>
         </div>
-        <div class="summary-bump-row visible" id="summaryBump">
-          <div class="summary-bump-name">⚡ Cron Job Mastery Module</div>
-          <div class="summary-bump-price">$9.99</div>
-        </div>
+
       </div>
       <div class="summary-total-row">
         <div class="summary-total-label">Total Today</div>
@@ -490,17 +476,9 @@ if (IS_TEST_MODE) {
   });
 }
 
-// Order bump toggle
-const bump = document.getElementById('cronBump');
-const summaryBump = document.getElementById('summaryBump');
-const totalPrice  = document.getElementById('totalPrice');
-
-function updateTotal() {
-  const total = bump.checked ? 36.99 : 27.00;
-  totalPrice.textContent = '$' + total.toFixed(2);
-  summaryBump.classList.toggle('visible', bump.checked);
-}
-bump.addEventListener('change', updateTotal);
+// Total is always $27 — upsells handled post-purchase
+const totalPrice = document.getElementById('totalPrice');
+totalPrice.textContent = '$27.00';
 
 async function handleSubmit() {
   const btn = document.getElementById('submitBtn');
@@ -548,8 +526,7 @@ async function handleSubmit() {
       body: JSON.stringify({
         paymentMethodId: paymentMethod.id,
         email,
-        name,
-        hasCronBump: bump.checked
+        name
       })
     });
 

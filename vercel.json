@@ -9,10 +9,12 @@
     { "source": "/course",            "destination": "/course.html" },
     { "source": "/checkout-course",   "destination": "/checkout-course.html" },
     { "source": "/upgrade",           "destination": "/upgrade.html" },
+    { "source": "/cron-upsell",       "destination": "/cron-upsell.html" },
     { "source": "/course-thankyou",   "destination": "/course-thankyou.html" },
     { "source": "/api/fulfillment",       "destination": "/api/fulfillment.js" },
     { "source": "/api/checkout-course",   "destination": "/api/checkout-course.js" },
     { "source": "/api/upsell-course",     "destination": "/api/upsell-course.js" },
+    { "source": "/api/upsell-cron",       "destination": "/api/upsell-cron.js" },
     { "source": "/api/course-webhook",    "destination": "/api/course-webhook.js" },
     { "source": "/members",               "destination": "/members.html" }
   ]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Special One-Time Offer — AI CEO Starter Kit</title>
+  <title>Final Offer — Cron Job Mastery Module</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -76,7 +76,6 @@
       color: #e8c96a;
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 0;
     }
 
     /* ── CONTENT ── */
@@ -116,36 +115,42 @@
       margin-bottom: 20px;
     }
 
-    .kit-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
+    .module-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
     }
-    @media (max-width: 480px) { .kit-grid { grid-template-columns: 1fr; } }
-    .kit-item {
+    .module-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
       background: rgba(255,255,255,0.04);
-      border-left: 2px solid var(--gold);
-      padding: 10px 12px;
-      font-size: 13px;
-      color: #c4d4e8;
-      line-height: 1.4;
+      border-left: 3px solid var(--gold);
+      padding: 12px 14px;
     }
-    .kit-item strong { display: block; color: var(--white); font-size: 12px; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .module-num {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      min-width: 24px;
+    }
+    .module-text { font-size: 14px; color: #c4d4e8; line-height: 1.5; }
+    .module-text strong { display: block; color: var(--white); margin-bottom: 2px; }
 
     .price-section { text-align: center; padding: 20px 0; }
     .price-was { color: #8BA3C4; font-size: 15px; text-decoration: line-through; margin-bottom: 4px; }
     .price-now {
       font-family: 'Playfair Display', serif;
       color: var(--gold);
-      font-size: 56px;
+      font-size: 64px;
       font-weight: 900;
       line-height: 1;
       margin-bottom: 6px;
     }
     .price-note { color: #8BA3C4; font-size: 13px; }
 
-    /* ── WHAT'S INSIDE ── */
     .inside-list {
       display: flex;
       flex-direction: column;
@@ -160,12 +165,7 @@
       color: #c4d4e8;
       line-height: 1.5;
     }
-    .inside-check {
-      color: var(--gold);
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
+    .inside-check { color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
 
     /* ── ACCEPT BUTTON ── */
     .accept-btn {
@@ -186,6 +186,7 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       transition: background 0.15s;
+      border-radius: 2px;
     }
     .accept-btn:active { background: var(--gold-light); }
     .accept-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -198,7 +199,6 @@
       line-height: 1.5;
     }
 
-    /* ── DECLINE ── */
     .decline-wrap { text-align: center; }
     .decline-link {
       color: #4a5568;
@@ -226,8 +226,7 @@
     }
     .loading-overlay.active { display: flex; }
     .spinner {
-      width: 44px;
-      height: 44px;
+      width: 44px; height: 44px;
       border: 3px solid rgba(201,168,76,0.2);
       border-top-color: var(--gold);
       border-radius: 50%;
@@ -249,91 +248,93 @@
     .error-msg.visible { display: block; }
   </style>
 
-  <!-- Meta Pixel Code -->
+  <!-- Meta Pixel -->
   <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
   if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
   n.queue=[];t=b.createElement(e);t.async=!0;
   t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '898060140812365');
   fbq('track', 'PageView');
-  fbq('track', 'Purchase', {
-    content_name: 'Build Your AI CEO Course',
-    content_category: 'Course',
-    currency: 'USD',
-    value: 27.00,
-    content_type: 'product',
-    content_ids: ['build-your-ai-ceo-course']
-  });
   </script>
   <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code -->
-
+  src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"/></noscript>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-text">⚡ Wait — Your Order Is Processing. This Offer Is Only Available Right Now.</div>
+  <div class="header-text">⚡ Last Step — Exclusive Add-On Available Now Only</div>
 </div>
 
 <div class="hero">
-  <div class="congrats-tag">🎉 Order Confirmed — One More Thing</div>
-  <h1>Grab the <em>29-File Operating System</em> That Runs a Live AI CEO Business</h1>
-  <p class="hero-sub">You just built the foundation. Now get the exact operating files powering a real AI CEO — plug in and run in minutes.</p>
-  <p class="timer-note">⚠️ This offer disappears when you leave this page.</p>
+  <div class="congrats-tag">🎉 Almost Done — One Final Upgrade</div>
+  <h1>Automate Your AI CEO With <em>Cron Job Mastery</em></h1>
+  <p class="hero-sub">You have the course. Now make it run itself. This 3-video module shows you exactly how to schedule your AI CEO's daily operations — so it wakes up, reports, and executes every morning without you.</p>
+  <p class="timer-note">⚠️ This offer is only available right now — it disappears when you leave.</p>
 </div>
 
 <div class="content">
   <div class="product-card">
-    <div class="product-label">Special Post-Purchase Offer</div>
-    <div class="product-title">AI CEO Starter Kit</div>
-    <div class="product-desc">29 plug-and-play .md files — the exact operating system powering a live, revenue-generating AI CEO. You've just learned how to build the system. These files make it run like a seasoned executive from day one.</div>
+    <div class="product-label">Exclusive Add-On — $9.99</div>
+    <div class="product-title">Cron Job Mastery Module</div>
+    <div class="product-desc">3 focused videos that teach you how to build the automation layer that makes your AI CEO fully autonomous — morning scans, nightly memory updates, and opportunity alerts running on their own, every day.</div>
 
-    <div class="kit-grid">
-      <div class="kit-item"><strong>Identity + Soul Files</strong>SOUL.md, IDENTITY.md, USER.md — your AI CEO's personality and purpose</div>
-      <div class="kit-item"><strong>Memory Architecture</strong>MEMORY.md — structured long-term recall system</div>
-      <div class="kit-item"><strong>Daily Operations</strong>HEARTBEAT.md, DAILY_OPERATIONS_LOOP.md, EXECUTION_PROTOCOL.md</div>
-      <div class="kit-item"><strong>Venture Engine</strong>VENTURE_ENGINE.md + 8 venture strategy files</div>
-      <div class="kit-item"><strong>Sales System</strong>VENTURE_OUTREACH_SEQUENCE.md, VENTURE_SALES_SCRIPTS.md</div>
-      <div class="kit-item"><strong>Full Setup Guide</strong>Step-by-step PDF to install every file in under 30 minutes</div>
+    <div class="module-list">
+      <div class="module-item">
+        <div class="module-num">01</div>
+        <div class="module-text">
+          <strong>What Cron Jobs Are & Why They Matter</strong>
+          How to schedule tasks so your AI CEO operates on autopilot — no manual prompting required.
+        </div>
+      </div>
+      <div class="module-item">
+        <div class="module-num">02</div>
+        <div class="module-text">
+          <strong>Building Your Morning Report Loop</strong>
+          Set up your AI CEO to deliver a daily briefing — market scans, task status, and priority actions — every morning automatically.
+        </div>
+      </div>
+      <div class="module-item">
+        <div class="module-num">03</div>
+        <div class="module-text">
+          <strong>Nightly Memory & Opportunity Loops</strong>
+          Automate the nightly memory consolidation and opportunity discovery cycle so your system learns and improves while you sleep.
+        </div>
+      </div>
     </div>
 
     <div class="inside-list">
-      <div class="inside-item"><span class="inside-check">✓</span>29 pre-written configuration files — copy, paste, done</div>
-      <div class="inside-item"><span class="inside-check">✓</span>The same files running a live AI CEO generating real revenue</div>
-      <div class="inside-item"><span class="inside-check">✓</span>Setup guide included — deployed in 30 minutes or less</div>
-      <div class="inside-item"><span class="inside-check">✓</span>Works with any AI model — Claude, GPT, and others</div>
-      <div class="inside-item"><span class="inside-check">✓</span>Instant digital download — in your email immediately</div>
+      <div class="inside-item"><span class="inside-check">✓</span>3 step-by-step video lessons — clear and beginner-friendly</div>
+      <div class="inside-item"><span class="inside-check">✓</span>The most powerful automation layer in the entire AI CEO system</div>
+      <div class="inside-item"><span class="inside-check">✓</span>Works with any setup — no coding background required</div>
+      <div class="inside-item"><span class="inside-check">✓</span>Instant access — added to your members area immediately</div>
     </div>
 
     <div class="price-section">
-      <div class="price-was">Regular price: $97</div>
-      <div class="price-now">$47</div>
-      <div class="price-note">One-time charge · Instant delivery · One click to add</div>
+      <div class="price-was">Regular price: $47</div>
+      <div class="price-now">$9.99</div>
+      <div class="price-note">One-time charge · Instant access · One click to add</div>
     </div>
 
     <div class="error-msg" id="errorMsg"></div>
 
     <button class="accept-btn" id="acceptBtn" onclick="handleAccept()">
-      Yes! Add the Starter Kit for $47 →
+      Yes! Add Cron Job Mastery for $9.99 →
     </button>
-    <div class="accept-note">One click — we'll charge the same card you just used. No new form needed.</div>
+    <div class="accept-note">One click — charged to the same card you used at checkout. No new form needed.</div>
 
     <div class="decline-wrap">
-      <button class="decline-link" onclick="handleDecline()">No thanks, I don't want the operating files. Take me to my course.</button>
+      <button class="decline-link" onclick="handleDecline()">No thanks, I don't need automation. Take me to my course.</button>
     </div>
   </div>
 </div>
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="loading-text" id="loadingText">Adding to your order...</div>
+  <div class="loading-text" id="loadingText">Adding Cron Job Mastery...</div>
 </div>
 
 <script>
@@ -350,11 +351,19 @@
     btn.disabled = true;
     overlay.classList.add('active');
 
+    // Test mode bypass
+    const sessionId = getSessionId();
+    if (sessionId === 'test_bypass') {
+      document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your course...';
+      setTimeout(() => { window.location.href = '/course-thankyou?upsell=cron'; }, 1500);
+      return;
+    }
+
     try {
-      const res = await fetch('/api/upsell-course', {
+      const res = await fetch('/api/upsell-cron', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: getSessionId(), product: 'starter-kit' })
+        body: JSON.stringify({ sessionId, product: 'cron-mastery' })
       });
       const data = await res.json();
 
@@ -366,12 +375,21 @@
         return;
       }
 
-      document.getElementById('loadingText').textContent = 'Starter Kit added! One more thing...';
-      const sid = getSessionId();
-      setTimeout(() => { window.location.href = `/cron-upsell?session_id=${sid}&upsell47=1`; }, 1500);
+      // Fire Meta purchase pixel for $9.99
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'Purchase', {
+          content_name: 'Cron Job Mastery Module',
+          content_category: 'Course Add-On',
+          currency: 'USD',
+          value: 9.99
+        });
+      }
+
+      document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your course...';
+      setTimeout(() => { window.location.href = '/course-thankyou?upsell=cron'; }, 1500);
 
     } catch (e) {
-      err.textContent = 'Something went wrong. Email hello@cyrushq.ai and we\'ll sort it out.';
+      err.textContent = "Something went wrong. Email hello@cyrushq.ai and we'll sort it out.";
       err.classList.add('visible');
       btn.disabled = false;
       overlay.classList.remove('active');
@@ -379,8 +397,7 @@
   }
 
   function handleDecline() {
-    const sid = getSessionId();
-    window.location.href = `/cron-upsell?session_id=${sid}`;
+    window.location.href = '/course-thankyou';
   }
 </script>
 </body>
