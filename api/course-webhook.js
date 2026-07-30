@@ -140,7 +140,8 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       contactId,
       subject: `Your AI CEO course is ready, ${firstName} 👑`,
       html: emailBody,
-      from: 'hello@cyrushq.ai',
+      fromName: 'CyrusHQ Team',
+      from: 'hello@recaptureleads.com',
       to: email
     })
   });
@@ -183,13 +184,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ received: true, note: 'no email' });
     }
 
-    const product      = meta.product || '';
-    const hasCronBump  = meta.has_cron_bump === 'true';
+    const product       = meta.product || '';
+    const hasCronBump   = product === 'cron-job-mastery';  // cron is now its own post-purchase upsell
     const hasStarterKit = product === 'ai-ceo-starter-kit';
 
-    // Only fire for course-related products
-    if (product === 'build-your-ai-ceo' || product === 'ai-ceo-starter-kit') {
-      console.log(`Triggering GHL for ${email} — cron:${hasCronBump} kit:${hasStarterKit}`);
+    // Fire for all course-related products
+    if (['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery'].includes(product)) {
+      console.log(`Triggering GHL for ${email} — product:${product} cron:${hasCronBump} kit:${hasStarterKit}`);
       await triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit });
     }
   }
