@@ -1,6 +1,71 @@
 // POST /api/course-webhook
 // Stripe webhook handler for course purchases
 // Fires GHL automation: course access email + conditional cron bonus + optional starter kit
+// Also fires Meta Conversions API (CAPI) Purchase event for ad attribution
+
+const PIXEL_ID = '898060140812365';
+const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
+
+async function hashSHA256(value) {
+  const crypto = await import('crypto');
+  return crypto.createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
+}
+
+async function sendMetaCAPIEvent({ email, name, customerId, fbp, fbc, eventSourceUrl, paymentIntentId, amountCents }) {
+  try {
+    const eventTime = Math.floor(Date.now() / 1000);
+    const hashedEmail = await hashSHA256(email);
+    const hashedExternalId = await hashSHA256(customerId || email);
+
+    // Build user_data — only include fields we have
+    const userData = {
+      em: [hashedEmail],
+      external_id: [hashedExternalId],
+      client_user_agent: 'Mozilla/5.0 (server-side event)'
+    };
+    if (fbp) userData.fbp = fbp;
+    if (fbc) userData.fbc = fbc;
+
+    const eventData = {
+      event_name: 'Purchase',
+      event_time: eventTime,
+      event_id: paymentIntentId, // deduplication key — matches pixel event_id if set
+      action_source: 'website',
+      event_source_url: eventSourceUrl || 'https://cyrushq.ai/checkout-course',
+      user_data: userData,
+      custom_data: {
+        currency: 'USD',
+        value: ((amountCents || 2700) / 100).toFixed(2),
+        content_name: 'Build Your AI CEO Course',
+        content_category: 'Online Course',
+        content_ids: ['build-your-ai-ceo'],
+        content_type: 'product'
+      }
+    };
+
+    const payload = { data: [eventData] };
+
+    const res = await fetch(
+      `https://graph.facebook.com/v21.0/${PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const result = await res.json();
+    if (result.error) {
+      console.error('Meta CAPI error:', JSON.stringify(result.error));
+      return false;
+    }
+    console.log('Meta CAPI Purchase event sent — events_received:', result.events_received, '| fbtrace_id:', result.fbtrace_id);
+    return true;
+  } catch (err) {
+    console.error('Meta CAPI exception:', err.message);
+    return false;
+  }
+}
 
 export const config = { api: { bodyParser: false } };
 
@@ -184,14 +249,32 @@ export default async function handler(req, res) {
       return res.status(200).json({ received: true, note: 'no email' });
     }
 
-    const product       = meta.product || '';
-    const hasCronBump   = product === 'cron-job-mastery';  // cron is now its own post-purchase upsell
-    const hasStarterKit = product === 'ai-ceo-starter-kit';
+    const product        = meta.product || '';
+    const hasCronBump    = product === 'cron-job-mastery';
+    const hasStarterKit  = product === 'ai-ceo-starter-kit';
+    const fbp            = meta.fbp            || null;
+    const fbc            = meta.fbc            || null;
+    const eventSourceUrl = meta.event_source_url || null;
 
-    // Fire for all course-related products
+    // Fire GHL automation for all course-related products
     if (['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery'].includes(product)) {
       console.log(`Triggering GHL for ${email} — product:${product} cron:${hasCronBump} kit:${hasStarterKit}`);
       await triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit });
+    }
+
+    // Fire Meta CAPI Purchase event for all course products
+    if (['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery'].includes(product)) {
+      console.log(`Sending Meta CAPI Purchase for ${email} — PI: ${pi.id}`);
+      await sendMetaCAPIEvent({
+        email,
+        name,
+        customerId: pi.customer,
+        fbp,
+        fbc,
+        eventSourceUrl,
+        paymentIntentId: pi.id,
+        amountCents: pi.amount
+      });
     }
   }
 

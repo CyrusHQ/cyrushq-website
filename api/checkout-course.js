@@ -5,7 +5,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { paymentMethodId, email, name } = req.body;
+  const { paymentMethodId, email, name, fbp, fbc, eventSourceUrl } = req.body;
 
   if (!paymentMethodId || !email || !name) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -66,9 +66,12 @@ export default async function handler(req, res) {
       'automatic_payment_methods[allow_redirects]': 'never',
       receipt_email:            email,
       description:              'Build Your AI CEO Course',
-      'metadata[product]':      'build-your-ai-ceo',
-      'metadata[customer_name]': name,
-      'metadata[customer_email]': email
+      'metadata[product]':           'build-your-ai-ceo',
+      'metadata[customer_name]':      name,
+      'metadata[customer_email]':     email,
+      ...(fbp           ? { 'metadata[fbp]':              fbp            } : {}),
+      ...(fbc           ? { 'metadata[fbc]':              fbc            } : {}),
+      ...(eventSourceUrl ? { 'metadata[event_source_url]': eventSourceUrl } : {})
     });
 
     const piRes  = await fetch(`${STRIPE_BASE}/payment_intents`, { method: 'POST', headers, body: piBody });
