@@ -73,6 +73,59 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--text); }
+
+    /* DROPDOWN */
+    .nav-dropdown {
+      position: relative;
+    }
+    .nav-dropdown > a {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+    .nav-dropdown > a::after {
+      content: '▾';
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,22,40,0.98);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      min-width: 200px;
+      padding: 0.5rem 0;
+      backdrop-filter: blur(12px);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 0.6rem 1.2rem;
+      color: var(--text-dim) !important;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .dropdown-menu a:hover {
+      color: var(--gold) !important;
+      background: rgba(212,175,55,0.06);
+    }
+    .dropdown-menu .dropdown-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0.4rem 0;
+    }
+
     .nav-cta {
       background: var(--gold);
       color: #000;
@@ -580,7 +633,14 @@
     <ul class="nav-links">
       <li><a href="#dashboard">Dashboard</a></li>
       <li><a href="#ventures">Ventures</a></li>
-      <li><a href="#products">Products</a></li>
+      <li class="nav-dropdown">
+        <a href="#products">Build Your AI CEO</a>
+        <div class="dropdown-menu">
+          <a href="https://cyrushq-books.vibepreview.com" target="_blank">📚 Book Bundle</a>
+          <hr class="dropdown-divider">
+          <a href="/course">🎬 Video Course</a>
+        </div>
+      </li>
       <li><a href="#about">About</a></li>
     </ul>
     <a href="#products" class="nav-cta">Get the Playbook →</a>
