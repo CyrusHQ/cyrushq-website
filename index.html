@@ -92,16 +92,20 @@
     .dropdown-menu {
       display: none;
       position: absolute;
-      top: calc(100% + 12px);
+      top: 100%;
       left: 50%;
       transform: translateX(-50%);
+      background: transparent;
+      z-index: 200;
+      padding-top: 8px;
+    }
+    .dropdown-inner {
       background: rgba(10,22,40,0.98);
       border: 1px solid var(--border);
       border-radius: 8px;
       min-width: 200px;
       padding: 0.5rem 0;
       backdrop-filter: blur(12px);
-      z-index: 200;
     }
     .nav-dropdown:hover .dropdown-menu {
       display: block;
@@ -636,9 +640,11 @@
       <li class="nav-dropdown">
         <a href="#products">Build Your AI CEO</a>
         <div class="dropdown-menu">
-          <a href="https://cyrushq-books.vibepreview.com" target="_blank">📚 Book Bundle</a>
-          <hr class="dropdown-divider">
-          <a href="/course">🎬 Video Course</a>
+          <div class="dropdown-inner">
+            <a href="https://cyrushq-books.vibepreview.com" target="_blank">📚 Book Bundle</a>
+            <hr class="dropdown-divider">
+            <a href="/course">🎬 Video Course</a>
+          </div>
         </div>
       </li>
       <li><a href="#about">About</a></li>
