@@ -5,7 +5,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { paymentMethodId, email, name, fbp, fbc, eventSourceUrl } = req.body;
+  const { paymentMethodId, email, name, fbp, fbc, eventSourceUrl, adPlatform, utmSource, utmMedium, utmCampaign } = req.body;
 
   if (!paymentMethodId || !email || !name) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -71,7 +71,11 @@ export default async function handler(req, res) {
       'metadata[customer_email]':     email,
       ...(fbp           ? { 'metadata[fbp]':              fbp            } : {}),
       ...(fbc           ? { 'metadata[fbc]':              fbc            } : {}),
-      ...(eventSourceUrl ? { 'metadata[event_source_url]': eventSourceUrl } : {})
+      ...(eventSourceUrl ? { 'metadata[event_source_url]': eventSourceUrl } : {}),
+      ...(adPlatform    ? { 'metadata[ad_platform]':      adPlatform     } : {}),
+      ...(utmSource     ? { 'metadata[utm_source]':       utmSource      } : {}),
+      ...(utmMedium     ? { 'metadata[utm_medium]':       utmMedium      } : {}),
+      ...(utmCampaign   ? { 'metadata[utm_campaign]':     utmCampaign    } : {})
     });
 
     const piRes  = await fetch(`${STRIPE_BASE}/payment_intents`, { method: 'POST', headers, body: piBody });
