@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       'automatic_payment_methods[enabled]': 'true',
       'automatic_payment_methods[allow_redirects]': 'never',
       receipt_email:            email,
-      description:              'Build Your AI CEO Course',
+      description:              adPlatform ? `Build Your AI CEO Course — ${adPlatform}` : 'Build Your AI CEO Course',
       'metadata[product]':           'build-your-ai-ceo',
       'metadata[customer_name]':      name,
       'metadata[customer_email]':     email,
