@@ -88,7 +88,7 @@ async function verifyStripeSignature(rawBody, signature, secret) {
   return expected === v1;
 }
 
-async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit }) {
+async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit, isBundle = false }) {
   const hexKey = process.env.GHL_API_KEY || '';
   const GHL_API_KEY = /^[0-9a-f]+$/i.test(hexKey)
     ? Buffer.from(hexKey, 'hex').toString('utf8').trim()
@@ -109,6 +109,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
   const tags = ['cyrushq-customer', 'course-build-your-ai-ceo'];
   if (hasCronBump)   tags.push('course-cron-bump-purchased');
   if (hasStarterKit) tags.push('course-starter-kit-purchased');
+  if (isBundle)      tags.push('complete-bundle-97-purchased');
 
   // 1. Upsert contact in GHL
   const contactRes = await fetch(`${GHL_BASE}/contacts/`, {
@@ -136,7 +137,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       </a>
     </div>` : '';
 
-  const kitSection = hasStarterKit ? `
+  const kitSection = hasStarterKit && !isBundle ? `
     <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:20px; margin:20px 0; text-align:center;">
       <p style="color:#14532d; font-weight:700; margin:0 0 8px;">✅ AI CEO Starter Kit — 29 Files Enclosed</p>
       <p style="color:#166534; font-size:14px; margin:0 0 14px;">Your operating files are ready to download from your portal.</p>
@@ -144,6 +145,25 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
          style="background:#16a34a; color:#fff; padding:12px 24px; text-decoration:none; font-weight:700; font-size:14px; display:inline-block; letter-spacing:1px;">
         Download Starter Kit →
       </a>
+    </div>` : '';
+
+  const bundleSection = isBundle ? `
+    <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:24px; margin:20px 0;">
+      <p style="color:#14532d; font-weight:700; margin:0 0 12px; font-size:15px;">✅ Your Complete Bundle Downloads</p>
+      <p style="color:#166534; font-size:14px; margin:0 0 16px;">All 5 items are ready. Download everything in one ZIP or grab them individually:</p>
+      <div style="text-align:center; margin-bottom:16px;">
+        <a href="https://cyrushq.ai/downloads/ai-ceo-complete-bundle-cyrushq-2026-bX5nR7kP.zip"
+           style="background:#16a34a; color:#fff; padding:14px 28px; text-decoration:none; font-weight:700; font-size:14px; display:inline-block; letter-spacing:1px;">
+          Download Complete Bundle (All Files) →
+        </a>
+      </div>
+      <p style="color:#555; font-size:13px; margin:0 0 6px;">Or individually:</p>
+      <ul style="color:#555; font-size:13px; line-height:2; margin:0; padding-left:20px;">
+        <li><a href="https://cyrushq.ai/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf" style="color:#16a34a;">AI Agent Playbook (81-page PDF)</a></li>
+        <li><a href="https://cyrushq.ai/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf" style="color:#16a34a;">6-Figure AI Agency Blueprint (120-page PDF)</a></li>
+        <li><a href="https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip" style="color:#16a34a;">AI CEO Starter Kit (29 plug-and-play files)</a></li>
+        <li><a href="https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-tL9xM3vQ.zip" style="color:#16a34a;">AI Growth Engine Pack (4 bonus engine files)</a></li>
+      </ul>
     </div>` : '';
 
   const emailBody = `
@@ -170,6 +190,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
 
     ${cronSection}
     ${kitSection}
+    ${bundleSection}
 
     <p style="color:#555; font-size:14px; line-height:1.6; margin-top:20px;">
       <strong>What to do first:</strong><br>
@@ -251,19 +272,21 @@ export default async function handler(req, res) {
 
     const product        = meta.product || '';
     const hasCronBump    = product === 'cron-job-mastery';
-    const hasStarterKit  = product === 'ai-ceo-starter-kit';
+    const hasStarterKit  = product === 'ai-ceo-starter-kit' || product === 'complete-bundle';
+    const isBundle       = product === 'complete-bundle';
     const fbp            = meta.fbp            || null;
     const fbc            = meta.fbc            || null;
     const eventSourceUrl = meta.event_source_url || null;
 
-    // Fire GHL automation for all course-related products
-    if (['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery'].includes(product)) {
-      console.log(`Triggering GHL for ${email} — product:${product} cron:${hasCronBump} kit:${hasStarterKit}`);
-      await triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit });
+    // Fire GHL automation for all course-related products (including complete bundle)
+    const courseProducts = ['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery', 'complete-bundle'];
+    if (courseProducts.includes(product)) {
+      console.log(`Triggering GHL for ${email} — product:${product} cron:${hasCronBump} kit:${hasStarterKit} bundle:${isBundle}`);
+      await triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit, isBundle });
     }
 
     // Fire Meta CAPI Purchase event for all course products
-    if (['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery'].includes(product)) {
+    if (courseProducts.includes(product)) {
       console.log(`Sending Meta CAPI Purchase for ${email} — PI: ${pi.id}`);
       await sendMetaCAPIEvent({
         email,
