@@ -136,9 +136,43 @@
       text-align: center;
     }
 
-    /* Starter kit download — conditionally shown */
-    .starter-kit-row { display: none; }
-    .starter-kit-row.visible { display: block; }
+    /* Conditionally shown purchase rows */
+    .starter-kit-row, .cron-row, .course-section { display: none; }
+    .starter-kit-row.visible, .cron-row.visible, .course-section.visible { display: block; }
+
+    /* Course access card */
+    .course-access-card {
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.5);
+      padding: 24px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .course-access-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .course-access-sub {
+      color: #8BA3C4;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .course-access-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 32px;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .course-access-btn:hover { background: var(--gold-light); }
 
     /* ── NEXT STEPS ── */
     .steps-card {
@@ -272,13 +306,24 @@
         </span>
       </a>
 
-      <!-- Shown only if starter kit was purchased (upsell2 accepted) -->
+      <!-- Shown only if starter kit was purchased -->
       <div class="starter-kit-row" id="starterKitRow">
         <a class="download-btn" href="/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip" download style="background:#16a34a; color:#fff;">
           <span class="dl-icon">📦</span>
           <span class="dl-text">
             <span class="dl-name">AI CEO Starter Kit — 29 Files</span>
             <span class="dl-desc">Complete operating system — ZIP archive</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Shown only if cron module was purchased -->
+      <div class="cron-row" id="cronRow">
+        <a class="download-btn" href="https://cyrushq.ai/members" style="background:#2d3748; color:#C9A84C; border:1px solid #C9A84C;">
+          <span class="dl-icon">⚡</span>
+          <span class="dl-text">
+            <span class="dl-name">Cron Job Mastery Module</span>
+            <span class="dl-desc">Access inside your course portal → cyrushq.ai/members</span>
           </span>
         </a>
       </div>
@@ -290,29 +335,38 @@
     </div>
   </div>
 
+  <!-- COURSE ACCESS — shown only if video course was purchased -->
+  <div class="course-section" id="courseSection">
+    <div class="course-access-card">
+      <div class="course-access-title">🎬 Your Video Course Is Ready</div>
+      <div class="course-access-sub">Check your email — a welcome message with your course access link was sent immediately. Click below to go to your course portal now.</div>
+      <a href="https://cyrushq.ai/members" class="course-access-btn">Go to My Course Portal →</a>
+    </div>
+  </div>
+
   <!-- NEXT STEPS -->
   <div class="steps-card">
-    <div class="steps-title">👑 What's Next — Start Here</div>
+    <div class="steps-title" id="nextStepsTitle">👑 What's Next — Start Here</div>
     <div class="step-list">
       <div class="step-item">
         <div class="step-num">1</div>
         <div class="step-content">
-          <div class="step-title">Start with Book 1, Chapter 1</div>
-          <div class="step-desc">Open the 6-Figure AI Agency Blueprint and read Chapter 1. It gives you the full architecture before you build anything — takes about 20 minutes.</div>
+          <div class="step-title" id="step1Title">Start with Book 1, Chapter 1</div>
+          <div class="step-desc" id="step1Desc">Open the 6-Figure AI Agency Blueprint and read Chapter 1. It gives you the full architecture before you build anything — takes about 20 minutes.</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">2</div>
         <div class="step-content">
-          <div class="step-title">Follow the 7-Phase Roadmap</div>
-          <div class="step-desc">The Blueprint is structured as a 7-phase, 41-day build. Follow it in order. Every step is numbered, every file is named. No guessing.</div>
+          <div class="step-title" id="step2Title">Follow the 7-Phase Roadmap</div>
+          <div class="step-desc" id="step2Desc">The Blueprint is structured as a 7-phase, 41-day build. Follow it in order. Every step is numbered, every file is named. No guessing.</div>
         </div>
       </div>
       <div class="step-item">
         <div class="step-num">3</div>
         <div class="step-content">
-          <div class="step-title">Use the AI Agent Playbook as Your Reference</div>
-          <div class="step-desc">Whenever you're setting up prompts, roles, or memory — open Book 2. It's your operational manual for running AI as a business system.</div>
+          <div class="step-title" id="step3Title">Use the AI Agent Playbook as Your Reference</div>
+          <div class="step-desc" id="step3Desc">Whenever you're setting up prompts, roles, or memory — open Book 2. It's your operational manual for running AI as a business system.</div>
         </div>
       </div>
     </div>
@@ -329,14 +383,22 @@
 </footer>
 
 <script>
-  // Check URL params to see if starter kit upsell was taken
-  // We detect this by checking if the session_id corresponds to someone who also took upsell-2
-  // Since we don't have a server-side session state here, we use a query param hint
-  // The book-upsell-3 redirect passes session info; upsell-2 accept sets a flag
-  const urlParams = new URLSearchParams(window.location.search);
-  // Check for starterKit param — set when someone navigated through upsell-2 accept
-  if (urlParams.get('starterKit') === '1') {
-    document.getElementById('starterKitRow').classList.add('visible');
+  const params     = new URLSearchParams(window.location.search);
+  const hasCourse  = params.get('course') === '1';
+  const hasKit     = params.get('starterKit') === '1';
+  const hasCron    = params.get('cron') === '1';
+
+  if (hasKit)   document.getElementById('starterKitRow').classList.add('visible');
+  if (hasCron)  document.getElementById('cronRow').classList.add('visible');
+
+  if (hasCourse) {
+    document.getElementById('courseSection').classList.add('visible');
+    document.getElementById('step1Title').textContent = 'Access Your Video Course';
+    document.getElementById('step1Desc').textContent  = 'Click the button above to go to your course portal. Check your email — a welcome message with your access link was sent immediately after purchase.';
+    document.getElementById('step2Title').textContent = 'Start with Module 1';
+    document.getElementById('step2Desc').textContent  = 'Module 1 is under 20 minutes and gives you the full architecture before you build anything. Most students have a live AI CEO by the end of the weekend.';
+    document.getElementById('step3Title').textContent = 'Use the Books as Your Reference';
+    document.getElementById('step3Desc').textContent  = 'Your 2-book bundle is your reference library while you build. The Blueprint is your roadmap. The Playbook is your operational manual.';
   }
 </script>
 </body>

@@ -338,9 +338,12 @@
   const email      = params.get('email') || '';
   const source     = params.get('source') || sessionStorage.getItem('adSource') || 'organic';
   const starterKit = params.get('starterKit') || '0';
+  const course     = params.get('course') || '0';
 
-  function thankYouUrl() {
-    return `/book-thankyou?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}&starterKit=${encodeURIComponent(starterKit)}`;
+  function thankYouUrl(cron) {
+    let url = `/book-thankyou?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}&starterKit=${encodeURIComponent(starterKit)}&course=${encodeURIComponent(course)}`;
+    if (cron) url += '&cron=1';
+    return url;
   }
 
   async function handleAccept() {
@@ -376,7 +379,7 @@
       }
 
       document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your downloads...';
-      setTimeout(() => { window.location.href = thankYouUrl(); }, 1500);
+      setTimeout(() => { window.location.href = thankYouUrl(true); }, 1500);
 
     } catch (e) {
       err.textContent = "Something went wrong. Email hello@cyrushq.ai and we'll sort it out.";
@@ -387,7 +390,7 @@
   }
 
   function handleDecline() {
-    window.location.href = thankYouUrl();
+    window.location.href = thankYouUrl(false);
   }
 </script>
 </body>

@@ -287,9 +287,10 @@
   const sessionId = params.get('session_id') || '';
   const email     = params.get('email') || '';
   const source    = params.get('source') || sessionStorage.getItem('adSource') || 'organic';
+  const course    = params.get('course') || '0';
 
   function nextUrl(base, starterKit) {
-    let url = `${base}?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}`;
+    let url = `${base}?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}&course=${encodeURIComponent(course)}`;
     if (starterKit) url += '&starterKit=1';
     return url;
   }

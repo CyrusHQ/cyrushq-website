@@ -316,8 +316,10 @@
   const email     = params.get('email') || '';
   const source    = params.get('source') || sessionStorage.getItem('adSource') || 'organic';
 
-  function nextUrl(base) {
-    return `${base}?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}`;
+  function nextUrl(base, course) {
+    let url = `${base}?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}`;
+    if (course) url += '&course=1';
+    return url;
   }
 
   async function handleAccept() {
@@ -353,7 +355,7 @@
       }
 
       document.getElementById('loadingText').textContent = 'Course added! One more thing...';
-      setTimeout(() => { window.location.href = nextUrl('/book-upsell-2'); }, 1500);
+      setTimeout(() => { window.location.href = nextUrl('/book-upsell-2', true); }, 1500);
 
     } catch (e) {
       err.textContent = "Something went wrong. Email hello@cyrushq.ai and we'll sort it out.";
@@ -364,7 +366,7 @@
   }
 
   function handleDecline() {
-    window.location.href = nextUrl('/book-upsell-2');
+    window.location.href = nextUrl('/book-upsell-2', false);
   }
 </script>
 </body>
