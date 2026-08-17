@@ -35,7 +35,7 @@ async function sendMetaCAPIEvent({ email, name, customerId, fbp, fbc, eventSourc
       user_data: userData,
       custom_data: {
         currency: 'USD',
-        value: ((amountCents || 2700) / 100).toFixed(2),
+        value: ((amountCents || 4700) / 100).toFixed(2),
         content_name: 'Build Your AI CEO Course',
         content_category: 'Online Course',
         content_ids: ['build-your-ai-ceo'],

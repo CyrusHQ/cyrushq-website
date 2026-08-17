@@ -18,8 +18,8 @@ export default async function handler(req, res) {
     'Content-Type': 'application/x-www-form-urlencoded'
   };
 
-  // Price: $27 — upsells handled post-purchase
-  const amountCents = 2700;
+  // Price: $47 — upsells handled post-purchase
+  const amountCents = 4700;
 
   try {
     // 1. Find or create Stripe customer
