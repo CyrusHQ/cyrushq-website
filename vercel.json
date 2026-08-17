@@ -16,6 +16,16 @@
     { "source": "/api/upsell-course",     "destination": "/api/upsell-course.js" },
     { "source": "/api/upsell-cron",       "destination": "/api/upsell-cron.js" },
     { "source": "/api/course-webhook",    "destination": "/api/course-webhook.js" },
-    { "source": "/members",               "destination": "/members.html" }
+    { "source": "/members",               "destination": "/members.html" },
+    { "source": "/books",                  "destination": "/books.html" },
+    { "source": "/checkout-books",         "destination": "/checkout-books.html" },
+    { "source": "/book-upgrade",           "destination": "/book-upgrade.html" },
+    { "source": "/book-upsell-2",          "destination": "/book-upsell-2.html" },
+    { "source": "/book-upsell-3",          "destination": "/book-upsell-3.html" },
+    { "source": "/book-thankyou",          "destination": "/book-thankyou.html" },
+    { "source": "/api/checkout-books",     "destination": "/api/checkout-books.js" },
+    { "source": "/api/book-upsell-1",      "destination": "/api/book-upsell-1.js" },
+    { "source": "/api/book-upsell-2",      "destination": "/api/book-upsell-2.js" },
+    { "source": "/api/book-upsell-3",      "destination": "/api/book-upsell-3.js" }
   ]
 }

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agency Blueprint — 2-Book Bundle | CyrusHQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0A1628;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --muted: #6b7280;
+      --text: #1a1a2e;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── STICKY NAV ── */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      border-bottom: 2px solid var(--gold);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 17px;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 10px 20px;
+      text-decoration: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: background 0.15s;
+      border-radius: 2px;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
+
+    /* ── HERO ── */
+    .hero-section {
+      background: var(--navy);
+      text-align: center;
+    }
+    .hero-img {
+      width: 100%;
+      display: block;
+    }
+    .hero-img-desktop { display: block; }
+    .hero-img-mobile  { display: none; }
+    @media (max-width: 640px) {
+      .hero-img-desktop { display: none; }
+      .hero-img-mobile  { display: block; }
+    }
+
+    /* ── HERO CTA ── */
+    .hero-cta-section {
+      background: var(--navy);
+      text-align: center;
+      padding: 28px 20px 36px;
+    }
+    .hero-cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 20px 48px;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background 0.15s;
+      margin-bottom: 16px;
+    }
+    .hero-cta-btn:hover { background: var(--gold-light); }
+    .trust-line {
+      color: #8BA3C4;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .trust-line span { color: var(--gold-light); font-weight: 600; }
+
+    /* ── BENEFITS STRIP ── */
+    .benefits-strip {
+      background: var(--cream);
+      padding: 32px 20px;
+      border-top: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .benefits-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      flex-wrap: nowrap;
+    }
+    .benefit-item {
+      flex: 1;
+      text-align: center;
+      padding: 12px 10px;
+    }
+    .benefit-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+    .benefit-text { font-size: 13px; font-weight: 600; color: var(--navy); line-height: 1.4; }
+    @media (max-width: 600px) {
+      .benefits-grid { flex-wrap: wrap; gap: 8px; }
+      .benefit-item { flex: 0 0 48%; }
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .section-tag {
+      display: inline-block;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 5px 14px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 6vw, 40px);
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: clamp(15px, 4vw, 17px);
+      line-height: 1.6;
+    }
+
+    /* ── FEATURE CARDS ── */
+    .features-section {
+      background: var(--navy);
+      padding: 0 20px 60px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-top: 3px solid var(--gold);
+      padding: 28px 24px;
+    }
+    .feature-card-icon {
+      font-size: 32px;
+      margin-bottom: 14px;
+      display: block;
+    }
+    .feature-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .feature-card-body {
+      font-size: 14px;
+      color: #8BA3C4;
+      line-height: 1.7;
+    }
+
+    /* ── FEATURES SECTION HEADER (inside navy) ── */
+    .features-section-header {
+      background: var(--navy);
+      text-align: center;
+      padding: 60px 20px 32px;
+    }
+    .features-section-header .section-tag { color: var(--gold); }
+    .features-section-header .section-title { color: var(--white); }
+    .features-section-header .section-sub  { color: #8BA3C4; }
+
+    /* ── FAQ SECTION ── */
+    .faq-section {
+      background: var(--navy);
+      padding: 20px 20px 60px;
+    }
+    .faq-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .faq-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 5vw, 34px);
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .faq-item {
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      cursor: pointer;
+      gap: 16px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .faq-q-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.4;
+    }
+    .faq-chevron {
+      color: var(--gold);
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+      line-height: 1;
+    }
+    .faq-item.open .faq-chevron { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.25s ease;
+    }
+    .faq-item.open .faq-answer { max-height: 500px; }
+    .faq-answer-inner {
+      padding-bottom: 20px;
+      font-size: 14px;
+      color: #8BA3C4;
+      line-height: 1.75;
+    }
+
+    /* ── FINAL CTA ── */
+    .final-cta-section {
+      background: var(--navy);
+      border-top: 2px solid var(--gold);
+      padding: 64px 20px;
+      text-align: center;
+    }
+    .final-cta-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 6vw, 40px);
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .final-cta-sub {
+      color: #8BA3C4;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .final-cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 20px 52px;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background 0.15s;
+      margin-bottom: 16px;
+    }
+    .final-cta-btn:hover { background: var(--gold-light); }
+    .final-cta-trust {
+      color: #4a5568;
+      font-size: 13px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #060f1a;
+      padding: 20px;
+      text-align: center;
+      color: #4a5568;
+      font-size: 12px;
+      border-top: 1px solid #1a2a40;
+    }
+  </style>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '898060140812365');
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent', {
+    content_name: 'AI Agency Blueprint — 2-Book Bundle',
+    content_category: 'Books',
+    currency: 'USD',
+    value: 17.00,
+    content_type: 'product'
+  });
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"/></noscript>
+
+  <!-- TikTok Pixel -->
+  <script>
+  !function (w, d, t) {
+    w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+    ttq.load('D9MJRQ3C77U9D4RN72PG');
+    ttq.page();
+    ttq.track('ViewContent', {
+      content_id: 'ai-agency-blueprint-book-bundle',
+      content_name: 'AI Agency Blueprint — 2-Book Bundle',
+      content_type: 'product',
+      currency: 'USD',
+      value: 17
+    });
+  }(window, document, 'ttq');
+  </script>
+
+  <!-- Taboola Pixel -->
+  <script type='text/javascript'>
+   window._tfa = window._tfa || [];
+   window._tfa.push({notify: 'event', name: 'page_view', id: 2084944});
+   !function (t, f, a, x) {
+   if (!document.getElementById(x)) {
+   t.async = 1;t.src = a;t.id=x;f.parentNode.insertBefore(t, f);
+   }
+   }(document.createElement('script'),
+   document.getElementsByTagName('script')[0],
+   '//cdn.taboola.com/libtrc/unip/2084944/tfa.js',
+   'tb_tfa_script');
+  </script>
+</head>
+<body>
+
+<!-- ── STICKY NAV ── -->
+<nav class="sticky-nav">
+  <div class="nav-logo">AI Agency Blueprint</div>
+  <a class="nav-cta" href="#" id="navCtaBtn">Get Instant Access — $17</a>
+</nav>
+
+<!-- ── HERO IMAGE ── -->
+<section class="hero-section">
+  <img class="hero-img hero-img-desktop" src="assets/book-hero-desktop.png" alt="AI Agency Blueprint — 6-Figure Blueprint + AI Agent Playbook" loading="eager">
+  <img class="hero-img hero-img-mobile" src="assets/book-hero-mobile.png" alt="AI Agency Blueprint — 6-Figure Blueprint + AI Agent Playbook" loading="eager">
+</section>
+
+<!-- ── HERO CTA ── -->
+<section class="hero-cta-section">
+  <a class="hero-cta-btn" href="#" id="heroCtaBtn">Get Instant Access — $17</a>
+  <div class="trust-line">
+    <span>✅ 100% Satisfaction Guaranteed</span><br>
+    Bundle: $17 total &nbsp;•&nbsp; Instant PDF Download
+  </div>
+</section>
+
+<!-- ── BENEFIT ICONS ── -->
+<section class="benefits-strip">
+  <div class="benefits-grid">
+    <div class="benefit-item">
+      <span class="benefit-icon">📋</span>
+      <div class="benefit-text">Step-by-step guides</div>
+    </div>
+    <div class="benefit-item">
+      <span class="benefit-icon">🚫</span>
+      <div class="benefit-text">No coding required</div>
+    </div>
+    <div class="benefit-item">
+      <span class="benefit-icon">🌍</span>
+      <div class="benefit-text">Real-world examples</div>
+    </div>
+    <div class="benefit-item">
+      <span class="benefit-icon">⚡</span>
+      <div class="benefit-text">Immediate access</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT YOU'LL LEARN HEADER ── -->
+<div class="features-section-header">
+  <div class="section-tag">Inside the Bundle</div>
+  <h2 class="section-title" style="color:var(--white);">What You'll Learn</h2>
+  <p class="section-sub" style="color:#8BA3C4; max-width:600px; margin:0 auto;">Everything you need to automate and scale your business using an AI agent.</p>
+</div>
+
+<!-- ── FEATURE CARDS ── -->
+<section class="features-section">
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <span class="feature-card-icon">⚡</span>
+      <div class="feature-card-title">The AI CEO Architecture</div>
+      <p class="feature-card-body">Most people use AI like a calculator. This book teaches you to use it like a CEO. You'll learn the exact four-layer system — Role, Memory, Tools, and Judgment — that transforms a generic AI model into a fully autonomous operator that knows who it is, remembers everything, takes real action, and knows when to ask vs. when to execute. This is the architecture behind a live, operating AI CEO. Not theory. Not prompts. A system.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-card-icon">📈</span>
+      <div class="feature-card-title">29 Files. Copy. Paste. Deploy.</div>
+      <p class="feature-card-body">You don't need to know how to code. Every file is written for you. Inside these books you'll find 29 plug-and-play Markdown files — the exact operating system powering a real AI CEO — ready to copy and paste directly into your setup. SOUL.md. MEMORY.md. VENTURE_ENGINE.md. HEARTBEAT.md. Every file explained, every field customizable, zero guesswork. You're not building from scratch — you're deploying a proven system.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-card-icon">📖</span>
+      <div class="feature-card-title">Zero to Operational: The 7-Phase Build</div>
+      <p class="feature-card-body">This is not a book about what's possible. It's a step-by-step field manual for people who are ready to build. The AI Agency Blueprint walks you through 7 phases and 60+ steps — from installing your first tool to running a live AI CEO on Discord, connected to real systems, executing real decisions. Every command is real. Every file name is real. Every step is in order. If Christy built this starting from "what is a Markdown file?" — so can you.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq-section">
+  <div class="faq-inner">
+    <h2 class="faq-section-title">Frequently Asked Questions</h2>
+
+    <div class="faq-item open">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">What exactly do I get for $17?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">You get two complete PDF guides — the 6-Figure AI Agency Blueprint (120 pages) and the AI Agent Playbook (81 pages). That's over 200 pages of step-by-step strategy, copy-paste templates, real prompts, and implementation frameworks. Instant digital download, available immediately after purchase.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Do I need to know how to code or have a tech background?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">No. Neither book requires coding knowledge. The Blueprint is built around tools like CRM, ChatGPT, and Zapier — no custom development needed. The Playbook gives you copy-paste prompts and templates you can use immediately regardless of your tech level.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">How do I receive the books after I purchase?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">You'll be taken directly to a download page immediately after checkout. Your PDFs are available right away — no waiting, no shipping.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Will this work for me if I'm just getting started?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Yes. The AI Agent Playbook is designed to show you how to set up AI as a business operator from scratch, even if you've never built a business before. The Blueprint walks you through a 7-phase, 41-day roadmap — so you always know exactly what to do next.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">I already use some AI tools. Is this still useful?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Absolutely. Most people using AI in their business are using 10% of what's possible. These books focus specifically on operational systems — how to make AI run your business, not just answer questions. If you're not using AI for sales, client delivery, and content simultaneously, there's a lot here for you.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Is this just theory or is it actually actionable?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">It's operational, not academic. The Blueprint includes sales scripts, pricing models, an automation stack, and a 41-day checklist. The Playbook includes role design, memory systems, tool integrations, and the exact prompts used to run real ventures. These are working documents, not a motivational read.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">What if it's not for me? Is there a refund policy?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Yes. 30-day full refund, no questions asked. Email hello@recaptureleads.com and we'll process it immediately. You keep the books either way.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span class="faq-q-text">Will the PDFs work on my phone, tablet, Mac, or PC?</span>
+        <span class="faq-chevron">+</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Yes — they're standard PDF files and work on any device. You can read them in your browser, on Kindle, in Apple Books, Google Drive, or any PDF reader.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta-section">
+  <h2 class="final-cta-headline">Ready to Build an AI CEO That Works While You Sleep?</h2>
+  <p class="final-cta-sub">Download the 2-book bundle instantly and start building your autonomous AI CEO today.</p>
+  <a class="final-cta-btn" href="#" id="finalCtaBtn">Get Instant Access — $17</a>
+  <div class="final-cta-trust">Bundle: $17 total &nbsp;•&nbsp; Secure checkout via Stripe</div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  © 2026 Cyrus Systems. All rights reserved.
+</footer>
+
+<script>
+  // ── AD SOURCE TRACKING ──
+  (function() {
+    const source = new URLSearchParams(window.location.search).get('source') || 'organic';
+    sessionStorage.setItem('adSource', source);
+
+    // Wire up all CTA buttons to pass source param
+    function makeCheckoutUrl() {
+      const s = sessionStorage.getItem('adSource') || 'organic';
+      return '/checkout-books?source=' + encodeURIComponent(s);
+    }
+
+    function wireCta(el) {
+      if (!el) return;
+      el.href = makeCheckoutUrl();
+    }
+
+    wireCta(document.getElementById('navCtaBtn'));
+    wireCta(document.getElementById('heroCtaBtn'));
+    wireCta(document.getElementById('finalCtaBtn'));
+  })();
+
+  // ── FAQ ACCORDION ──
+  function toggleFaq(questionEl) {
+    const item = questionEl.parentElement;
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    // Open this one if it wasn't already open
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+
+</body>
+</html>

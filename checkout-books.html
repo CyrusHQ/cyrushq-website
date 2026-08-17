@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Checkout — AI Agency Blueprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0A1628;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --red: #dc2626;
+      --green: #16a34a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--navy);
+      padding: 14px 20px;
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+    }
+    .header-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 18px;
+      letter-spacing: 3px;
+    }
+    .header-logo span { color: var(--white); }
+    .header-secure {
+      color: #8BA3C4;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    /* ── LAYOUT ── */
+    .checkout-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 720px) {
+      .checkout-wrap { grid-template-columns: 1fr; padding: 16px 16px 40px; }
+      .order-summary { order: -1; }
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px;
+    }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--navy);
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--white);
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus { border-color: var(--gold); }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Stripe Element */
+    .stripe-element-wrap {
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      padding: 13px 14px;
+      background: var(--white);
+      transition: border-color 0.15s;
+    }
+    .stripe-element-wrap.focused { border-color: var(--gold); }
+
+    /* ── SUBMIT ── */
+    .submit-btn {
+      display: block;
+      width: 100%;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-align: center;
+      padding: 19px 24px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: background 0.15s, opacity 0.15s;
+      border-radius: 2px;
+    }
+    .submit-btn:active { background: var(--gold-light); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .secure-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ── ERROR ── */
+    .error-msg {
+      display: none;
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 3px;
+    }
+    .error-msg.visible { display: block; }
+
+    /* ── ORDER SUMMARY ── */
+    .summary-items { margin-bottom: 16px; }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .summary-item:last-child { border-bottom: none; }
+    .summary-item-name { font-size: 14px; color: var(--text); line-height: 1.4; flex: 1; }
+    .summary-item-name small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .summary-item-price { font-weight: 700; color: var(--navy); font-size: 14px; white-space: nowrap; }
+
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 2px solid var(--navy);
+      margin-top: 4px;
+    }
+    .summary-total-label { font-weight: 700; color: var(--navy); font-size: 15px; }
+    .summary-total-price { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--gold); font-weight: 700; }
+
+    .guarantee-badge {
+      margin-top: 16px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 3px;
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .guarantee-badge .icon { font-size: 24px; flex-shrink: 0; }
+    .guarantee-badge .text { font-size: 12px; color: #166534; line-height: 1.5; }
+    .guarantee-badge .text strong { display: block; margin-bottom: 2px; }
+
+    .payment-icons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .pay-icon {
+      background: #f3f4f6;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* ── LOADING OVERLAY ── */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,22,40,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .loading-overlay.active { display: flex; }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { color: var(--white); font-size: 15px; font-weight: 600; }
+  </style>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '898060140812365');
+  fbq('track', 'PageView');
+  fbq('track', 'InitiateCheckout', {
+    content_name: 'AI Agency Blueprint — 2-Book Bundle',
+    content_category: 'Books',
+    currency: 'USD',
+    value: 17.00,
+    num_items: 2
+  });
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"/></noscript>
+
+  <!-- TikTok Pixel -->
+  <script>
+  !function (w, d, t) {
+    w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+    ttq.load('D9MJRQ3C77U9D4RN72PG');
+    ttq.page();
+    ttq.track('InitiateCheckout', {
+      content_id: 'ai-agency-blueprint-book-bundle',
+      content_name: 'AI Agency Blueprint — 2-Book Bundle',
+      content_type: 'product',
+      currency: 'USD',
+      value: 17
+    });
+  }(window, document, 'ttq');
+  </script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">CYRUSHQ.AI | <span>AI Agency Blueprint</span></div>
+  <div class="header-secure">🔒 Secure Checkout — 256-bit SSL Encryption</div>
+</header>
+
+<div class="checkout-wrap">
+  <!-- LEFT: FORM -->
+  <div class="checkout-form">
+    <div class="card">
+      <div class="card-title">Your Information</div>
+      <div class="form-group">
+        <label class="form-label" for="fullName">Full Name</label>
+        <input class="form-input" type="text" id="fullName" placeholder="Jane Smith" autocomplete="name" inputmode="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input class="form-input" type="email" id="email" placeholder="jane@example.com" autocomplete="email" inputmode="email">
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">Payment Details</div>
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <div class="stripe-element-wrap" id="cardNumberWrap">
+          <div id="cardNumber"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <div class="stripe-element-wrap" id="cardExpiryWrap">
+            <div id="cardExpiry"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Security Code</label>
+          <div class="stripe-element-wrap" id="cardCvcWrap">
+            <div id="cardCvc"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+        Complete My Order — $17 →
+      </button>
+      <div class="secure-row">
+        🔒 Payments secured by Stripe · Your card is never stored
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: ORDER SUMMARY -->
+  <div class="order-summary">
+    <div class="card">
+      <div class="card-title">Order Summary</div>
+      <div class="summary-items">
+        <div class="summary-item">
+          <div class="summary-item-name">
+            AI Agency Blueprint — 2-Book Bundle
+          </div>
+          <div class="summary-item-price">$17.00</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-name">
+            6-Figure AI Agency Blueprint (PDF)
+            <small>120-page complete field manual</small>
+          </div>
+          <div class="summary-item-price">—</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-name">
+            AI Agent Playbook (PDF)
+            <small>81-page operational guide</small>
+          </div>
+          <div class="summary-item-price">—</div>
+        </div>
+      </div>
+      <div class="summary-total-row">
+        <div class="summary-total-label">Total Today</div>
+        <div class="summary-total-price">$17.00</div>
+      </div>
+    </div>
+
+    <div class="guarantee-badge">
+      <div class="icon">🛡️</div>
+      <div class="text">
+        <strong>30-Day Money-Back Guarantee</strong>
+        Not satisfied? Email us within 30 days for a full refund. No forms, no questions.
+      </div>
+    </div>
+
+    <div class="payment-icons">
+      <span class="pay-icon">VISA</span>
+      <span class="pay-icon">MC</span>
+      <span class="pay-icon">AMEX</span>
+      <span class="pay-icon">Apple Pay</span>
+      <span class="pay-icon">Google Pay</span>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Processing your order...</div>
+</div>
+
+<script>
+// Read adSource from sessionStorage (set on books.html)
+const adSource = sessionStorage.getItem('adSource') || new URLSearchParams(window.location.search).get('source') || 'organic';
+sessionStorage.setItem('adSource', adSource);
+
+const PUBLISHABLE_KEY = 'pk_live_51THvcRDl0ECsHFXrVol78CShFLEfSIOWydlEiYVBt4Ft93mxrLMsi2rZbv3iyD7GssSGhGYswFdevj4HdxeDO5qs00IkMzXLzo';
+const stripe = Stripe(PUBLISHABLE_KEY);
+const elements = stripe.elements();
+
+const style = {
+  base: {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: '15px',
+    color: '#1a1a2e',
+    '::placeholder': { color: '#9ca3af' }
+  },
+  invalid: { color: '#dc2626' }
+};
+
+const cardNumber = elements.create('cardNumber', { style });
+const cardExpiry = elements.create('cardExpiry', { style });
+const cardCvc   = elements.create('cardCvc',    { style });
+
+cardNumber.mount('#cardNumber');
+cardExpiry.mount('#cardExpiry');
+cardCvc.mount('#cardCvc');
+
+[
+  [cardNumber, 'cardNumberWrap'],
+  [cardExpiry, 'cardExpiryWrap'],
+  [cardCvc,    'cardCvcWrap']
+].forEach(([el, id]) => {
+  el.on('focus', () => document.getElementById(id).classList.add('focused'));
+  el.on('blur',  () => document.getElementById(id).classList.remove('focused'));
+});
+
+async function handleSubmit() {
+  const btn     = document.getElementById('submitBtn');
+  const err     = document.getElementById('errorMsg');
+  const overlay = document.getElementById('loadingOverlay');
+
+  const name  = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+
+  err.classList.remove('visible');
+
+  if (!name)  { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+
+  btn.disabled = true;
+  overlay.classList.add('active');
+
+  try {
+    const { paymentMethod, error: pmError } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardNumber,
+      billing_details: { name, email }
+    });
+
+    if (pmError) {
+      showError(pmError.message);
+      btn.disabled = false;
+      overlay.classList.remove('active');
+      return;
+    }
+
+    function getCookie(n) {
+      const m = document.cookie.match(new RegExp('(^| )' + n + '=([^;]+)'));
+      return m ? decodeURIComponent(m[2]) : null;
+    }
+    const fbp = getCookie('_fbp') || null;
+    let fbc = getCookie('_fbc') || null;
+    if (!fbc) {
+      const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+      if (fbclid) fbc = `fb.1.${Date.now()}.${fbclid}`;
+    }
+
+    const res = await fetch('/api/checkout-books', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        paymentMethodId: paymentMethod.id,
+        email,
+        name,
+        source: adSource,
+        fbp,
+        fbc,
+        eventSourceUrl: window.location.href
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      showError(data.error);
+      btn.disabled = false;
+      overlay.classList.remove('active');
+      return;
+    }
+
+    if (data.requiresAction) {
+      const { error: actionError } = await stripe.confirmCardPayment(data.clientSecret);
+      if (actionError) {
+        showError(actionError.message);
+        btn.disabled = false;
+        overlay.classList.remove('active');
+        return;
+      }
+    }
+
+    window.location.href = data.redirectUrl || '/book-upgrade';
+
+  } catch (e) {
+    showError('Something went wrong. Please try again or contact hello@cyrushq.ai');
+    btn.disabled = false;
+    overlay.classList.remove('active');
+  }
+}
+
+function showError(msg) {
+  const err = document.getElementById('errorMsg');
+  err.textContent = msg;
+  err.classList.add('visible');
+  document.getElementById('loadingOverlay').classList.remove('active');
+  err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+</script>
+</body>
+</html>
