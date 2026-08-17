@@ -90,48 +90,82 @@
     .email-note-body  { font-size: 13px; color: #8BA3C4; line-height: 1.6; }
 
     /* ── DOWNLOAD CARD ── */
-    .download-card {
+    /* ── DOWNLOAD SECTION — download.html card style ── */
+    .download-header-img {
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto 24px;
+      display: block;
+    }
+    .download-header-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 4px;
+    }
+    .books-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 520px) {
+      .books-grid { grid-template-columns: 1fr; }
+    }
+    .book-card {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(201,168,76,0.25);
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-    .download-card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      color: var(--gold);
-      margin-bottom: 18px;
-    }
-    .download-list {
+      border-radius: 16px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-    .download-btn {
-      display: flex;
       align-items: center;
       gap: 12px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .book-card:hover { border-color: rgba(201,168,76,0.55); }
+    .book-card.full-width { grid-column: 1 / -1; }
+    .book-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.4;
+    }
+    .book-card-desc {
+      font-size: 12px;
+      color: #8BA3C4;
+      line-height: 1.55;
+    }
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       background: var(--gold);
       color: var(--navy);
       font-family: 'Inter', sans-serif;
-      font-size: 15px;
       font-weight: 700;
-      padding: 16px 20px;
+      font-size: 14px;
+      height: 48px;
+      padding: 0 20px;
+      border-radius: 10px;
       text-decoration: none;
-      border-radius: 2px;
-      transition: background 0.15s;
+      width: 100%;
+      margin-top: auto;
+      transition: background 0.15s, transform 0.1s;
       -webkit-tap-highlight-color: transparent;
     }
-    .download-btn:hover { background: var(--gold-light); }
-    .download-btn .dl-icon { font-size: 20px; flex-shrink: 0; }
-    .download-btn .dl-text { flex: 1; }
-    .download-btn .dl-name { display: block; font-size: 14px; font-weight: 700; }
-    .download-btn .dl-desc { display: block; font-size: 11px; font-weight: 400; opacity: 0.7; margin-top: 2px; }
-
+    .dl-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .dl-btn.green { background: #16a34a; color: #fff; }
+    .dl-btn.green:hover { background: #15803d; }
+    .dl-btn.dark { background: rgba(255,255,255,0.08); color: var(--gold); border: 1px solid rgba(201,168,76,0.4); }
+    .dl-btn.dark:hover { background: rgba(255,255,255,0.12); }
     .download-note {
       font-size: 12px;
       color: #4a5568;
-      margin-top: 14px;
+      margin-top: 4px;
       line-height: 1.6;
       text-align: center;
     }
@@ -285,54 +319,56 @@
     <div class="email-note-body">A confirmation receipt was sent from The CyrusHQ Team. Bookmark this page — your download links are here and in your email.</div>
   </div>
 
-  <!-- DOWNLOADS -->
-  <div class="download-card">
-    <div class="download-card-title">📥 Your Downloads</div>
-    <div class="download-list">
+  <!-- DOWNLOADS — download.html card style -->
+  <div class="download-header-img">
+    <img src="/assets/download-header.png" alt="Your Downloads Are Ready — CyrusHQ">
+  </div>
 
-      <a class="download-btn" href="/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf" download>
-        <span class="dl-icon">📄</span>
-        <span class="dl-text">
-          <span class="dl-name">6-Figure AI Agency Blueprint</span>
-          <span class="dl-desc">120-page complete field manual — PDF</span>
-        </span>
+  <div class="books-grid" id="downloadsGrid">
+
+    <div class="book-card">
+      <div class="book-card-title">6-Figure AI Agency Blueprint</div>
+      <div class="book-card-desc">How to Build a Fully Autonomous AI CEO From Scratch — 120-page field manual</div>
+      <a class="dl-btn" href="/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf" download>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF
       </a>
+    </div>
 
-      <a class="download-btn" href="/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf" download>
-        <span class="dl-icon">📄</span>
-        <span class="dl-text">
-          <span class="dl-name">AI Agent Playbook</span>
-          <span class="dl-desc">81-page operational guide — PDF</span>
-        </span>
+    <div class="book-card">
+      <div class="book-card-title">AI Agent Playbook</div>
+      <div class="book-card-desc">The Complete Guide to Turning AI Into a Business Operator — 81-page guide</div>
+      <a class="dl-btn" href="/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf" download>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF
       </a>
-
-      <!-- Shown only if starter kit was purchased -->
-      <div class="starter-kit-row" id="starterKitRow">
-        <a class="download-btn" href="/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip" download style="background:#16a34a; color:#fff;">
-          <span class="dl-icon">📦</span>
-          <span class="dl-text">
-            <span class="dl-name">AI CEO Starter Kit — 29 Files</span>
-            <span class="dl-desc">Complete operating system — ZIP archive</span>
-          </span>
-        </a>
-      </div>
-
-      <!-- Shown only if cron module was purchased -->
-      <div class="cron-row" id="cronRow">
-        <a class="download-btn" href="https://cyrushq.ai/members" style="background:#2d3748; color:#C9A84C; border:1px solid #C9A84C;">
-          <span class="dl-icon">⚡</span>
-          <span class="dl-text">
-            <span class="dl-name">Cron Job Mastery Module</span>
-            <span class="dl-desc">Access inside your course portal → cyrushq.ai/members</span>
-          </span>
-        </a>
-      </div>
-
     </div>
-    <div class="download-note">
-      These links are available on this page and in your confirmation email. Bookmark this page for future access.<br>
-      Files open in any PDF reader — iPhone, Android, Mac, PC, Kindle, Google Drive.
+
+    <!-- Shown only if starter kit was purchased -->
+    <div class="book-card starter-kit-row" id="starterKitRow">
+      <div class="book-card-title">AI CEO Starter Kit — 29 Files</div>
+      <div class="book-card-desc">Complete plug-and-play operating system — ZIP archive with Setup Guide</div>
+      <a class="dl-btn green" href="/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip" download>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download ZIP
+      </a>
     </div>
+
+    <!-- Shown only if cron module was purchased -->
+    <div class="book-card cron-row" id="cronRow">
+      <div class="book-card-title">Cron Job Mastery Module</div>
+      <div class="book-card-desc">3-video bonus series — access inside your course portal</div>
+      <a class="dl-btn dark" href="https://cyrushq.ai/members">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Access Course Portal
+      </a>
+    </div>
+
+  </div>
+
+  <div class="download-note">
+    Bookmark this page — your download links are here and in your confirmation email.<br>
+    PDFs open on any device: iPhone, Android, Mac, PC, Kindle, Google Drive.
   </div>
 
   <!-- COURSE ACCESS — shown only if video course was purchased -->
