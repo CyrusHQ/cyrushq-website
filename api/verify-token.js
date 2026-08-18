@@ -2,8 +2,6 @@
 // Validates HMAC magic link token and returns purchased products
 
 import { createHmac, timingSafeEqual } from 'crypto';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 
 const COURSE_PRODUCT_IDS = ['build-your-ai-ceo', 'cron-job-mastery'];
 
@@ -13,23 +11,9 @@ function generateToken(secret, email) {
     .digest('hex');
 }
 
-async function loadOverrides() {
-  // Try multiple path strategies for Vercel serverless compatibility
-  const attempts = [
-    join(process.cwd(), 'api', 'portal-overrides.json'),
-    join(process.cwd(), 'portal-overrides.json'),
-    '/var/task/api/portal-overrides.json',
-    new URL('./portal-overrides.json', import.meta.url).pathname
-  ];
-  for (const filePath of attempts) {
-    try {
-      const raw = await readFile(filePath, 'utf8');
-      return JSON.parse(raw);
-    } catch {
-      // try next
-    }
-  }
-  // Fallback: hardcoded overrides for all confirmed buyers
+function loadOverrides() {
+  // Hardcoded confirmed buyers — updated from Stripe on 2026-08-17
+  // New buyers are handled via live Stripe lookup; this covers early/legacy buyers
   return {
     'beth.shaffer66@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
     'wmp@journeydigital.net': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
@@ -140,14 +124,11 @@ export default async function handler(req, res) {
     return res.status(200).json({ valid: false, error: 'Invalid access link' });
   }
 
-  // Token is valid — load products
-  const [stripeProducts, overrides] = await Promise.all([
-    getStripeProducts(email),
-    loadOverrides()
-  ]);
-
+  // Token is valid — load products (overrides first, then Stripe live lookup)
+  const overrides = loadOverrides();
   const overrideProducts = overrides[email] || overrides[email.toLowerCase()] || [];
-  const allProducts = [...new Set([...stripeProducts, ...overrideProducts])];
+  const stripeProducts = await getStripeProducts(email);
+  const allProducts = [...new Set([...overrideProducts, ...stripeProducts])];
 
   return res.status(200).json({
     valid: true,
