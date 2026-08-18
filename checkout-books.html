@@ -225,6 +225,39 @@
       color: var(--muted);
     }
 
+    /* ── TIMER BAR ── */
+    .timer-bar {
+      background: var(--navy);
+      border-bottom: 2px solid var(--gold);
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.3px;
+      position: sticky;
+      top: 0;
+      z-index: 500;
+    }
+    .timer-bar .timer-count {
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+    .timer-bar.timer-urgent {
+      background: #7f1d1d;
+      border-bottom-color: #ef4444;
+    }
+    .timer-bar.timer-urgent .timer-count {
+      color: #fca5a5;
+      animation: pulse 1s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
     /* ── LOADING OVERLAY ── */
     .loading-overlay {
       display: none;
@@ -308,6 +341,11 @@
 </head>
 <body>
 
+<!-- TIMER BAR -->
+<div class="timer-bar" id="timerBar">
+  🔒 Your $17 rate is reserved for <span class="timer-count" id="timerDisplay">20:00</span>
+</div>
+
 <header class="header">
   <div class="header-logo">CYRUSHQ.AI | <span>AI Agency Blueprint</span></div>
   <div class="header-secure">🔒 Secure Checkout — 256-bit SSL Encryption</div>
@@ -390,7 +428,10 @@
       </div>
       <div class="summary-total-row">
         <div class="summary-total-label">Total Today</div>
-        <div class="summary-total-price">$17.00</div>
+        <div class="summary-total-price">
+          <span style="display:block;text-decoration:line-through;color:#9ca3af;font-size:13px;font-weight:500;font-family:'Inter',sans-serif;margin-bottom:2px;">$54.00</span>
+          $17.00
+        </div>
       </div>
     </div>
 
@@ -536,6 +577,46 @@ async function handleSubmit() {
     overlay.classList.remove('active');
   }
 }
+
+// ── 20-MINUTE SESSION TIMER ────────────────────────────────────────────────
+(function () {
+  const DURATION_MS = 20 * 60 * 1000;
+  const KEY = 'cyrus_books_timer_v1';
+
+  if (!sessionStorage.getItem(KEY)) {
+    sessionStorage.setItem(KEY, Date.now().toString());
+  }
+
+  const startTime = parseInt(sessionStorage.getItem(KEY), 10);
+  const display   = document.getElementById('timerDisplay');
+  const bar       = document.getElementById('timerBar');
+
+  function tick() {
+    const remaining = DURATION_MS - (Date.now() - startTime);
+
+    if (remaining <= 0) {
+      bar.classList.add('timer-urgent');
+      bar.innerHTML = '⏰ Your reserved price has expired — redirecting...';
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2500);
+      return;
+    }
+
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+    display.textContent = mins + ':' + secs.toString().padStart(2, '0');
+
+    if (remaining < 2 * 60 * 1000) {
+      bar.classList.add('timer-urgent');
+    }
+
+    setTimeout(tick, 1000);
+  }
+
+  tick();
+})();
+// ────────────────────────────────────────────────────────────────────────────
 
 function showError(msg) {
   const err = document.getElementById('errorMsg');
