@@ -343,6 +343,15 @@
     return params.get('session_id') || '';
   }
 
+  function thankYouUrl(boughtCron) {
+    const params = new URLSearchParams(window.location.search);
+    const hasKit = params.get('upsell47') === '1';
+    let url = '/course-thankyou?';
+    if (boughtCron) url += 'cron=1&';
+    if (hasKit) url += 'kit=1&';
+    return url.replace(/[&?]$/, '');
+  }
+
   async function handleAccept() {
     const btn = document.getElementById('acceptBtn');
     const overlay = document.getElementById('loadingOverlay');
@@ -355,7 +364,7 @@
     const sessionId = getSessionId();
     if (sessionId === 'test_bypass') {
       document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your course...';
-      setTimeout(() => { window.location.href = '/course-thankyou?upsell=cron'; }, 1500);
+      setTimeout(() => { window.location.href = thankYouUrl(true); }, 1500);
       return;
     }
 
@@ -386,7 +395,7 @@
       }
 
       document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your course...';
-      setTimeout(() => { window.location.href = '/course-thankyou?upsell=cron'; }, 1500);
+      setTimeout(() => { window.location.href = thankYouUrl(true); }, 1500);
 
     } catch (e) {
       err.textContent = "Something went wrong. Email hello@cyrushq.ai and we'll sort it out.";
@@ -397,7 +406,7 @@
   }
 
   function handleDecline() {
-    window.location.href = '/course-thankyou';
+    window.location.href = thankYouUrl(false);
   }
 </script>
 </body>

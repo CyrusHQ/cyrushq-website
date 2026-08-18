@@ -266,10 +266,16 @@
 
 <div class="content">
 
-  <!-- UPSELL CONFIRMATION (shown when ?upsell=1) -->
-  <div class="upsell-confirm" id="upsellConfirm">
+  <!-- UPSELL CONFIRMATION: Starter Kit -->
+  <div class="upsell-confirm" id="kitConfirm">
     <div class="upsell-confirm-title">✅ AI CEO Starter Kit Added!</div>
     <div class="upsell-confirm-body">Your 29 operating files will be delivered in the same email. Check your inbox — it's all there.</div>
+  </div>
+
+  <!-- UPSELL CONFIRMATION: Cron -->
+  <div class="upsell-confirm" id="cronConfirm">
+    <div class="upsell-confirm-title">✅ Cron Job Mastery Module Added!</div>
+    <div class="upsell-confirm-body">Your cron module is unlocked inside the course portal. Check your email for your access link.</div>
   </div>
 
   <!-- EMAIL NOTE -->
@@ -331,10 +337,10 @@
 </footer>
 
 <script>
-  // Show upsell confirmation
-  if (new URLSearchParams(window.location.search).get('upsell') === '1') {
-    document.getElementById('upsellConfirm').classList.add('visible');
-  }
+  // Show upsell confirmations based on purchase params
+  const _p = new URLSearchParams(window.location.search);
+  if (_p.get('kit') === '1')  document.getElementById('kitConfirm').classList.add('visible');
+  if (_p.get('cron') === '1') document.getElementById('cronConfirm').classList.add('visible');
 
   function copyLink(btn) {
     navigator.clipboard.writeText('https://cyrushq.ai/course').then(() => {
