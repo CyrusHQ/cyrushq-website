@@ -9,8 +9,9 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --navy: #0A1628;
-      --navy-mid: #112240;
+      --navy: #070A13;
+      --navy-mid: #0C1320;
+      --navy-card: #112240;
       --gold: #C9A84C;
       --gold-light: #E8C96A;
       --cream: #F8F6F1;
@@ -30,22 +31,50 @@
       min-height: 100vh;
     }
 
-    /* ─── PASSWORD GATE ─── */
+    /* ─── GATE OVERLAY ─── */
     #gate {
       position: fixed; inset: 0;
       background: var(--navy);
       display: flex; align-items: center; justify-content: center;
       z-index: 9999;
       padding: 20px;
+      overflow-y: auto;
     }
     #gate.hidden { display: none; }
 
+    /* ─── LOADING STATE ─── */
+    #loading-state {
+      position: fixed; inset: 0;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9998;
+      flex-direction: column;
+      gap: 16px;
+    }
+    #loading-state.hidden { display: none; }
+    .loading-logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: var(--gold);
+      font-size: 22px;
+      letter-spacing: 3px;
+    }
+    .loading-spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .loading-text { color: #8BA3C4; font-size: 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── GATE BOX ─── */
     .gate-box {
       background: var(--navy-mid);
       border: 1px solid rgba(201,168,76,0.3);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 48px 40px;
-      max-width: 420px;
+      max-width: 440px;
       width: 100%;
       text-align: center;
     }
@@ -59,20 +88,37 @@
     .gate-sub {
       color: #8BA3C4;
       font-size: 13px;
-      margin-bottom: 32px;
+      margin-bottom: 36px;
     }
-    .gate-box h2 {
+
+    /* Primary: Email access form */
+    .gate-section-primary h2 {
       color: var(--white);
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: 22px;
+      font-size: 20px;
       margin-bottom: 10px;
     }
-    .gate-box p {
+    .gate-section-primary p {
       color: #8BA3C4;
       font-size: 14px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       line-height: 1.6;
     }
+
+    /* Invalid link notice */
+    .gate-invalid-notice {
+      display: none;
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.4);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #fca5a5;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
     .gate-input {
       width: 100%;
       padding: 14px 18px;
@@ -81,14 +127,12 @@
       border-radius: 8px;
       color: var(--white);
       font-size: 15px;
-      text-align: center;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       outline: none;
       font-family: 'Inter', sans-serif;
     }
     .gate-input:focus { border-color: var(--gold); }
-    .gate-input::placeholder { letter-spacing: 1px; color: #4a6080; }
+    .gate-input::placeholder { color: #4a6080; }
     .gate-btn {
       width: 100%;
       padding: 15px;
@@ -98,16 +142,94 @@
       border-radius: 8px;
       font-size: 15px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, opacity 0.2s;
     }
     .gate-btn:hover { background: var(--gold-light); }
-    .gate-error {
-      color: #f87171;
+    .gate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .gate-feedback {
       font-size: 13px;
       margin-top: 12px;
+      line-height: 1.5;
+      min-height: 18px;
+    }
+    .gate-feedback.success { color: #4ade80; }
+    .gate-feedback.error   { color: #f87171; }
+
+    /* Divider */
+    .gate-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 20px;
+    }
+    .gate-divider::before, .gate-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+    .gate-divider span {
+      color: #4a6080;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    /* Secondary: Password toggle */
+    .gate-pw-toggle {
+      color: #8BA3C4;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .gate-pw-toggle:hover { color: var(--gold); }
+
+    .gate-pw-section {
+      display: none;
+      margin-top: 20px;
+    }
+    .gate-pw-section.open { display: block; }
+    .gate-pw-input {
+      width: 100%;
+      padding: 13px 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 15px;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .gate-pw-input:focus { border-color: var(--gold); }
+    .gate-pw-input::placeholder { letter-spacing: 1px; color: #4a6080; }
+    .gate-pw-btn {
+      width: 100%;
+      padding: 13px;
+      background: rgba(201,168,76,0.15);
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .gate-pw-btn:hover { background: rgba(201,168,76,0.25); }
+    .gate-pw-error {
+      color: #f87171;
+      font-size: 13px;
+      margin-top: 10px;
       display: none;
     }
 
@@ -135,7 +257,7 @@
       font-size: 13px;
       font-weight: 500;
     }
-    .header-lock {
+    .header-user {
       color: #8BA3C4;
       font-size: 12px;
       display: flex;
@@ -167,6 +289,52 @@
       color: #8BA3C4;
       font-size: 15px;
       line-height: 1.6;
+    }
+
+    .bookmark-note {
+      background: var(--navy-mid);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 28px;
+      color: #8BA3C4;
+      font-size: 13px;
+      text-align: center;
+    }
+    .bookmark-note strong { color: var(--gold); }
+
+    /* ─── NO ACCESS STATE ─── */
+    .no-access-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px 32px;
+      text-align: center;
+      margin-top: 24px;
+    }
+    .no-access-box h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .no-access-box p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .no-access-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--gold);
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     /* ─── MODULE CARDS ─── */
@@ -265,19 +433,6 @@
       width: 100%; height: 100%;
       border: none;
     }
-    .video-placeholder {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #4a6080;
-      font-size: 14px;
-      gap: 10px;
-    }
-    .video-placeholder .icon { font-size: 32px; }
     .video-title {
       font-size: 14px;
       font-weight: 600;
@@ -350,6 +505,11 @@
       margin-top: 40px;
     }
 
+    /* ─── HIDDEN CONTENT SECTIONS ─── */
+    .content-course    { display: none; }
+    .content-bonus     { display: none; }
+    .content-no-access { display: none; }
+
     /* ─── RESPONSIVE ─── */
     @media (max-width: 600px) {
       .site-header { padding: 14px 16px; }
@@ -365,16 +525,47 @@
 </head>
 <body>
 
-  <!-- ─── PASSWORD GATE ─── -->
+  <!-- ─── LOADING STATE ─── -->
+  <div id="loading-state" class="hidden">
+    <div class="loading-logo">CYRUSHQ.AI</div>
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Verifying your access link…</div>
+  </div>
+
+  <!-- ─── ACCESS GATE ─── -->
   <div id="gate">
     <div class="gate-box">
       <div class="gate-logo">CYRUSHQ.AI</div>
       <div class="gate-sub">Build Your AI CEO — Course Portal</div>
-      <h2>Access Granted 👑</h2>
-      <p>Enter your course password to access your training and downloads.</p>
-      <input type="password" id="pwInput" class="gate-input" placeholder="Enter password" autocomplete="off">
-      <button class="gate-btn" onclick="checkPassword()">Access My Course →</button>
-      <div class="gate-error" id="gateError">Incorrect password. Check your welcome email.</div>
+
+      <!-- Invalid link notice (shown when token fails) -->
+      <div class="gate-invalid-notice" id="invalidNotice">
+        This link is invalid or has been updated. Enter your email below to get a fresh access link.
+      </div>
+
+      <!-- PRIMARY: Email entry -->
+      <div class="gate-section-primary">
+        <h2>Welcome Back 👑</h2>
+        <p>Enter the email you used to purchase and we'll send you an instant access link.</p>
+        <input type="email" id="emailInput" class="gate-input" placeholder="your@email.com" autocomplete="email">
+        <button class="gate-btn" id="sendLinkBtn" onclick="sendAccessLink()">Send My Access Link →</button>
+        <div class="gate-feedback" id="emailFeedback"></div>
+      </div>
+
+      <!-- Divider -->
+      <div class="gate-divider">
+        <span>or</span>
+      </div>
+
+      <!-- SECONDARY: Password toggle -->
+      <button class="gate-pw-toggle" onclick="togglePasswordForm()">Already have a password?</button>
+
+      <div class="gate-pw-section" id="pwSection">
+        <input type="password" id="pwInput" class="gate-pw-input" placeholder="Enter password" autocomplete="off">
+        <button class="gate-pw-btn" onclick="checkPassword()">Access with Password →</button>
+        <div class="gate-pw-error" id="gateError">Incorrect password. Check your welcome email.</div>
+      </div>
+
     </div>
   </div>
 
@@ -382,338 +573,338 @@
   <header class="site-header">
     <a href="https://cyrushq.ai" class="header-logo">CYRUSHQ.AI</a>
     <span class="header-title">Build Your AI CEO — Course Portal</span>
-    <span class="header-lock">🔒 Members Only</span>
+    <span class="header-user" id="headerUser">🔒 Members Only</span>
   </header>
 
   <!-- ─── PORTAL ─── -->
   <main class="portal-wrap">
 
-    <div class="welcome-banner">
-      <h1>Your AI CEO is waiting. 👑</h1>
-      <p>Work through the modules in order for the best result. Most students have a live AI CEO by the end of the weekend. Each module includes a video and a downloadable resource — use them together.</p>
+    <div class="welcome-banner" id="welcomeBanner">
+      <h1 id="welcomeHeadline">Your AI CEO is waiting. 👑</h1>
+      <p id="welcomeBody">Work through the modules in order for the best result. Most students have a live AI CEO by the end of the weekend. Each module includes a video and a downloadable resource — use them together.</p>
     </div>
 
-    <!-- INTRO -->
-    <div class="section-label">Getting Started</div>
+    <!-- Bookmark note (shown for magic link users) -->
+    <div class="bookmark-note" id="bookmarkNote" style="display:none;">
+      🔖 <strong>Bookmark this page for instant access anytime.</strong> Your link is unique to you and never expires.
+    </div>
 
-    <div class="module-card">
-      <div class="module-header" onclick="toggleModule(this)">
-        <span class="module-badge">INTRO</span>
-        <span class="module-title">Welcome — What You're About to Build</span>
-        <span class="module-toggle">▾</span>
-      </div>
-      <div class="module-body">
-        <div class="video-section">
-          <div class="video-wrap" id="vid-intro">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/b7c84b4d-edcd-493d-a67a-38d36c7076ec?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-        </div>
+    <!-- No access state -->
+    <div class="content-no-access" id="noAccessSection">
+      <div class="no-access-box">
+        <h2>No course access found</h2>
+        <p>We couldn't find a course purchase for your account. Visit the course page to get instant access.</p>
+        <a href="https://cyrushq.ai/course" class="no-access-btn">Get the Course →</a>
       </div>
     </div>
 
-    <!-- MODULE 1 -->
-    <div class="section-divider">
-      <div class="section-label">Core Training</div>
-    </div>
+    <!-- ─── COURSE CONTENT (build-your-ai-ceo) ─── -->
+    <div class="content-course" id="courseContent">
 
-    <div class="module-card">
-      <div class="module-header" onclick="toggleModule(this)">
-        <span class="module-badge">MODULE 1</span>
-        <span class="module-title">Identity — Who Is Your AI CEO?</span>
-        <span class="module-toggle">▾</span>
+      <!-- INTRO -->
+      <div class="section-label">Getting Started</div>
+
+      <div class="module-card">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-badge">INTRO</span>
+          <span class="module-title">Welcome — What You're About to Build</span>
+          <span class="module-toggle">▾</span>
+        </div>
+        <div class="module-body">
+          <div class="video-section">
+            <div class="video-wrap" id="vid-intro">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/b7c84b4d-edcd-493d-a67a-38d36c7076ec?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="module-body">
 
-        <div class="video-section">
-          <div class="video-label">Video 1 of 3</div>
-          <div class="video-wrap" id="vid-1a">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/9c87ab4a-92fe-4fda-b244-e4160576b5ce?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Setting the Foundation</div>
-        </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 2 of 3</div>
-          <div class="video-wrap" id="vid-1b">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/e4281cb8-851b-4119-8dbb-4149fd9814c8?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Building Your AI CEO Identity Files</div>
-        </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 3 of 3</div>
-          <div class="video-wrap" id="vid-1c">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/e600b8d4-48ba-4a29-afb6-43afc8c7c656?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Your Workspace Setup</div>
-        </div>
-
-        <div class="downloads-section">
-          <div class="downloads-title">Module 1 Downloads</div>
-          <div class="download-list">
-            <a href="/downloads/module-1/Module-1-Identity-Files-Core.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">Identity Files — Core Pack</span>
-              <span class="download-arrow">↓</span>
-            </a>
-            <a href="/downloads/module-1/Module-1-Identity-Files-Operational.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">Identity Files — Operational Pack</span>
-              <span class="download-arrow">↓</span>
-            </a>
-            <a href="/downloads/module-1/Module-1-Workspace-Path.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">Workspace Path Guide</span>
-              <span class="download-arrow">↓</span>
-            </a>
-          </div>
-        </div>
-
+      <!-- MODULE 1 -->
+      <div class="section-divider">
+        <div class="section-label">Core Training</div>
       </div>
-    </div>
 
-    <!-- MODULE 2 -->
-    <div class="module-card">
-      <div class="module-header" onclick="toggleModule(this)">
-        <span class="module-badge">MODULE 2</span>
-        <span class="module-title">API Keys — Connecting Your AI Brain</span>
-        <span class="module-toggle">▾</span>
+      <div class="module-card">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-badge">MODULE 1</span>
+          <span class="module-title">Identity — Who Is Your AI CEO?</span>
+          <span class="module-toggle">▾</span>
+        </div>
+        <div class="module-body">
+          <div class="video-section">
+            <div class="video-label">Video 1 of 3</div>
+            <div class="video-wrap" id="vid-1a">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/9c87ab4a-92fe-4fda-b244-e4160576b5ce?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Setting the Foundation</div>
+          </div>
+          <div class="video-section">
+            <div class="video-label">Video 2 of 3</div>
+            <div class="video-wrap" id="vid-1b">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/e4281cb8-851b-4119-8dbb-4149fd9814c8?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Building Your AI CEO Identity Files</div>
+          </div>
+          <div class="video-section">
+            <div class="video-label">Video 3 of 3</div>
+            <div class="video-wrap" id="vid-1c">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/e600b8d4-48ba-4a29-afb6-43afc8c7c656?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Your Workspace Setup</div>
+          </div>
+          <div class="downloads-section">
+            <div class="downloads-title">Module 1 Downloads</div>
+            <div class="download-list">
+              <a href="/downloads/module-1/Module-1-Identity-Files-Core.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">Identity Files — Core Pack</span>
+                <span class="download-arrow">↓</span>
+              </a>
+              <a href="/downloads/module-1/Module-1-Identity-Files-Operational.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">Identity Files — Operational Pack</span>
+                <span class="download-arrow">↓</span>
+              </a>
+              <a href="/downloads/module-1/Module-1-Workspace-Path.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">Workspace Path Guide</span>
+                <span class="download-arrow">↓</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="module-body">
 
-        <div class="video-section">
-          <div class="video-label">Video 1 of 2</div>
-          <div class="video-wrap" id="vid-2a">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/b74176d4-b4a3-41b2-8b42-aa30b6047265?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Anthropic API Key Setup</div>
+      <!-- MODULE 2 -->
+      <div class="module-card">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-badge">MODULE 2</span>
+          <span class="module-title">API Keys — Connecting Your AI Brain</span>
+          <span class="module-toggle">▾</span>
         </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 2 of 2</div>
-          <div class="video-wrap" id="vid-2b">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/67336789-0643-44e6-bdce-7ba4e940356a?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+        <div class="module-body">
+          <div class="video-section">
+            <div class="video-label">Video 1 of 2</div>
+            <div class="video-wrap" id="vid-2a">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/b74176d4-b4a3-41b2-8b42-aa30b6047265?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Anthropic API Key Setup</div>
           </div>
-          <div class="video-title">OpenAI API Key Setup + Verification</div>
-        </div>
-
-        <div class="downloads-section">
-          <div class="downloads-title">Module 2 Downloads</div>
-          <div class="download-list">
-            <a href="/downloads/module-2/Module-2-API-Key-Setup-Checklist.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">API Key Setup Checklist</span>
-              <span class="download-arrow">↓</span>
-            </a>
+          <div class="video-section">
+            <div class="video-label">Video 2 of 2</div>
+            <div class="video-wrap" id="vid-2b">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/67336789-0643-44e6-bdce-7ba4e940356a?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">OpenAI API Key Setup + Verification</div>
+          </div>
+          <div class="downloads-section">
+            <div class="downloads-title">Module 2 Downloads</div>
+            <div class="download-list">
+              <a href="/downloads/module-2/Module-2-API-Key-Setup-Checklist.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">API Key Setup Checklist</span>
+                <span class="download-arrow">↓</span>
+              </a>
+            </div>
           </div>
         </div>
-
       </div>
-    </div>
 
-    <!-- MODULE 3 -->
-    <div class="module-card">
-      <div class="module-header" onclick="toggleModule(this)">
-        <span class="module-badge">MODULE 3</span>
-        <span class="module-title">Discord — Building Your AI CEO's Home Base</span>
-        <span class="module-toggle">▾</span>
+      <!-- MODULE 3 -->
+      <div class="module-card">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-badge">MODULE 3</span>
+          <span class="module-title">Discord — Building Your AI CEO's Home Base</span>
+          <span class="module-toggle">▾</span>
+        </div>
+        <div class="module-body">
+          <div class="video-section">
+            <div class="video-label">Video 1 of 2</div>
+            <div class="video-wrap" id="vid-3a">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/bf331e18-fd03-4c11-9878-4faeacbfb267?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Why Discord + Server Setup</div>
+          </div>
+          <div class="video-section">
+            <div class="video-label">Video 2 of 2</div>
+            <div class="video-wrap" id="vid-3b">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/0c219eb3-79c2-411e-8f24-31afac0ba8ce?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Bot Creation + Channel IDs</div>
+          </div>
+          <div class="downloads-section">
+            <div class="downloads-title">Module 3 Downloads</div>
+            <div class="download-list">
+              <a href="/downloads/module-3/Module-3-Discord-Setup-Checklist.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">Discord Setup Checklist</span>
+                <span class="download-arrow">↓</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="module-body">
 
-        <div class="video-section">
-          <div class="video-label">Video 1 of 2</div>
-          <div class="video-wrap" id="vid-3a">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/bf331e18-fd03-4c11-9878-4faeacbfb267?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Why Discord + Server Setup</div>
+      <!-- MODULE 4 -->
+      <div class="module-card">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-badge">MODULE 4</span>
+          <span class="module-title">OpenClaw — Installing Your AI CEO</span>
+          <span class="module-toggle">▾</span>
         </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 2 of 2</div>
-          <div class="video-wrap" id="vid-3b">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/0c219eb3-79c2-411e-8f24-31afac0ba8ce?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+        <div class="module-body">
+          <div class="video-section">
+            <div class="video-label">Video 1 of 4</div>
+            <div class="video-wrap" id="vid-4a">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/462818fb-5226-41cc-9749-f630873f2ccd?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Install OpenClaw + Node.js</div>
           </div>
-          <div class="video-title">Bot Creation + Channel IDs</div>
-        </div>
-
-        <div class="downloads-section">
-          <div class="downloads-title">Module 3 Downloads</div>
-          <div class="download-list">
-            <a href="/downloads/module-3/Module-3-Discord-Setup-Checklist.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">Discord Setup Checklist</span>
-              <span class="download-arrow">↓</span>
-            </a>
+          <div class="video-section">
+            <div class="video-label">Video 2 of 4</div>
+            <div class="video-wrap" id="vid-4b">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/e87cf2e6-84ae-4387-ace3-34f8c0652ba5?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Config File + First Start</div>
+          </div>
+          <div class="video-section">
+            <div class="video-label">Video 3 of 4</div>
+            <div class="video-wrap" id="vid-4c">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/123d8ed8-cf13-4343-bfe2-acdaa508e0cb?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Connecting Discord → Config</div>
+          </div>
+          <div class="video-section">
+            <div class="video-label">Video 4 of 4</div>
+            <div class="video-wrap" id="vid-4d">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/38a40ab6-4d3c-468f-8ecd-cb499e309a9e?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">First Contact — Your AI CEO is Alive</div>
+            <div class="video-desc">This is the moment. By the end of this video your AI CEO will be running live on your Discord.</div>
+          </div>
+          <div class="downloads-section">
+            <div class="downloads-title">Module 4 Downloads</div>
+            <div class="download-list">
+              <a href="/downloads/module-4/Module-4-OpenClaw-Config-Template.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">OpenClaw Config Template</span>
+                <span class="download-arrow">↓</span>
+              </a>
+            </div>
           </div>
         </div>
-
       </div>
-    </div>
 
-    <!-- MODULE 4 -->
-    <div class="module-card">
-      <div class="module-header" onclick="toggleModule(this)">
-        <span class="module-badge">MODULE 4</span>
-        <span class="module-title">OpenClaw — Installing Your AI CEO</span>
-        <span class="module-toggle">▾</span>
+      <!-- MODULE 5 -->
+      <div class="module-card">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-badge">MODULE 5</span>
+          <span class="module-title">Monetize — Turning Your AI CEO into Income</span>
+          <span class="module-toggle">▾</span>
+        </div>
+        <div class="module-body">
+          <div class="video-section">
+            <div class="video-label">Video 1 of 2</div>
+            <div class="video-wrap" id="vid-5a">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/29e11f6e-3c31-4397-8d01-7572e017f9f5?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">3 Income Streams You Can Launch This Week</div>
+          </div>
+          <div class="video-section">
+            <div class="video-label">Video 2 of 2</div>
+            <div class="video-wrap" id="vid-5b">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/b4973efb-e658-4206-ab71-fed534aa4214?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Expanding Your AI Agent Toolkit</div>
+          </div>
+          <div class="downloads-section">
+            <div class="downloads-title">Module 5 Downloads</div>
+            <div class="download-list">
+              <a href="/downloads/module-5/Module-5-Three-Income-Streams.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">3 Income Streams Playbook</span>
+                <span class="download-arrow">↓</span>
+              </a>
+              <a href="/downloads/module-5/Module-5b-Agent-Tools-Expansion-Guide.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">Agent Tools Expansion Guide</span>
+                <span class="download-arrow">↓</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="module-body">
 
-        <div class="video-section">
-          <div class="video-label">Video 1 of 4</div>
-          <div class="video-wrap" id="vid-4a">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/462818fb-5226-41cc-9749-f630873f2ccd?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Install OpenClaw + Node.js</div>
-        </div>
+    </div><!-- /content-course -->
 
-        <div class="video-section">
-          <div class="video-label">Video 2 of 4</div>
-          <div class="video-wrap" id="vid-4b">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/e87cf2e6-84ae-4387-ace3-34f8c0652ba5?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Config File + First Start</div>
-        </div>
+    <!-- ─── BONUS MODULE (cron-job-mastery) ─── -->
+    <div class="content-bonus" id="bonusContent">
 
-        <div class="video-section">
-          <div class="video-label">Video 3 of 4</div>
-          <div class="video-wrap" id="vid-4c">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/123d8ed8-cf13-4343-bfe2-acdaa508e0cb?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Connecting Discord → Config</div>
-        </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 4 of 4</div>
-          <div class="video-wrap" id="vid-4d">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/38a40ab6-4d3c-468f-8ecd-cb499e309a9e?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">First Contact — Your AI CEO is Alive</div>
-          <div class="video-desc">This is the moment. By the end of this video your AI CEO will be running live on your Discord.</div>
-        </div>
-
-        <div class="downloads-section">
-          <div class="downloads-title">Module 4 Downloads</div>
-          <div class="download-list">
-            <a href="/downloads/module-4/Module-4-OpenClaw-Config-Template.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">OpenClaw Config Template</span>
-              <span class="download-arrow">↓</span>
-            </a>
-          </div>
-        </div>
-
+      <div class="section-divider">
+        <div class="section-label">⚡ Bonus Module — Cron Job Add-On</div>
       </div>
-    </div>
 
-    <!-- MODULE 5 -->
-    <div class="module-card">
-      <div class="module-header" onclick="toggleModule(this)">
-        <span class="module-badge">MODULE 5</span>
-        <span class="module-title">Monetize — Turning Your AI CEO into Income</span>
-        <span class="module-toggle">▾</span>
+      <div class="module-card bonus">
+        <div class="module-header" onclick="toggleModule(this)">
+          <span class="module-badge">BONUS</span>
+          <span class="module-title">Cron Jobs — Automate Your AI CEO 24/7</span>
+          <span class="module-toggle">▾</span>
+        </div>
+        <div class="module-body">
+
+          <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; padding: 14px 16px; background: #fff8e8; border-radius: 8px; border-left: 3px solid var(--gold);">
+            ⚡ <strong>Cron Job Add-On purchased.</strong> These videos unlock automated schedules so your AI CEO works around the clock — even while you sleep.
+          </p>
+
+          <div class="video-section">
+            <div class="video-label">Video 1 of 3</div>
+            <div class="video-wrap" id="vid-bonus1">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/9445b645-b60a-46e6-89b2-97635d1dfd05?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">What Is a Cron Job?</div>
+          </div>
+
+          <div class="video-section">
+            <div class="video-label">Video 2 of 3</div>
+            <div class="video-wrap" id="vid-bonus2">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/815a3865-49dd-4139-9a54-40f1e61e0f41?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Method 1 — AI Sets It Up For You</div>
+          </div>
+
+          <div class="video-section">
+            <div class="video-label">Video 3 of 3</div>
+            <div class="video-wrap" id="vid-bonus3">
+              <iframe src="https://iframe.mediadelivery.net/embed/695356/d117961a-0800-420e-9974-c6c2f3b16ef8?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">Method 2 — Terminal Setup</div>
+          </div>
+
+          <div class="downloads-section">
+            <div class="downloads-title">Bonus Module Downloads</div>
+            <div class="download-list">
+              <a href="/downloads/module-6-bonus/Module-6-20-Power-Cron-Jobs.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">20 Power Cron Jobs for Your AI CEO</span>
+                <span class="download-arrow">↓</span>
+              </a>
+              <a href="/downloads/module-6-bonus/Module-6-Cron-Command-Cheatsheet.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">Cron Command Cheatsheet</span>
+                <span class="download-arrow">↓</span>
+              </a>
+              <a href="/downloads/module-6-bonus/Module-6-Cron-Prompts-Pack.pdf" download class="download-btn">
+                <span class="download-icon">📄</span>
+                <span class="download-name">Cron Prompts Pack</span>
+                <span class="download-arrow">↓</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="module-body">
 
-        <div class="video-section">
-          <div class="video-label">Video 1 of 2</div>
-          <div class="video-wrap" id="vid-5a">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/29e11f6e-3c31-4397-8d01-7572e017f9f5?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">3 Income Streams You Can Launch This Week</div>
-        </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 2 of 2</div>
-          <div class="video-wrap" id="vid-5b">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/b4973efb-e658-4206-ab71-fed534aa4214?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Expanding Your AI Agent Toolkit</div>
-        </div>
-
-        <div class="downloads-section">
-          <div class="downloads-title">Module 5 Downloads</div>
-          <div class="download-list">
-            <a href="/downloads/module-5/Module-5-Three-Income-Streams.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">3 Income Streams Playbook</span>
-              <span class="download-arrow">↓</span>
-            </a>
-            <a href="/downloads/module-5/Module-5b-Agent-Tools-Expansion-Guide.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">Agent Tools Expansion Guide</span>
-              <span class="download-arrow">↓</span>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- BONUS MODULE 6 — CRON JOBS -->
-    <div class="section-divider">
-      <div class="section-label">⚡ Bonus Module — Cron Job Add-On</div>
-    </div>
-
-    <div class="module-card bonus">
-      <div class="module-header" onclick="toggleModule(this)">
-        <span class="module-badge">BONUS</span>
-        <span class="module-title">Cron Jobs — Automate Your AI CEO 24/7</span>
-        <span class="module-toggle">▾</span>
-      </div>
-      <div class="module-body">
-
-        <p style="color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; padding: 14px 16px; background: #fff8e8; border-radius: 8px; border-left: 3px solid var(--gold);">
-          ⚡ <strong>Cron Job Add-On purchased.</strong> These videos unlock automated schedules so your AI CEO works around the clock — even while you sleep.
-        </p>
-
-        <div class="video-section">
-          <div class="video-label">Video 1 of 3</div>
-          <div class="video-wrap" id="vid-bonus1">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/9445b645-b60a-46e6-89b2-97635d1dfd05?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">What Is a Cron Job?</div>
-        </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 2 of 3</div>
-          <div class="video-wrap" id="vid-bonus2">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/815a3865-49dd-4139-9a54-40f1e61e0f41?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Method 1 — AI Sets It Up For You</div>
-        </div>
-
-        <div class="video-section">
-          <div class="video-label">Video 3 of 3</div>
-          <div class="video-wrap" id="vid-bonus3">
-            <iframe src="https://iframe.mediadelivery.net/embed/695356/d117961a-0800-420e-9974-c6c2f3b16ef8?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="video-title">Method 2 — Terminal Setup</div>
-        </div>
-
-        <div class="downloads-section">
-          <div class="downloads-title">Bonus Module Downloads</div>
-          <div class="download-list">
-            <a href="/downloads/module-6-bonus/Module-6-20-Power-Cron-Jobs.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">20 Power Cron Jobs for Your AI CEO</span>
-              <span class="download-arrow">↓</span>
-            </a>
-            <a href="/downloads/module-6-bonus/Module-6-Cron-Command-Cheatsheet.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">Cron Command Cheatsheet</span>
-              <span class="download-arrow">↓</span>
-            </a>
-            <a href="/downloads/module-6-bonus/Module-6-Cron-Prompts-Pack.pdf" download class="download-btn">
-              <span class="download-icon">📄</span>
-              <span class="download-name">Cron Prompts Pack</span>
-              <span class="download-arrow">↓</span>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
+    </div><!-- /content-bonus -->
 
     <div class="portal-footer">
       © 2026 CyrusHQ · <a href="mailto:hello@cyrushq.ai" style="color:var(--gold); text-decoration:none;">hello@cyrushq.ai</a><br>
@@ -723,33 +914,157 @@
   </main>
 
   <script>
+    // ─── CONSTANTS ───────────────────────────────────────────────
     const CORRECT_PASSWORD = 'CyrusAICEO2026';
 
-    function checkPassword() {
-      const input = document.getElementById('pwInput').value.trim();
-      if (input === CORRECT_PASSWORD) {
-        sessionStorage.setItem('course_access', 'granted');
-        document.getElementById('gate').classList.add('hidden');
-      } else {
-        document.getElementById('gateError').style.display = 'block';
-        document.getElementById('pwInput').value = '';
-        document.getElementById('pwInput').focus();
+    // ─── UTILITY ─────────────────────────────────────────────────
+    function qs(id) { return document.getElementById(id); }
+
+    function showPortal(products, email, isMagicLink) {
+      // Hide gate / loading
+      qs('gate').classList.add('hidden');
+      qs('loading-state').classList.add('hidden');
+
+      // Update header
+      if (email && isMagicLink) {
+        qs('headerUser').textContent = '👑 ' + email;
+        qs('bookmarkNote').style.display = 'block';
+        qs('welcomeHeadline').textContent = 'Welcome back 👑';
+        qs('welcomeBody').textContent = 'Your personalized portal is ready. Work through the modules in order — most students have a live AI CEO by the end of the weekend.';
+      }
+
+      const hasCourse = products.includes('build-your-ai-ceo');
+      const hasBonus  = products.includes('cron-job-mastery');
+
+      if (!hasCourse && !hasBonus) {
+        qs('noAccessSection').style.display = 'block';
+        qs('welcomeHeadline').textContent = 'Course Access Not Found';
+        qs('welcomeBody').textContent = 'We verified your identity but could not find a course purchase on your account.';
+        return;
+      }
+
+      if (hasCourse) {
+        qs('courseContent').style.display = 'block';
+        // Auto-open Module 1
+        const headers = document.querySelectorAll('#courseContent .module-header');
+        if (headers[1]) {
+          headers[1].classList.add('open');
+          headers[1].nextElementSibling.classList.add('open');
+        }
+      }
+
+      if (hasBonus) {
+        qs('bonusContent').style.display = 'block';
       }
     }
 
-    // Allow Enter key
-    document.getElementById('pwInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') checkPassword();
-    });
+    // ─── TOKEN VERIFICATION ──────────────────────────────────────
+    async function verifyMagicLink(token, encodedEmail) {
+      qs('gate').classList.add('hidden');
+      qs('loading-state').classList.remove('hidden');
 
-    // Check session on load
-    window.addEventListener('DOMContentLoaded', function() {
-      if (sessionStorage.getItem('course_access') === 'granted') {
-        document.getElementById('gate').classList.add('hidden');
+      try {
+        const url = `/api/verify-token?t=${encodeURIComponent(token)}&e=${encodeURIComponent(encodedEmail)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.valid) {
+          sessionStorage.setItem('course_access', 'granted');
+          sessionStorage.setItem('course_products', JSON.stringify(data.products));
+          sessionStorage.setItem('course_email', data.email);
+          sessionStorage.setItem('course_via_token', '1');
+          showPortal(data.products, data.email, true);
+        } else {
+          // Invalid token — show gate with notice
+          qs('loading-state').classList.add('hidden');
+          qs('gate').classList.remove('hidden');
+          qs('invalidNotice').style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Token verification error:', err);
+        qs('loading-state').classList.add('hidden');
+        qs('gate').classList.remove('hidden');
+        qs('invalidNotice').style.display = 'block';
       }
+    }
+
+    // ─── EMAIL ACCESS LINK ───────────────────────────────────────
+    async function sendAccessLink() {
+      const email = qs('emailInput').value.trim();
+      const feedback = qs('emailFeedback');
+      const btn = qs('sendLinkBtn');
+
+      if (!email || !email.includes('@')) {
+        feedback.textContent = 'Please enter a valid email address.';
+        feedback.className = 'gate-feedback error';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      feedback.textContent = '';
+      feedback.className = 'gate-feedback';
+
+      try {
+        const res = await fetch('/api/send-access-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          feedback.textContent = '✅ Check your inbox — your access link is on its way.';
+          feedback.className = 'gate-feedback success';
+          btn.textContent = 'Link Sent ✓';
+        } else {
+          feedback.textContent = data.error || 'Something went wrong. Please try again.';
+          feedback.className = 'gate-feedback error';
+          btn.disabled = false;
+          btn.textContent = 'Send My Access Link →';
+        }
+      } catch (err) {
+        feedback.textContent = 'Network error. Please try again.';
+        feedback.className = 'gate-feedback error';
+        btn.disabled = false;
+        btn.textContent = 'Send My Access Link →';
+      }
+    }
+
+    // ─── PASSWORD FALLBACK ───────────────────────────────────────
+    function togglePasswordForm() {
+      const section = qs('pwSection');
+      section.classList.toggle('open');
+      if (section.classList.contains('open')) {
+        qs('pwInput').focus();
+      }
+    }
+
+    function checkPassword() {
+      const input = qs('pwInput').value.trim();
+      if (input === CORRECT_PASSWORD) {
+        sessionStorage.setItem('course_access', 'granted');
+        sessionStorage.setItem('course_products', JSON.stringify(['build-your-ai-ceo', 'cron-job-mastery']));
+        sessionStorage.setItem('course_via_token', '0');
+        showPortal(['build-your-ai-ceo', 'cron-job-mastery'], null, false);
+      } else {
+        qs('gateError').style.display = 'block';
+        qs('pwInput').value = '';
+        qs('pwInput').focus();
+      }
+    }
+
+    // Allow Enter key on password
+    document.addEventListener('DOMContentLoaded', function() {
+      qs('pwInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkPassword();
+      });
+      qs('emailInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') sendAccessLink();
+      });
     });
 
-    // Module accordion toggle
+    // ─── MODULE ACCORDION ────────────────────────────────────────
     function toggleModule(header) {
       const body = header.nextElementSibling;
       const isOpen = body.classList.contains('open');
@@ -757,13 +1072,29 @@
       body.classList.toggle('open', !isOpen);
     }
 
-    // Auto-open Module 1 on load
+    // ─── INIT ─────────────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', function() {
-      const firstHeader = document.querySelectorAll('.module-header')[1]; // skip intro
-      if (firstHeader) {
-        firstHeader.classList.add('open');
-        firstHeader.nextElementSibling.classList.add('open');
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('t');
+      const encodedEmail = params.get('e');
+
+      // Check for magic link in URL
+      if (token && encodedEmail) {
+        verifyMagicLink(token, encodedEmail);
+        return;
       }
+
+      // Check session storage (already authenticated this session)
+      if (sessionStorage.getItem('course_access') === 'granted') {
+        const products = JSON.parse(sessionStorage.getItem('course_products') || '["build-your-ai-ceo"]');
+        const email = sessionStorage.getItem('course_email') || null;
+        const viaToken = sessionStorage.getItem('course_via_token') === '1';
+        showPortal(products, email, viaToken);
+        return;
+      }
+
+      // No token, no session — show gate normally
+      qs('loading-state').classList.add('hidden');
     });
   </script>
 

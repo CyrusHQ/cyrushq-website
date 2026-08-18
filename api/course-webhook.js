@@ -89,6 +89,14 @@ async function verifyStripeSignature(rawBody, signature, secret) {
 }
 
 async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit, isBundle = false }) {
+  // Pre-compute magic link for this buyer
+  const cryptoMod = await import('crypto');
+  const portalSecret = process.env.PORTAL_SECRET || '';
+  const magicToken = cryptoMod.createHmac('sha256', portalSecret)
+    .update(`${portalSecret}:${email.toLowerCase().trim()}`)
+    .digest('hex');
+  const magicLink = `https://cyrushq.ai/members?t=${magicToken}&e=${encodeURIComponent(email.toLowerCase().trim())}`;
+
   const hexKey = process.env.GHL_API_KEY || '';
   const GHL_API_KEY = /^[0-9a-f]+$/i.test(hexKey)
     ? Buffer.from(hexKey, 'hex').toString('utf8').trim()
@@ -180,11 +188,11 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
     </p>
 
     <div style="text-align:center; margin:28px 0;">
-      <a href="https://cyrushq.ai/members"
+      <a href="${magicLink}"
          style="background:#C9A84C; color:#0A1628; padding:18px 36px; text-decoration:none;
                 font-weight:700; font-size:16px; display:inline-block; letter-spacing:1.5px;
                 text-transform:uppercase;">
-        Go to My Course Portal →
+        Access My Course Portal &rarr;
       </a>
     </div>
 
@@ -198,10 +206,8 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       Most students have a live AI CEO by the end of the weekend.
     </p>
 
-    <div style="background:#f8f6f1; border:1px solid #e5e7eb; border-radius:8px; padding:16px 20px; margin-top:20px;">
-      <p style="color:#1a1a2e; font-size:13px; font-weight:700; margin:0 0 6px;">🔑 Your Course Password</p>
-      <p style="color:#C9A84C; font-size:18px; font-weight:700; letter-spacing:2px; margin:0 0 6px;">CyrusAICEO2026</p>
-      <p style="color:#888; font-size:12px; margin:0;">You'll need this each time you visit your course portal.</p>
+    <div style="background:#f8f6f1; border:1px solid #e5e7eb; border-radius:8px; padding:14px 18px; margin-top:20px; text-align:center;">
+      <p style="color:#555; font-size:13px; margin:0; line-height:1.6;">🔖 <strong>Bookmark this link for instant access anytime — no password needed.</strong></p>
     </div>
     <p style="color:#888; font-size:13px; margin-top:20px; line-height:1.5;">
       Questions? Just reply to this email — we're fast.<br>

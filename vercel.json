@@ -26,6 +26,8 @@
     { "source": "/api/checkout-books",     "destination": "/api/checkout-books.js" },
     { "source": "/api/book-upsell-1",      "destination": "/api/book-upsell-1.js" },
     { "source": "/api/book-upsell-2",      "destination": "/api/book-upsell-2.js" },
-    { "source": "/api/book-upsell-3",      "destination": "/api/book-upsell-3.js" }
+    { "source": "/api/book-upsell-3",      "destination": "/api/book-upsell-3.js" },
+    { "source": "/api/verify-token",       "destination": "/api/verify-token.js" },
+    { "source": "/api/send-access-link",   "destination": "/api/send-access-link.js" }
   ]
 }
