@@ -112,7 +112,7 @@ async function sendGHLEmail({ email, firstName, magicLink }) {
   <!-- Body -->
   <div style="padding:48px 40px; background:#ffffff;">
     <h2 style="color:#070A13; margin:0 0 16px; font-family:Georgia,'Playfair Display',serif; font-size:24px;">
-      Your access link is ready, ${firstName}. 👑
+      Your access link is ready. 👑
     </h2>
     <p style="color:#555; line-height:1.7; margin:0 0 32px; font-size:15px;">
       Here's your instant access link. Click below — no password needed.
@@ -214,11 +214,9 @@ export default async function handler(req, res) {
   const magicLink = `https://cyrushq.ai/members?t=${token}&e=${encodeURIComponent(email)}`;
 
   // Extract first name
-  const firstName = 'Friend'; // No name available in this flow
-
   // Send email via GHL
   try {
-    await sendGHLEmail({ email, firstName, magicLink });
+    await sendGHLEmail({ email, firstName: '', magicLink });
   } catch (err) {
     console.error('GHL email send error:', err.message);
     return res.status(500).json({ error: 'Failed to send access email. Please try again or contact hello@cyrushq.ai' });
