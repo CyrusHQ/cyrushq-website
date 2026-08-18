@@ -14,13 +14,37 @@ function generateToken(secret, email) {
 }
 
 async function loadOverrides() {
-  try {
-    const filePath = join(process.cwd(), 'api', 'portal-overrides.json');
-    const raw = await readFile(filePath, 'utf8');
-    return JSON.parse(raw);
-  } catch {
-    return {};
+  // Try multiple path strategies for Vercel serverless compatibility
+  const attempts = [
+    join(process.cwd(), 'api', 'portal-overrides.json'),
+    join(process.cwd(), 'portal-overrides.json'),
+    '/var/task/api/portal-overrides.json',
+    new URL('./portal-overrides.json', import.meta.url).pathname
+  ];
+  for (const filePath of attempts) {
+    try {
+      const raw = await readFile(filePath, 'utf8');
+      return JSON.parse(raw);
+    } catch {
+      // try next
+    }
   }
+  // Fallback: hardcoded overrides for all confirmed buyers
+  return {
+    'beth.shaffer66@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'wmp@journeydigital.net': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
+    'y.a.j.w84@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'bwhit54@yahoo.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'omnath81@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'tools@omegabreweronline.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'gessick@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'pgarduque1@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery'],
+    'oburg004@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'rwhytemere82@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
+    'talent@christyprais.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
+    'socialsimplicity4you@gmail.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
+    'info@praisstone.com': ['build-your-ai-ceo']
+  };
 }
 
 async function getStripeProducts(email) {
