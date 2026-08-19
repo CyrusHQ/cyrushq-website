@@ -205,7 +205,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
 
   <div style="background:#F8F6F1; padding:20px 32px; text-align:center; border-top:2px solid #C9A84C;">
     <p style="color:#888; font-size:12px; margin:0;">
-      © 2026 CyrusHQ · cyrushq.ai · hello@recaptureleads.com<br>
+      © 2026 CyrusHQ · cyrushq.ai · hello@cyrushq.ai<br>
       Build wisely. Lead calmly. Create systems that endure.
     </p>
   </div>
@@ -221,7 +221,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       subject: `Your AI CEO course is ready, ${firstName} 👑`,
       html: emailBody,
       fromName: 'CyrusHQ Team',
-      from: 'hello@recaptureleads.com',
+      from: 'hello@cyrushq.ai',
       to: email
     })
   });
@@ -324,7 +324,7 @@ async function triggerGHLBookBundleWorkflow({ email, name }) {
 
   <div style="background:#F8F6F1; padding:20px 32px; text-align:center; border-top:2px solid #C9A84C;">
     <p style="color:#888; font-size:12px; margin:0;">
-      © 2026 CyrusHQ · cyrushq.ai · hello@recaptureleads.com<br>
+      © 2026 CyrusHQ · cyrushq.ai · hello@cyrushq.ai<br>
       Build wisely. Lead calmly. Create systems that endure.
     </p>
   </div>
@@ -339,7 +339,7 @@ async function triggerGHLBookBundleWorkflow({ email, name }) {
       subject: `Your AI books are ready, ${firstName} 📄`,
       html: emailBody,
       fromName: 'CyrusHQ Team',
-      from: 'hello@recaptureleads.com',
+      from: 'hello@cyrushq.ai',
       to: email
     })
   });
