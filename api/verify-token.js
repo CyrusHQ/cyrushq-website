@@ -32,7 +32,7 @@ function loadOverrides() {
 }
 
 async function getStripeProducts(email) {
-  const STRIPE_KEY = process.env.STRIPE_API_KEY;
+  const STRIPE_KEY = process.env.STRIPE_SECRET_KEY || process.env.STRIPE_API_KEY;
   if (!STRIPE_KEY) return [];
 
   const normalEmail = email.toLowerCase().trim();
