@@ -315,7 +315,7 @@
   </div>
 
   <!-- LOGIN BUTTON -->
-  <a href="/members" class="login-btn">Go to My Course Portal →</a>
+  <a href="/members" class="login-btn" id="portalBtn">Go to My Course Portal →</a>
   <div class="login-note">Or use the link in your email for direct access</div>
 
   <!-- SHARE -->
@@ -343,6 +343,22 @@
   const _p = new URLSearchParams(window.location.search);
   if (_p.get('kit') === '1')  document.getElementById('kitConfirm').classList.add('visible');
   if (_p.get('cron') === '1') document.getElementById('cronConfirm').classList.add('visible');
+
+  // Wire portal button directly to buyer's magic link
+  (async function() {
+    const email = sessionStorage.getItem('cyrushq_buyer_email');
+    if (!email) return; // fallback: button stays as /members gate
+    try {
+      const res = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
+      const data = await res.json();
+      if (data.url) {
+        const btn = document.getElementById('portalBtn');
+        btn.href = data.url;
+      }
+    } catch (e) {
+      // silently fail — button falls back to /members
+    }
+  })();
 
   function copyLink(btn) {
     navigator.clipboard.writeText('https://cyrushq.ai/course').then(() => {

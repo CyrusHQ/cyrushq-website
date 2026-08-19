@@ -613,7 +613,8 @@ async function handleSubmit() {
       }
     }
 
-    // Success — redirect to upsell
+    // Success — store email for thank-you page portal button, then redirect
+    sessionStorage.setItem('cyrushq_buyer_email', email.toLowerCase().trim());
     window.location.href = data.redirectUrl || '/upgrade';
 
   } catch (e) {
