@@ -134,26 +134,16 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
     return false;
   }
 
-  // 2. Build email — always includes course login link; conditionally includes bonus + kit links
-  const cronSection = hasCronBump ? `
-    <div style="background:#fffdf5; border:2px dashed #C9A84C; padding:20px; margin:20px 0; text-align:center;">
-      <p style="color:#0A1628; font-weight:700; margin:0 0 8px;">⚡ Your Cron Job Module is Ready</p>
-      <p style="color:#555; font-size:14px; margin:0 0 14px;">Find it inside your course portal under "Bonus Module" — or access it directly:</p>
-      <a href="https://cyrushq.ai/members"
-         style="background:#C9A84C; color:#0A1628; padding:12px 24px; text-decoration:none; font-weight:700; font-size:14px; display:inline-block; letter-spacing:1px;">
-        View Cron Job Module →
-      </a>
-    </div>` : '';
-
-  const kitSection = hasStarterKit && !isBundle ? `
-    <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:20px; margin:20px 0; text-align:center;">
-      <p style="color:#14532d; font-weight:700; margin:0 0 8px;">✅ AI CEO Starter Kit — 29 Files Enclosed</p>
-      <p style="color:#166534; font-size:14px; margin:0 0 14px;">Your operating files are ready to download from your portal.</p>
-      <a href="https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip"
-         style="background:#16a34a; color:#fff; padding:12px 24px; text-decoration:none; font-weight:700; font-size:14px; display:inline-block; letter-spacing:1px;">
-        Download Starter Kit →
-      </a>
-    </div>` : '';
+  // 2. Build email — ONE email per buyer; upsell products (cron, kit) suppress their own email.
+  // A single bonus note covers all add-ons without sending 3 separate emails.
+  const bonusNote = `
+    <div style="background:#fffbeb; border:1px solid #C9A84C; border-radius:8px; padding:16px 20px; margin:24px 0;">
+      <p style="color:#555; font-size:14px; margin:0; line-height:1.6;">
+        ⚡ <strong>Added the Cron Job Module or AI CEO Starter Kit?</strong> They're already unlocked inside your portal — just click your access link above and they'll be waiting for you.
+      </p>
+    </div>`;
+  const cronSection = '';
+  const kitSection = '';
 
   const bundleSection = isBundle ? `
     <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:24px; margin:20px 0;">
@@ -196,9 +186,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       </a>
     </div>
 
-    ${cronSection}
-    ${kitSection}
-    ${bundleSection}
+    ${isBundle ? bundleSection : bonusNote}
 
     <p style="color:#555; font-size:14px; line-height:1.6; margin-top:20px;">
       <strong>What to do first:</strong><br>
@@ -217,7 +205,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
 
   <div style="background:#F8F6F1; padding:20px 32px; text-align:center; border-top:2px solid #C9A84C;">
     <p style="color:#888; font-size:12px; margin:0;">
-      © 2026 CyrusHQ · cyrushq.ai · hello@cyrushq.ai<br>
+      © 2026 CyrusHQ · cyrushq.ai · hello@recaptureleads.com<br>
       Build wisely. Lead calmly. Create systems that endure.
     </p>
   </div>
@@ -240,6 +228,26 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
 
   const emailData = await emailRes.json();
   console.log('GHL email result:', JSON.stringify(emailData));
+  return true;
+}
+
+// Tag-only upsert: adds GHL contact tags without sending an email.
+// Used for upsell products (cron, starter kit) so buyers only ever get ONE welcome email.
+async function addGHLTagsOnly({ email, name, tags }) {
+  const hexKey = process.env.GHL_API_KEY || '';
+  const GHL_API_KEY = /^[0-9a-f]+$/i.test(hexKey)
+    ? Buffer.from(hexKey, 'hex').toString('utf8').trim()
+    : hexKey.trim();
+  const firstName = (name || 'Friend').split(' ')[0];
+  const lastName  = (name || '').split(' ').slice(1).join(' ') || '';
+  const res = await fetch('https://services.leadconnectorhq.com/contacts/', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${GHL_API_KEY}`, 'Content-Type': 'application/json', 'Version': '2021-07-28' },
+    body: JSON.stringify({ email, firstName, lastName, locationId: 'FitEZb4RfLdF1TkKxZEC', tags })
+  });
+  const d = await res.json();
+  const contactId = d.contact?.id || d.meta?.contactId;
+  console.log(`GHL tag-only upsert for ${email} — contactId: ${contactId} tags: ${tags.join(',')}`);
   return true;
 }
 
@@ -316,7 +324,7 @@ async function triggerGHLBookBundleWorkflow({ email, name }) {
 
   <div style="background:#F8F6F1; padding:20px 32px; text-align:center; border-top:2px solid #C9A84C;">
     <p style="color:#888; font-size:12px; margin:0;">
-      © 2026 CyrusHQ · cyrushq.ai · hello@cyrushq.ai<br>
+      © 2026 CyrusHQ · cyrushq.ai · hello@recaptureleads.com<br>
       Build wisely. Lead calmly. Create systems that endure.
     </p>
   </div>
@@ -384,15 +392,24 @@ export default async function handler(req, res) {
     const eventSourceUrl = meta.event_source_url || null;
 
     // Fire GHL automation for all course-related products (including complete bundle)
+    // UPSELL PRODUCTS (cron, starter kit): tag-only — no email. Base course email already went out.
+    // This prevents buyers from receiving 2–3 separate emails for a single checkout session.
     const courseProducts = ['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery', 'complete-bundle', 'book-bundle'];
     if (courseProducts.includes(product)) {
       if (isBookBundle) {
-        // Book bundle: send dedicated GHL workflow with book-specific tags and email
         console.log(`Triggering GHL book-bundle workflow for ${email}`);
         await triggerGHLBookBundleWorkflow({ email, name });
+      } else if (product === 'build-your-ai-ceo' || isBundle) {
+        // Base course or complete bundle: send the one welcome email
+        console.log(`Triggering GHL welcome email for ${email} — product:${product}`);
+        await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: isBundle, isBundle });
       } else {
-        console.log(`Triggering GHL for ${email} — product:${product} cron:${hasCronBump} kit:${hasStarterKit} bundle:${isBundle}`);
-        await triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit, isBundle });
+        // Upsell-only PI (cron or starter kit): tag the contact, suppress email
+        const upsellTags = ['cyrushq-customer', 'course-build-your-ai-ceo'];
+        if (product === 'cron-job-mastery')   upsellTags.push('course-cron-bump-purchased');
+        if (product === 'ai-ceo-starter-kit') upsellTags.push('course-starter-kit-purchased');
+        console.log(`GHL tag-only for ${email} — product:${product} (email suppressed)`);
+        await addGHLTagsOnly({ email, name, tags: upsellTags });
       }
     }
 

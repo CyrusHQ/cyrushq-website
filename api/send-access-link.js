@@ -114,8 +114,11 @@ async function sendGHLEmail({ email, firstName, magicLink }) {
     <h2 style="color:#070A13; margin:0 0 16px; font-family:Georgia,'Playfair Display',serif; font-size:24px;">
       Your access link is ready. 👑
     </h2>
-    <p style="color:#555; line-height:1.7; margin:0 0 32px; font-size:15px;">
-      Here's your instant access link. Click below — no password needed.
+    <p style="color:#555; line-height:1.7; margin:0 0 8px; font-size:15px;">
+      We're sorry if you had any trouble accessing your course — here's a fresh link that will get you straight in. No password needed.
+    </p>
+    <p style="color:#555; line-height:1.7; margin:0 0 32px; font-size:14px;">
+      If you added any bonuses (Cron Job Module or Starter Kit), they're already unlocked inside your portal.
     </p>
 
     <!-- CTA Button -->
