@@ -138,14 +138,14 @@ async function sendGHLEmail({ email, firstName, magicLink }) {
 
     <p style="color:#888; font-size:13px; line-height:1.6; margin:0;">
       Questions? Just reply to this email — we're fast.<br>
-      <a href="mailto:hello@cyrushq.ai" style="color:#C9A84C; text-decoration:none;">hello@cyrushq.ai</a>
+      <a href="mailto:hello@recaptureleads.com" style="color:#C9A84C; text-decoration:none;">hello@recaptureleads.com</a>
     </p>
   </div>
 
   <!-- Footer -->
   <div style="background:#F8F6F1; padding:20px 32px; text-align:center; border-top:2px solid #C9A84C;">
     <p style="color:#888; font-size:12px; margin:0; line-height:1.7;">
-      © 2026 CyrusHQ · <a href="https://cyrushq.ai" style="color:#C9A84C; text-decoration:none;">cyrushq.ai</a> · <a href="mailto:hello@cyrushq.ai" style="color:#C9A84C; text-decoration:none;">hello@cyrushq.ai</a><br>
+      © 2026 CyrusHQ · <a href="https://cyrushq.ai" style="color:#C9A84C; text-decoration:none;">cyrushq.ai</a> · <a href="mailto:hello@recaptureleads.com" style="color:#C9A84C; text-decoration:none;">hello@recaptureleads.com</a><br>
       Build wisely. Lead calmly. Create systems that endure.
     </p>
   </div>
@@ -205,7 +205,7 @@ export default async function handler(req, res) {
 
   if (allProducts.length === 0) {
     return res.status(200).json({
-      error: "No purchase found for this email. Please check you're using the email you purchased with, or contact hello@cyrushq.ai"
+      error: "No purchase found for this email. Please check you're using the email you purchased with, or contact hello@recaptureleads.com"
     });
   }
 
@@ -219,7 +219,7 @@ export default async function handler(req, res) {
     await sendGHLEmail({ email, firstName: '', magicLink });
   } catch (err) {
     console.error('GHL email send error:', err.message);
-    return res.status(500).json({ error: 'Failed to send access email. Please try again or contact hello@cyrushq.ai' });
+    return res.status(500).json({ error: 'Failed to send access email. Please try again or contact hello@recaptureleads.com' });
   }
 
   return res.status(200).json({
