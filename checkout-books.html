@@ -532,6 +532,7 @@ async function handleSubmit() {
       }
     }
 
+    sessionStorage.setItem('cyrushq_buyer_email', email.toLowerCase().trim());
     window.location.href = data.redirectUrl || '/book-upgrade';
 
   } catch (e) {

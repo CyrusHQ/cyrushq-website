@@ -316,7 +316,10 @@ async function triggerGHLBookBundleWorkflow({ email, name }) {
       Then follow the 7-phase, 41-day roadmap — every step is numbered, every file is named.
     </p>
 
-    <p style="color:#888; font-size:13px; margin-top:20px; line-height:1.5;">
+    <div style="background:#fffbeb; border:1px solid #C9A84C; border-radius:8px; padding:14px 18px; margin-top:20px;">
+      <p style="color:#555; font-size:13px; margin:0; line-height:1.6;">⚡ <strong>Added any bonuses?</strong> If you purchased the AI CEO Starter Kit, Cron Job Module, or Video Course, your downloads are on the page below — and a separate email with any course access link is on its way.</p>
+    </div>
+    <p style="color:#888; font-size:13px; margin-top:16px; line-height:1.5;">
       Questions? Just reply to this email — we're fast.<br>
       Download page: <a href="https://cyrushq.ai/book-thankyou" style="color:#C9A84C;">cyrushq.ai/book-thankyou</a>
     </p>

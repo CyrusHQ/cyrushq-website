@@ -376,7 +376,7 @@
     <div class="course-access-card">
       <div class="course-access-title">🎬 Your Video Course Is Ready</div>
       <div class="course-access-sub">Check your email — a welcome message with your course access link was sent immediately. Click below to go to your course portal now.</div>
-      <a href="https://cyrushq.ai/members" class="course-access-btn">Go to My Course Portal →</a>
+      <a href="https://cyrushq.ai/members" class="course-access-btn" id="bookPortalBtn">Go to My Course Portal →</a>
     </div>
   </div>
 
@@ -435,6 +435,17 @@
     document.getElementById('step2Desc').textContent  = 'Module 1 is under 20 minutes and gives you the full architecture before you build anything. Most students have a live AI CEO by the end of the weekend.';
     document.getElementById('step3Title').textContent = 'Use the Books as Your Reference';
     document.getElementById('step3Desc').textContent  = 'Your 2-book bundle is your reference library while you build. The Blueprint is your roadmap. The Playbook is your operational manual.';
+
+    // Wire portal button directly to buyer\'s magic link
+    (async function() {
+      const email = sessionStorage.getItem('cyrushq_buyer_email');
+      if (!email) return;
+      try {
+        const res = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        if (data.url) document.getElementById('bookPortalBtn').href = data.url;
+      } catch (e) { /* silent fallback to /members gate */ }
+    })();
   }
 </script>
 </body>
