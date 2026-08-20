@@ -29,6 +29,7 @@
     { "source": "/api/book-upsell-3",      "destination": "/api/book-upsell-3.js" },
     { "source": "/api/verify-token",       "destination": "/api/verify-token.js" },
     { "source": "/api/send-access-link",   "destination": "/api/send-access-link.js" },
-    { "source": "/api/get-portal-link",    "destination": "/api/get-portal-link.js" }
+    { "source": "/api/get-portal-link",    "destination": "/api/get-portal-link.js" },
+    { "source": "/api/send-kit-update",    "destination": "/api/send-kit-update.js" }
   ]
 }
