@@ -27,7 +27,7 @@ function loadOverrides() {
     'rwhytemere82@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
     'talent@christyprais.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
     'socialsimplicity4you@gmail.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
-    'info@praisstone.com': ['build-your-ai-ceo']
+    'info@praisstone.com': ['cron-job-mastery']
   };
 }
 
