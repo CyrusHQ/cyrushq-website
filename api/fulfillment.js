@@ -22,6 +22,16 @@ const PRODUCT_MAP = {
     downloadUrl: 'https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-tL9xM3vQ.zip',
     tag: 'bought-growth-engine-pack'
   },
+  'book-bundle': {
+    name: 'AI Agency Book Bundle',
+    downloadUrl: null,
+    tag: 'bought-book-bundle',
+    isBundle: true,
+    bundleItems: [
+      { name: '6-Figure AI Agency Blueprint', url: 'https://cyrushq.ai/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf' },
+      { name: 'AI Agent Playbook', url: 'https://cyrushq.ai/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf' }
+    ]
+  },
   'complete-bundle': {
     name: 'The Complete Bundle — AI CEO System',
     downloadUrl: null, // bundle sends multiple links
@@ -195,7 +205,7 @@ export default async function handler(req, res) {
     const session = event.data.object;
     const customerEmail = session.customer_details?.email;
     const customerName = session.customer_details?.name;
-    const productKey = session.metadata?.product_key;
+    const productKey = session.metadata?.product_key || session.metadata?.product;
 
     if (!customerEmail || !productKey) {
       console.error('Missing email or product_key', { customerEmail, productKey });
