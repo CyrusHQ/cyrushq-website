@@ -70,8 +70,8 @@ async function sendCronEmail(email, name) {
       contactId,
       subject: 'Your Cron Job Mastery Module — Access Inside 👑',
       html: emailBody,
-      fromName: 'Cyrus Systems Team',
-      from: 'hello@recaptureleads.com',
+      fromName: 'CyrusHQ',
+      from: 'hello@send.cyrushq.ai',
       to: email
     })
   });

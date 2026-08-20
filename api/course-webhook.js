@@ -220,8 +220,8 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       contactId,
       subject: `Your AI CEO course is ready, ${firstName} 👑`,
       html: emailBody,
-      fromName: 'Cyrus Systems Team',
-      from: 'hello@recaptureleads.com',
+      fromName: 'CyrusHQ',
+      from: 'hello@send.cyrushq.ai',
       to: email
     })
   });
@@ -280,7 +280,7 @@ async function triggerGHLCronEmail({ email, name }) {
 
   const emailRes = await fetch(`${GHL_BASE}/conversations/messages`, {
     method: 'POST', headers: GHL_HEADERS,
-    body: JSON.stringify({ type: 'Email', contactId, subject: `Your Cron Job Mastery Module — Access Inside 👑`, html: emailBody, fromName: 'Cyrus Systems Team', from: 'hello@recaptureleads.com', to: email })
+    body: JSON.stringify({ type: 'Email', contactId, subject: `Your Cron Job Mastery Module — Access Inside 👑`, html: emailBody, fromName: 'CyrusHQ', from: 'hello@send.cyrushq.ai', to: email })
   });
   const emailData = await emailRes.json();
   console.log('GHL cron email result:', JSON.stringify(emailData));
@@ -397,8 +397,8 @@ async function triggerGHLBookBundleWorkflow({ email, name }) {
       contactId,
       subject: `Your AI books are ready, ${firstName} 📄`,
       html: emailBody,
-      fromName: 'Cyrus Systems Team',
-      from: 'hello@recaptureleads.com',
+      fromName: 'CyrusHQ',
+      from: 'hello@send.cyrushq.ai',
       to: email
     })
   });
