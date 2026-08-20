@@ -372,7 +372,7 @@
       const res = await fetch('/api/upsell-cron', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, product: 'cron-mastery' })
+        body: JSON.stringify({ sessionId, product: 'cron-mastery', email: new URLSearchParams(window.location.search).get('email') || '' })
       });
       const data = await res.json();
 

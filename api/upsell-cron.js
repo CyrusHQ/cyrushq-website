@@ -81,7 +81,7 @@ async function sendCronEmail(email, name) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { sessionId } = req.body;
+  const { sessionId, email: clientEmail } = req.body;
 
   if (!sessionId) return res.status(400).json({ error: 'Missing session ID.' });
 
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Could not retrieve payment details. Please contact hello@cyrushq.ai' });
     }
 
-    const email = pi.metadata?.customer_email || '';
+    const email = clientEmail || pi.metadata?.customer_email || pi.receipt_email || '';
     const name  = pi.metadata?.customer_name  || '';
 
     // 2. Charge $9.99 using the same payment method — one click, no new card entry
