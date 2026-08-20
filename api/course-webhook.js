@@ -231,6 +231,62 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
   return true;
 }
 
+async function triggerGHLCronEmail({ email, name }) {
+  const cryptoMod = await import('crypto');
+  const portalSecret = process.env.PORTAL_SECRET || '';
+  const magicToken = cryptoMod.createHmac('sha256', portalSecret)
+    .update(`${portalSecret}:${email.toLowerCase().trim()}`)
+    .digest('hex');
+  const magicLink = `https://cyrushq.ai/members?t=${magicToken}&e=${encodeURIComponent(email.toLowerCase().trim())}`;
+
+  const hexKey = process.env.GHL_API_KEY || '';
+  const GHL_API_KEY = /^[0-9a-f]+$/i.test(hexKey)
+    ? Buffer.from(hexKey, 'hex').toString('utf8').trim()
+    : hexKey.trim();
+  const GHL_BASE = 'https://services.leadconnectorhq.com';
+  const GHL_HEADERS = { 'Authorization': `Bearer ${GHL_API_KEY}`, 'Content-Type': 'application/json', 'Version': '2021-07-28' };
+  const firstName = (name || 'Friend').split(' ')[0];
+  const lastName  = (name || '').split(' ').slice(1).join(' ') || '';
+
+  const contactRes = await fetch(`${GHL_BASE}/contacts/`, {
+    method: 'POST', headers: GHL_HEADERS,
+    body: JSON.stringify({ email, firstName, lastName, locationId: 'FitEZb4RfLdF1TkKxZEC', tags: ['cyrushq-customer', 'course-cron-bump-purchased'] })
+  });
+  const contactData = await contactRes.json();
+  const contactId = contactData.contact?.id || contactData.meta?.contactId;
+  if (!contactId) { console.error('GHL cron email contact fail:', JSON.stringify(contactData)); return false; }
+
+  const emailBody = `
+<div style="font-family:'Inter',Arial,sans-serif; max-width:600px; margin:0 auto; color:#1a1a2e;">
+  <div style="background:#0A1628; padding:32px; text-align:center;">
+    <h1 style="color:#C9A84C; margin:0; font-size:24px; letter-spacing:2px; font-family:Georgia,serif;">CYRUSHQ.AI</h1>
+    <p style="color:#8BA3C4; margin:8px 0 0; font-size:13px;">Your AI CEO System</p>
+  </div>
+  <div style="padding:40px 32px; background:#fff;">
+    <h2 style="color:#0A1628; margin:0 0 16px; font-family:Georgia,serif;">Your Cron Job Mastery Module is ready, ${firstName}. 👑</h2>
+    <p style="color:#555; line-height:1.6; margin:0 0 24px;">Your 3-video bonus series is waiting inside your course portal. Click below to access it now.</p>
+    <div style="text-align:center; margin:32px 0;">
+      <a href="${magicLink}" style="background:#C9A84C; color:#0A1628; padding:18px 36px; text-decoration:none; font-weight:700; font-size:16px; display:inline-block; letter-spacing:1.5px; text-transform:uppercase;">Access My Course Portal &rarr;</a>
+    </div>
+    <div style="background:#f8f6f1; border:1px solid #e5e7eb; border-radius:8px; padding:14px 18px; margin-top:20px; text-align:center;">
+      <p style="color:#555; font-size:13px; margin:0;">🔖 <strong>Bookmark this link — no password needed, instant access anytime.</strong></p>
+    </div>
+    <p style="color:#888; font-size:13px; margin-top:20px; line-height:1.5;">Questions? Reply to this email — we're fast.<br>Portal: <a href="https://cyrushq.ai/members" style="color:#C9A84C;">cyrushq.ai/members</a></p>
+  </div>
+  <div style="background:#F8F6F1; padding:20px 32px; text-align:center; border-top:2px solid #C9A84C;">
+    <p style="color:#888; font-size:12px; margin:0;">© 2026 CyrusHQ · cyrushq.ai · hello@cyrushq.ai<br>Build wisely. Lead calmly. Create systems that endure.</p>
+  </div>
+</div>`.trim();
+
+  const emailRes = await fetch(`${GHL_BASE}/conversations/messages`, {
+    method: 'POST', headers: GHL_HEADERS,
+    body: JSON.stringify({ type: 'Email', contactId, subject: `Your Cron Job Mastery Module — Access Inside 👑`, html: emailBody, fromName: 'CyrusHQ Team', from: 'hello@cyrushq.ai', to: email })
+  });
+  const emailData = await emailRes.json();
+  console.log('GHL cron email result:', JSON.stringify(emailData));
+  return true;
+}
+
 // Tag-only upsert: adds GHL contact tags without sending an email.
 // Used for upsell products (cron, starter kit) so buyers only ever get ONE welcome email.
 async function addGHLTagsOnly({ email, name, tags }) {
@@ -407,12 +463,15 @@ export default async function handler(req, res) {
         console.log(`Triggering GHL welcome email for ${email} — product:${product}`);
         await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: isBundle, isBundle });
       } else {
-        // Upsell-only PI (cron or starter kit): tag the contact, suppress email
-        const upsellTags = ['cyrushq-customer', 'course-build-your-ai-ceo'];
-        if (product === 'cron-job-mastery')   upsellTags.push('course-cron-bump-purchased');
-        if (product === 'ai-ceo-starter-kit') upsellTags.push('course-starter-kit-purchased');
-        console.log(`GHL tag-only for ${email} — product:${product} (email suppressed)`);
-        await addGHLTagsOnly({ email, name, tags: upsellTags });
+        // Cron: send magic link email. Starter kit: tag-only (course email already covers it).
+        if (product === 'cron-job-mastery') {
+          console.log(`Triggering GHL cron email for ${email}`);
+          await triggerGHLCronEmail({ email, name });
+        } else {
+          const upsellTags = ['cyrushq-customer', 'course-build-your-ai-ceo', 'course-starter-kit-purchased'];
+          console.log(`GHL tag-only for ${email} — product:${product}`);
+          await addGHLTagsOnly({ email, name, tags: upsellTags });
+        }
       }
     }
 
