@@ -357,7 +357,11 @@
     <!-- Shown only if cron module was purchased -->
     <div class="book-card cron-row" id="cronRow">
       <div class="book-card-title">Cron Job Mastery Module</div>
-      <div class="book-card-desc">3-video bonus series — your course portal link is below</div>
+      <div class="book-card-desc" id="cronDesc">3-video bonus series — your course portal link is below</div>
+      <a class="dl-btn dark" href="https://cyrushq.ai/members" id="cronPortalBtn" style="display:none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Access Course Portal
+      </a>
     </div>
 
   </div>
@@ -421,7 +425,25 @@
   const hasCron    = params.get('cron') === '1';
 
   if (hasKit)   document.getElementById('starterKitRow').classList.add('visible');
-  if (hasCron)  document.getElementById('cronRow').classList.add('visible');
+  if (hasCron) {
+    document.getElementById('cronRow').classList.add('visible');
+    if (!hasCourse) {
+      // Cron-only buyer — no portal button below, so show it inside the cron box
+      document.getElementById('cronDesc').textContent = '3-video bonus series — access inside your course portal';
+      const cronBtn = document.getElementById('cronPortalBtn');
+      cronBtn.style.display = '';
+      // Wire to magic link if email available
+      (async function() {
+        const email = sessionStorage.getItem('cyrushq_buyer_email');
+        if (!email) return;
+        try {
+          const res = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
+          const data = await res.json();
+          if (data.url) cronBtn.href = data.url;
+        } catch (e) { /* silent fallback to /members gate */ }
+      })();
+    }
+  }
 
   if (hasCourse) {
     document.getElementById('courseSection').classList.add('visible');
