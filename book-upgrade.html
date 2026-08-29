@@ -327,12 +327,15 @@
 
 <script>
   const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get('session_id') || '';
-  const email     = params.get('email') || '';
-  const source    = params.get('source') || sessionStorage.getItem('adSource') || 'organic';
+  const sessionId  = params.get('session_id') || '';
+  const email      = params.get('email') || '';
+  const source     = params.get('source') || sessionStorage.getItem('adSource') || 'organic';
+  const starterKit = params.get('starterKit') || '0';  // passed from earlier upsells
+  const cron       = params.get('cron') || '0';        // passed from cron upsell
 
   function nextUrl(base, course) {
-    let url = `${base}?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}`;
+    // reordered funnel: video course is now last — send all accumulated params to thank-you
+    let url = `${base}?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}&starterKit=${encodeURIComponent(starterKit)}&cron=${encodeURIComponent(cron)}`;
     if (course) url += '&course=1';
     return url;
   }
@@ -370,7 +373,7 @@
       }
 
       document.getElementById('loadingText').textContent = 'Course added! One more thing...';
-      setTimeout(() => { window.location.href = nextUrl('/book-upsell-2', true); }, 1500);
+      setTimeout(() => { window.location.href = nextUrl('/book-thankyou', true); }, 1500);
 
     } catch (e) {
       err.textContent = "Something went wrong. Email hello@cyrushq.ai and we'll sort it out.";
@@ -381,7 +384,7 @@
   }
 
   function handleDecline() {
-    window.location.href = nextUrl('/book-upsell-2', false);
+    window.location.href = nextUrl('/book-thankyou', false);
   }
 </script>
 </body>

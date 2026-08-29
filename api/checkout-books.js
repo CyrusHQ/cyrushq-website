@@ -92,7 +92,7 @@ export default async function handler(req, res) {
     }
 
     if (pi.status === 'succeeded') {
-      const redirectUrl = `/book-upgrade?session_id=${pi.id}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(adSource)}`;
+      const redirectUrl = `/book-upsell-2?session_id=${pi.id}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(adSource)}`;  // reordered: 29-files upsell first
       return res.status(200).json({ success: true, redirectUrl });
     }
 

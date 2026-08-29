@@ -366,8 +366,9 @@
   const starterKit = params.get('starterKit') || '0';
   const course     = params.get('course') || '0';
 
-  function thankYouUrl(cron) {
-    let url = `/book-thankyou?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}&starterKit=${encodeURIComponent(starterKit)}&course=${encodeURIComponent(course)}`;
+  function nextUrl(cron) {
+    // reordered funnel: cron now leads into video course upsell, not thank-you
+    let url = `/book-upgrade?session_id=${encodeURIComponent(sessionId)}&email=${encodeURIComponent(email)}&source=${encodeURIComponent(source)}&starterKit=${encodeURIComponent(starterKit)}`;
     if (cron) url += '&cron=1';
     return url;
   }
@@ -405,7 +406,7 @@
       }
 
       document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your downloads...';
-      setTimeout(() => { window.location.href = thankYouUrl(true); }, 1500);
+      setTimeout(() => { window.location.href = nextUrl(true); }, 1500);
 
     } catch (e) {
       err.textContent = "Something went wrong. Email hello@cyrushq.ai and we'll sort it out.";
@@ -416,7 +417,7 @@
   }
 
   function handleDecline() {
-    window.location.href = thankYouUrl(false);
+    window.location.href = nextUrl(false);
   }
 </script>
 </body>
