@@ -166,7 +166,8 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
   const bonusNote = `
     <div style="background:#fffbeb; border:1px solid #C9A84C; border-radius:8px; padding:16px 20px; margin:24px 0;">
       <p style="color:#555; font-size:14px; margin:0; line-height:1.6;">
-        ⚡ <strong>Added the Cron Job Module or AI CEO Starter Kit?</strong> They're already unlocked inside your portal — just click your access link above and they'll be waiting for you.
+        ⚡ <strong>Added the Cron Job Mastery Module?</strong> It's already unlocked inside your portal — just click your access link above and it'll be waiting for you.<br><br>
+        📥 <strong>Purchased the AI CEO Starter Kit?</strong> Check your email — your download link was sent separately.
       </p>
     </div>`;
 
