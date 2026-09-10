@@ -14,12 +14,12 @@ const PRODUCT_MAP = {
   },
   'ai-ceo-starter-kit': {
     name: 'AI CEO Starter Kit',
-    downloadUrl: 'https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip',
+    downloadUrl: 'https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-v2-qN8mW4xP.zip',
     tag: 'bought-starter-kit'
   },
   'ai-growth-engine-pack': {
     name: 'AI Growth Engine Pack',
-    downloadUrl: 'https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-tL9xM3vQ.zip',
+    downloadUrl: 'https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-v2-hM3kR7nW.zip',
     tag: 'bought-growth-engine-pack'
   },
   'book-bundle': {
@@ -40,8 +40,8 @@ const PRODUCT_MAP = {
     bundleItems: [
       { name: 'AI Agent Playbook', url: 'https://cyrushq.ai/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf' },
       { name: '6-Figure AI Agency Blueprint', url: 'https://cyrushq.ai/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf' },
-      { name: 'AI CEO Starter Kit (29 .md files + Setup Guide)', url: 'https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip' },
-      { name: 'AI Growth Engine Pack', url: 'https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-tL9xM3vQ.zip' }
+      { name: 'AI CEO Starter Kit (29 .md files + Setup Guide)', url: 'https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-v2-qN8mW4xP.zip' },
+      { name: 'AI Growth Engine Pack', url: 'https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-v2-hM3kR7nW.zip' }
     ]
   }
 };

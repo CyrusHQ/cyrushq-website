@@ -184,8 +184,8 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       <ul style="color:#555; font-size:13px; line-height:2; margin:0; padding-left:20px;">
         <li><a href="https://cyrushq.ai/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf" style="color:#16a34a;">AI Agent Playbook (81-page PDF)</a></li>
         <li><a href="https://cyrushq.ai/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf" style="color:#16a34a;">6-Figure AI Agency Blueprint (120-page PDF)</a></li>
-        <li><a href="https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-pR4vK8nJ.zip" style="color:#16a34a;">AI CEO Starter Kit (29 plug-and-play files)</a></li>
-        <li><a href="https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-tL9xM3vQ.zip" style="color:#16a34a;">AI Growth Engine Pack (4 bonus engine files)</a></li>
+        <li><a href="https://cyrushq.ai/downloads/ai-ceo-starter-kit-cyrushq-2026-v2-qN8mW4xP.zip" style="color:#16a34a;">AI CEO Starter Kit (29 plug-and-play files)</a></li>
+        <li><a href="https://cyrushq.ai/downloads/ai-growth-engine-pack-cyrushq-2026-v2-hM3kR7nW.zip" style="color:#16a34a;">AI Growth Engine Pack (4 bonus engine files)</a></li>
       </ul>
     </div>` : '';
 
