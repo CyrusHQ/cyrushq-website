@@ -46,6 +46,15 @@ const PRODUCT_MAP = {
   }
 };
 
+function buildMagicLink(email) {
+  const crypto = require('crypto');
+  const secret = process.env.PORTAL_SECRET || '';
+  const token = crypto.createHmac('sha256', secret)
+    .update(`${secret}:${email.toLowerCase().trim()}`)
+    .digest('hex');
+  return `https://cyrushq.ai/members?t=${token}&e=${encodeURIComponent(email.toLowerCase().trim())}`;
+}
+
 export const config = { api: { bodyParser: false } };
 
 async function getRawBody(req) {
@@ -106,10 +115,20 @@ async function sendDeliveryEmail(customerEmail, customerName, product) {
   // Build email body — handle single product and bundle
   let downloadSection = '';
   if (product.isBundle) {
+    const magicLink = buildMagicLink(customerEmail);
     downloadSection = `
-    <p style="color: #555; line-height: 1.6; margin: 0 0 16px;">Your complete bundle includes all 4 products. Click each button below to download:</p>
+    <div style="text-align:center; margin: 24px 0;">
+      <a href="${magicLink}"
+         style="background: #C9A84C; color: #0A1628; padding: 16px 36px;
+                text-decoration: none; font-weight: 700; font-size: 16px;
+                display: inline-block; letter-spacing: 1.5px; text-transform: uppercase;">
+        Access My Course Portal &rarr;
+      </a>
+    </div>
+    <p style="color: #555; line-height: 1.6; margin: 16px 0;">Your video course (Build Your AI CEO + Cron Job Mastery) is live and waiting. Click above — no password needed.</p>
+    <p style="color: #555; line-height: 1.6; margin: 0 0 16px;"><strong>Your downloads:</strong></p>
     ${product.bundleItems.map(item => `
-    <div style="margin: 12px 0;">
+    <div style="margin: 10px 0;">
       <a href="${item.url}"
          style="background: #0A1628; color: #C9A84C; padding: 12px 24px;
                 text-decoration: none; font-weight: 700; font-size: 14px;
