@@ -64,17 +64,9 @@
 <body>
   <div class="crown">👑</div>
   <h1>Purchase Complete.</h1>
-  <p class="sub">
-    Your AI CEO Starter Kit is ready. Download it now or grab it from the email we just sent.
-  </p>
+  <p class="sub" id="sub-text">Your product is ready. Download it now or grab it from the email we just sent.</p>
 
-  <div style="margin: 0 auto 28px; max-width:480px; width:100%;">
-    <a href="/downloads/ai-ceo-starter-kit-cyrushq-2026-v2-qN8mW4xP.zip"
-       download
-       style="display:block; background:#C9A84C; color:#070A13; padding:18px 36px; text-decoration:none; font-weight:700; font-size:1rem; letter-spacing:1.5px; text-transform:uppercase; font-family:'Inter',sans-serif; text-align:center;">
-      ⬇ Download AI CEO Starter Kit (ZIP)
-    </a>
-  </div>
+  <div style="margin: 0 auto 28px; max-width:480px; width:100%;" id="download-btn-wrap"></div>
 
   <div class="card">
     <p>Also check your inbox</p>
@@ -83,5 +75,27 @@
 
   <a href="https://cyrushq.ai" class="back">← Return to CyrusHQ</a>
   <p class="tagline">Build wisely. Lead calmly. Create systems that endure.</p>
+
+  <script>
+    var products = {
+      'ai-ceo-starter-kit': {
+        label: 'Your AI CEO Starter Kit is ready.',
+        btnText: '⬇ Download AI CEO Starter Kit (ZIP)',
+        url: '/downloads/ai-ceo-starter-kit-cyrushq-2026-v2-qN8mW4xP.zip'
+      },
+      'ai-growth-engine-pack': {
+        label: 'Your AI Growth Engine Pack is ready.',
+        btnText: '⬇ Download Growth Engine Pack (ZIP)',
+        url: '/downloads/ai-growth-engine-pack-cyrushq-2026-v2-hM3kR7nW.zip'
+      }
+    };
+    var p = new URLSearchParams(window.location.search).get('product');
+    var info = products[p];
+    if (info) {
+      document.getElementById('sub-text').textContent = info.label + ' Download it now or grab it from the email we just sent.';
+      document.getElementById('download-btn-wrap').innerHTML =
+        '<a href="' + info.url + '" download style="display:block;background:#C9A84C;color:#070A13;padding:18px 36px;text-decoration:none;font-weight:700;font-size:1rem;letter-spacing:1.5px;text-transform:uppercase;font-family:Inter,sans-serif;text-align:center;">' + info.btnText + '</a>';
+    }
+  </script>
 </body>
 </html>
