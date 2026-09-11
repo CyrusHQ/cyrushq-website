@@ -321,10 +321,27 @@
 
     <div style="margin-bottom:24px;">
       <div style="color:#C9A84C; font-weight:700; font-size:0.85rem; letter-spacing:1px; margin-bottom:14px; text-transform:uppercase;">Video Course Access</div>
+
+      <!-- Shown when magic link is ready (funnel buyers or after email entry) -->
       <a id="bundlePortalBtn" href="/members"
-         style="display:inline-block; background:#C9A84C; color:#0A1628; padding:14px 32px; font-weight:700; font-size:1rem; text-decoration:none; letter-spacing:1px; text-transform:uppercase;">
+         style="display:none; background:#C9A84C; color:#0A1628; padding:14px 32px; font-weight:700; font-size:1rem; text-decoration:none; letter-spacing:1px; text-transform:uppercase;">
         ▶ Open My Course Portal
       </a>
+
+      <!-- Shown for payment link buyers until they enter email -->
+      <div id="bundleEmailBox" style="display:none;">
+        <p style="color:#8BA3C4; font-size:0.88rem; margin:0 0 10px;">Enter the email you used at checkout to unlock instant portal access:</p>
+        <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+          <input type="email" id="bundleEmailInput" placeholder="your@email.com"
+            style="padding:12px 16px; border:2px solid #C9A84C; background:#0C1320; color:#fff; font-size:0.95rem; width:230px; outline:none;" />
+          <button onclick="sendBundleMagicLink()"
+            style="background:#C9A84C; color:#0A1628; padding:12px 20px; font-weight:700; font-size:0.95rem; border:none; cursor:pointer; letter-spacing:0.5px; white-space:nowrap;">
+            Get Portal Access →
+          </button>
+        </div>
+        <div id="bundleEmailStatus" style="margin-top:8px; font-size:0.85rem; color:#8BA3C4;"></div>
+      </div>
+
       <div style="color:#8BA3C4; font-size:0.8rem; margin-top:8px;">5 modules — Build Your AI CEO + Cron Job Mastery • Lifetime access</div>
     </div>
 
@@ -401,29 +418,95 @@
   // Wire portal button directly to buyer's magic link
   (async function() {
     const email = sessionStorage.getItem('cyrushq_buyer_email');
+    const isBundle = _p.get('bundle') === '1';
+
     if (email) {
       // Funnel buyer — generate magic link directly
       try {
         const res = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
         const data = await res.json();
         if (data.url) {
+          // Wire both portal buttons
           const btn = document.getElementById('portalBtn');
           btn.href = data.url;
           btn.style.display = 'inline-block';
-          // Also wire the bundle portal button if visible
           const bundleBtn = document.getElementById('bundlePortalBtn');
-          if (bundleBtn) bundleBtn.href = data.url;
+          if (bundleBtn) { bundleBtn.href = data.url; bundleBtn.style.display = 'inline-block'; }
+          const bundleBox = document.getElementById('bundleEmailBox');
+          if (bundleBox) bundleBox.style.display = 'none';
           document.getElementById('magicLinkForm').style.display = 'none';
           document.getElementById('loginNote').textContent = 'Or use the link in your email for direct access';
         }
       } catch (e) {
         // silently fail
+        if (isBundle) showBundleEmailBox();
+        else { document.getElementById('magicLinkForm').style.display = 'block'; }
       }
     } else {
-      // Payment link buyer — show email input to send magic link
-      document.getElementById('magicLinkForm').style.display = 'block';
-      document.getElementById('portalBtn').style.display = 'none';
+      // Payment link buyer — no sessionStorage email
+      if (isBundle) {
+        showBundleEmailBox(); // show email input inside bundle card
+      } else {
+        document.getElementById('magicLinkForm').style.display = 'block';
+        document.getElementById('portalBtn').style.display = 'none';
+      }
     }
+
+  function showBundleEmailBox() {
+    const box = document.getElementById('bundleEmailBox');
+    if (box) box.style.display = 'block';
+    // Hide the standalone magic link form — bundle card handles it
+    document.getElementById('magicLinkForm').style.display = 'none';
+    document.getElementById('portalBtn').style.display = 'none';
+  }
+
+  async function sendBundleMagicLink() {
+    const email = document.getElementById('bundleEmailInput').value.trim();
+    const status = document.getElementById('bundleEmailStatus');
+    if (!email || !email.includes('@')) {
+      status.textContent = 'Please enter a valid email address.';
+      status.style.color = '#e74c3c';
+      return;
+    }
+    status.textContent = 'Getting your access link...';
+    status.style.color = '#8BA3C4';
+    try {
+      // First try to get a direct portal link
+      const linkRes = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
+      const linkData = await linkRes.json();
+      if (linkData.url) {
+        // Direct magic link — wire the button immediately
+        const bundleBtn = document.getElementById('bundlePortalBtn');
+        bundleBtn.href = linkData.url;
+        bundleBtn.style.display = 'inline-block';
+        document.getElementById('bundleEmailBox').style.display = 'none';
+        status.textContent = '';
+        return;
+      }
+      // No portal link yet — send magic link email instead
+      const sendRes = await fetch('/api/send-access-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const sendData = await sendRes.json();
+      if (sendRes.ok && sendData.url) {
+        const bundleBtn = document.getElementById('bundlePortalBtn');
+        bundleBtn.href = sendData.url;
+        bundleBtn.style.display = 'inline-block';
+        document.getElementById('bundleEmailBox').style.display = 'none';
+        status.innerHTML = '✅ Portal access unlocked!';
+        status.style.color = '#2ecc71';
+      } else {
+        status.innerHTML = '✅ Magic link sent to your inbox! Check email then click the portal button above.';
+        status.style.color = '#2ecc71';
+        document.getElementById('bundleEmailInput').disabled = true;
+      }
+    } catch (e) {
+      status.textContent = 'Something went wrong. Email hello@cyrushq.ai for instant access.';
+      status.style.color = '#e74c3c';
+    }
+  }
   })();
 
   async function sendMagicLink() {
