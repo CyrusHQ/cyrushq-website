@@ -315,6 +315,53 @@ async function triggerGHLStarterKitEmail({ email, name }) {
   return true;
 }
 
+async function triggerGHLPlaybookEmail({ email, name }) {
+  const firstName = (name || 'Friend').split(' ')[0];
+  const lastName  = (name || '').split(' ').slice(1).join(' ') || '';
+  const tags = ['cyrushq-customer', 'ai-agent-playbook-purchased'];
+
+  const contactId = await upsertGHLContact({ email, firstName, lastName, tags });
+  if (!contactId) return false;
+
+  await mergeGHLTags(contactId, tags);
+
+  const emailBody = `
+<div style="font-family:'Inter',Arial,sans-serif; max-width:600px; margin:0 auto; color:#1a1a2e;">
+  <div style="background:#0A1628; padding:32px; text-align:center;">
+    <h1 style="color:#C9A84C; margin:0; font-size:24px; letter-spacing:2px; font-family:Georgia,serif;">CYRUSHQ.AI</h1>
+    <p style="color:#8BA3C4; margin:8px 0 0; font-size:13px;">AI Agent Playbook</p>
+  </div>
+  <div style="padding:40px 32px; background:#fff;">
+    <h2 style="color:#0A1628; margin:0 0 10px; font-family:Georgia,serif;">Your Playbook is ready, ${firstName}. 👑</h2>
+    <p style="color:#555; line-height:1.6; margin:0 0 20px;">Your purchase is confirmed. Your AI Agent Playbook is ready to download — 81 pages covering how to build, deploy, and scale AI agents for real business results.</p>
+    <div style="text-align:center; margin:28px 0;">
+      <a href="https://cyrushq.ai/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf"
+         style="background:#C9A84C; color:#0A1628; padding:18px 36px; text-decoration:none; font-weight:700; font-size:16px; display:inline-block; letter-spacing:1.5px; text-transform:uppercase;">
+        📄 Download AI Agent Playbook (PDF) &rarr;
+      </a>
+    </div>
+    <div style="background:#f8f6f1; border:1px solid #e5e7eb; border-radius:8px; padding:16px 20px; margin:24px 0;">
+      <p style="color:#555; font-size:14px; margin:0 0 8px; font-weight:600;">What’s inside your 81-page Playbook:</p>
+      <ul style="color:#555; font-size:13px; line-height:2; margin:0; padding-left:20px;">
+        <li>How to architect a multi-agent AI system from scratch</li>
+        <li>Agent types, roles, and coordination frameworks</li>
+        <li>Real deployment patterns for non-technical founders</li>
+        <li>How to build your AI CEO stack step by step</li>
+        <li>Scaling and oversight protocols</li>
+      </ul>
+    </div>
+    <p style="color:#555; font-size:14px; line-height:1.6; margin-top:20px;"><strong>Where to start:</strong><br>Begin with Chapter 1 — it gives you the full mental model before you build anything. Most readers finish in one sitting.</p>
+    <p style="color:#888; font-size:13px; margin-top:20px; line-height:1.5;">Questions? Just reply to this email — we’re fast.<br>Website: <a href="https://cyrushq.ai" style="color:#C9A84C;">cyrushq.ai</a></p>
+  </div>
+  <div style="background:#F8F6F1; padding:20px 32px; text-align:center; border-top:2px solid #C9A84C;">
+    <p style="color:#888; font-size:12px; margin:0;">© 2026 CyrusHQ · cyrushq.ai · hello@cyrushq.ai<br>Build wisely. Lead calmly. Create systems that endure.</p>
+  </div>
+</div>`.trim();
+
+  await sendGHLEmail({ contactId, to: email, subject: `Your AI Agent Playbook is ready, ${firstName} 👑`, html: emailBody });
+  return true;
+}
+
 async function triggerGHLGrowthEngineEmail({ email, name }) {
   const firstName = (name || 'Friend').split(' ')[0];
   const lastName  = (name || '').split(' ').slice(1).join(' ') || '';
@@ -504,6 +551,9 @@ export default async function handler(req, res) {
     } else if (product === 'ai-growth-engine-pack') {
       console.log(`Growth engine email + tag for ${email}`);
       await triggerGHLGrowthEngineEmail({ email, name });
+    } else if (product === 'ai-agent-playbook') {
+      console.log(`Playbook email + tag for ${email}`);
+      await triggerGHLPlaybookEmail({ email, name });
     }
     // Meta CAPI for checkout.session purchases
     await sendMetaCAPIEvent({
