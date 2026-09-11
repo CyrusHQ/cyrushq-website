@@ -315,8 +315,23 @@
   </div>
 
   <!-- LOGIN BUTTON -->
-  <a href="/members" class="login-btn" id="portalBtn">Go to My Course Portal →</a>
-  <div class="login-note">Or use the link in your email for direct access</div>
+  <a href="/members" class="login-btn" id="portalBtn" style="display:none;">Go to My Course Portal →</a>
+
+  <!-- Email capture for payment link buyers (no sessionStorage email) -->
+  <div id="magicLinkForm" style="display:none; margin-top:1.5rem; text-align:center;">
+    <p style="color:#555; font-size:0.95rem; margin-bottom:0.75rem;">Enter the email you used at checkout to get your instant access link:</p>
+    <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+      <input type="email" id="magicEmail" placeholder="your@email.com"
+        style="padding:12px 16px; border:2px solid #C9A84C; font-size:1rem; width:260px; outline:none;" />
+      <button onclick="sendMagicLink()"
+        style="background:#C9A84C; color:#0A1628; padding:12px 24px; font-weight:700; font-size:1rem; border:none; cursor:pointer; letter-spacing:0.5px;">
+        Send My Access Link →
+      </button>
+    </div>
+    <div id="magicStatus" style="margin-top:0.75rem; font-size:0.9rem; color:#555;"></div>
+  </div>
+
+  <div class="login-note" id="loginNote">Check your email — your personal access link is on its way.</div>
 
   <!-- SHARE -->
   <div class="share-card">
@@ -347,18 +362,63 @@
   // Wire portal button directly to buyer's magic link
   (async function() {
     const email = sessionStorage.getItem('cyrushq_buyer_email');
-    if (!email) return; // fallback: button stays as /members gate
-    try {
-      const res = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
-      const data = await res.json();
-      if (data.url) {
-        const btn = document.getElementById('portalBtn');
-        btn.href = data.url;
+    if (email) {
+      // Funnel buyer — generate magic link directly
+      try {
+        const res = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        if (data.url) {
+          const btn = document.getElementById('portalBtn');
+          btn.href = data.url;
+          btn.style.display = 'inline-block';
+          document.getElementById('magicLinkForm').style.display = 'none';
+          document.getElementById('loginNote').textContent = 'Or use the link in your email for direct access';
+        }
+      } catch (e) {
+        // silently fail
       }
-    } catch (e) {
-      // silently fail — button falls back to /members
+    } else {
+      // Payment link buyer — show email input to send magic link
+      document.getElementById('magicLinkForm').style.display = 'block';
+      document.getElementById('portalBtn').style.display = 'none';
     }
   })();
+
+  async function sendMagicLink() {
+    const email = document.getElementById('magicEmail').value.trim();
+    const status = document.getElementById('magicStatus');
+    if (!email || !email.includes('@')) {
+      status.textContent = 'Please enter a valid email address.';
+      status.style.color = '#c0392b';
+      return;
+    }
+    status.textContent = 'Sending your access link...';
+    status.style.color = '#555';
+    try {
+      const res = await fetch('/api/send-access-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        status.innerHTML = '✅ Access link sent! Check your inbox (and spam folder just in case).';
+        status.style.color = '#27ae60';
+        document.getElementById('magicEmail').disabled = true;
+        // Show direct portal button too
+        const btn = document.getElementById('portalBtn');
+        if (data.url) btn.href = data.url;
+        btn.style.display = 'inline-block';
+        btn.style.marginTop = '1rem';
+      } else {
+        status.textContent = data.error || 'Something went wrong. Try again or email hello@cyrushq.ai';
+        status.style.color = '#c0392b';
+      }
+    } catch (e) {
+      status.textContent = 'Network error. Please try again.';
+      status.style.color = '#c0392b';
+    }
+  }
 
   function copyLink(btn) {
     navigator.clipboard.writeText('https://cyrushq.ai/course').then(() => {

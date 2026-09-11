@@ -332,6 +332,7 @@ export default async function handler(req, res) {
   const event = JSON.parse(rawBody.toString('utf8'));
   console.log('Course webhook event:', event.type);
 
+  // Handle payment_intent.succeeded — funnel/custom checkout purchases (metadata on PI)
   if (event.type === 'payment_intent.succeeded') {
     const pi    = event.data.object;
     const meta  = pi.metadata || {};
@@ -366,16 +367,59 @@ export default async function handler(req, res) {
         await triggerGHLCronEmail({ email, name });
 
       } else if (product === 'ai-ceo-starter-kit') {
-        // Tag-only: course welcome email already sent; just add the starter kit tag
         const upsellTags = ['cyrushq-customer', 'course-build-your-ai-ceo', 'ai-ceo-starter-kit-purchased'];
         console.log(`Starter kit tag-only for ${email}`);
         await addGHLTagsOnly({ email, name, tags: upsellTags });
       }
 
-      // Meta CAPI for all course products
       console.log(`Meta CAPI for ${email} — PI: ${pi.id}`);
       await sendMetaCAPIEvent({ email, name, customerId: pi.customer, fbp, fbc, eventSourceUrl, paymentIntentId: pi.id, amountCents: pi.amount });
     }
+  }
+
+  // Handle checkout.session.completed — Stripe payment link purchases (metadata on session)
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const meta    = session.metadata || {};
+    const email   = session.customer_details?.email || meta.customer_email || '';
+    const name    = session.customer_details?.name  || meta.customer_name  || '';
+    const product = meta.product || meta.product_key || '';
+
+    if (!email || !product) {
+      console.log('checkout.session.completed — missing email or product, skipping:', { email, product });
+      return res.status(200).json({ received: true, note: 'no email or product' });
+    }
+
+    console.log(`checkout.session.completed — product:${product} email:${email}`);
+
+    const isBundle     = product === 'complete-bundle';
+    const isBookBundle = product === 'book-bundle';
+
+    if (isBundle) {
+      console.log(`Complete Bundle (payment link) for ${email}`);
+      await triggerGHLCourseWorkflow({ email, name, hasCronBump: true, hasStarterKit: true, isBundle: true });
+    } else if (isBookBundle || product === '2-book-bundle') {
+      console.log(`Book bundle (payment link) for ${email}`);
+      await triggerGHLBookBundleWorkflow({ email, name });
+    } else if (product === 'build-your-ai-ceo') {
+      await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false });
+    } else if (product === 'ai-ceo-starter-kit') {
+      const tags = ['cyrushq-customer', 'ai-ceo-starter-kit-purchased'];
+      await addGHLTagsOnly({ email, name, tags });
+    } else if (product === 'ai-growth-engine-pack') {
+      const tags = ['cyrushq-customer', 'ai-growth-engine-pack-purchased'];
+      await addGHLTagsOnly({ email, name, tags });
+    }
+    // Meta CAPI for checkout.session purchases
+    await sendMetaCAPIEvent({
+      email, name,
+      customerId: session.customer,
+      fbp: meta.fbp || null,
+      fbc: meta.fbc || null,
+      eventSourceUrl: meta.event_source_url || 'https://cyrushq.ai',
+      paymentIntentId: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
+      amountCents: session.amount_total
+    });
   }
 
   return res.status(200).json({ received: true });
