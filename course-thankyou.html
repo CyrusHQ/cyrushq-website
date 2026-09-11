@@ -314,6 +314,44 @@
     </div>
   </div>
 
+  <!-- BUNDLE DOWNLOADS (shown when ?bundle=1 is in URL) -->
+  <div id="bundleDownloads" style="display:none; background:#0A1628; border:2px solid #C9A84C; padding:32px; margin:32px 0; text-align:center;">
+    <div style="color:#C9A84C; font-size:1.4rem; font-weight:700; letter-spacing:1px; margin-bottom:8px;">👑 YOUR COMPLETE BUNDLE</div>
+    <p style="color:#8BA3C4; font-size:0.9rem; margin:0 0 24px;">Everything is ready right now — download directly or access via the email we just sent.</p>
+
+    <div style="margin-bottom:24px;">
+      <div style="color:#C9A84C; font-weight:700; font-size:0.85rem; letter-spacing:1px; margin-bottom:14px; text-transform:uppercase;">Video Course Access</div>
+      <a id="bundlePortalBtn" href="/members"
+         style="display:inline-block; background:#C9A84C; color:#0A1628; padding:14px 32px; font-weight:700; font-size:1rem; text-decoration:none; letter-spacing:1px; text-transform:uppercase;">
+        ▶ Open My Course Portal
+      </a>
+      <div style="color:#8BA3C4; font-size:0.8rem; margin-top:8px;">5 modules — Build Your AI CEO + Cron Job Mastery • Lifetime access</div>
+    </div>
+
+    <div style="border-top:1px solid #1A3A6B; padding-top:20px;">
+      <div style="color:#C9A84C; font-weight:700; font-size:0.85rem; letter-spacing:1px; margin-bottom:14px; text-transform:uppercase;">Your Digital Downloads</div>
+      <div style="display:grid; gap:10px; max-width:480px; margin:0 auto;">
+        <a href="/downloads/ai-agent-playbook-cyrushq-2026-xK9mP3qR.pdf" download
+           style="display:block; background:#0C1320; border:1px solid #C9A84C; color:#C9A84C; padding:12px 20px; text-decoration:none; font-weight:600; font-size:0.9rem; letter-spacing:0.5px;">
+          ⬇ AI Agent Playbook — 81-page PDF
+        </a>
+        <a href="/downloads/6-figure-blueprint-cyrushq-2026-mN7xQ2wL.pdf" download
+           style="display:block; background:#0C1320; border:1px solid #C9A84C; color:#C9A84C; padding:12px 20px; text-decoration:none; font-weight:600; font-size:0.9rem; letter-spacing:0.5px;">
+          ⬇ 6-Figure AI Agency Blueprint — 120-page PDF
+        </a>
+        <a href="/downloads/ai-ceo-starter-kit-cyrushq-2026-v2-qN8mW4xP.zip" download
+           style="display:block; background:#0C1320; border:1px solid #C9A84C; color:#C9A84C; padding:12px 20px; text-decoration:none; font-weight:600; font-size:0.9rem; letter-spacing:0.5px;">
+          ⬇ AI CEO Starter Kit — 29 plug-and-play .md files
+        </a>
+        <a href="/downloads/ai-growth-engine-pack-cyrushq-2026-v2-hM3kR7nW.zip" download
+           style="display:block; background:#0C1320; border:1px solid #C9A84C; color:#C9A84C; padding:12px 20px; text-decoration:none; font-weight:600; font-size:0.9rem; letter-spacing:0.5px;">
+          ⬇ AI Growth Engine Pack — 4 engine files
+        </a>
+      </div>
+      <p style="color:#555; font-size:0.8rem; margin-top:14px;">Links are permanent — bookmark this page or save your email for future access.</p>
+    </div>
+  </div>
+
   <!-- LOGIN BUTTON -->
   <a href="/members" class="login-btn" id="portalBtn" style="display:none;">Go to My Course Portal →</a>
 
@@ -356,8 +394,9 @@
 <script>
   // Show upsell confirmations based on purchase params
   const _p = new URLSearchParams(window.location.search);
-  if (_p.get('kit') === '1')  document.getElementById('kitConfirm').classList.add('visible');
-  if (_p.get('cron') === '1') document.getElementById('cronConfirm').classList.add('visible');
+  if (_p.get('kit') === '1')    document.getElementById('kitConfirm').classList.add('visible');
+  if (_p.get('cron') === '1')   document.getElementById('cronConfirm').classList.add('visible');
+  if (_p.get('bundle') === '1') document.getElementById('bundleDownloads').style.display = 'block';
 
   // Wire portal button directly to buyer's magic link
   (async function() {
@@ -371,6 +410,9 @@
           const btn = document.getElementById('portalBtn');
           btn.href = data.url;
           btn.style.display = 'inline-block';
+          // Also wire the bundle portal button if visible
+          const bundleBtn = document.getElementById('bundlePortalBtn');
+          if (bundleBtn) bundleBtn.href = data.url;
           document.getElementById('magicLinkForm').style.display = 'none';
           document.getElementById('loginNote').textContent = 'Or use the link in your email for direct access';
         }
