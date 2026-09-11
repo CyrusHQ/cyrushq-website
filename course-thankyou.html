@@ -452,10 +452,12 @@
       }
     }
 
+  })(); // end IIFE
+
+  // Global functions — must be outside IIFE so onclick can reach them
   function showBundleEmailBox() {
     const box = document.getElementById('bundleEmailBox');
     if (box) box.style.display = 'block';
-    // Hide the standalone magic link form — bundle card handles it
     document.getElementById('magicLinkForm').style.display = 'none';
     document.getElementById('portalBtn').style.display = 'none';
   }
@@ -471,11 +473,10 @@
     status.textContent = 'Getting your access link...';
     status.style.color = '#8BA3C4';
     try {
-      // First try to get a direct portal link
+      // Try direct portal link first
       const linkRes = await fetch(`/api/get-portal-link?e=${encodeURIComponent(email)}`);
       const linkData = await linkRes.json();
       if (linkData.url) {
-        // Direct magic link — wire the button immediately
         const bundleBtn = document.getElementById('bundlePortalBtn');
         bundleBtn.href = linkData.url;
         bundleBtn.style.display = 'inline-block';
@@ -483,7 +484,7 @@
         status.textContent = '';
         return;
       }
-      // No portal link yet — send magic link email instead
+      // Fall back to sending magic link email
       const sendRes = await fetch('/api/send-access-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -498,7 +499,7 @@
         status.innerHTML = '✅ Portal access unlocked!';
         status.style.color = '#2ecc71';
       } else {
-        status.innerHTML = '✅ Magic link sent to your inbox! Check email then click the portal button above.';
+        status.innerHTML = '✅ Magic link sent! Check your inbox then click the portal button.';
         status.style.color = '#2ecc71';
         document.getElementById('bundleEmailInput').disabled = true;
       }
@@ -507,7 +508,6 @@
       status.style.color = '#e74c3c';
     }
   }
-  })();
 
   async function sendMagicLink() {
     const email = document.getElementById('magicEmail').value.trim();
