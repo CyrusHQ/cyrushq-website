@@ -33,52 +33,59 @@ function loadOverrides() {
   };
 }
 
+function applyProductToSet(product, products) {
+  if (COURSE_PRODUCT_IDS.includes(product)) products.add(product);
+  // complete-bundle (payment link or direct) grants both course products
+  if (product === 'complete-bundle') {
+    products.add('build-your-ai-ceo');
+    products.add('cron-job-mastery');
+  }
+}
+
 async function getStripeProducts(email) {
   const STRIPE_KEY = process.env.STRIPE_SECRET_KEY || process.env.STRIPE_API_KEY;
   if (!STRIPE_KEY) return [];
 
   const normalEmail = email.toLowerCase().trim();
   const products = new Set();
+  const authHeader = `Basic ${Buffer.from(`${STRIPE_KEY}:`).toString('base64')}`;
 
   try {
-    // Fetch charges (up to 100)
-    const res = await fetch('https://api.stripe.com/v1/charges?limit=100', {
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${STRIPE_KEY}:`).toString('base64')}`
-      }
+    // --- 1. Check charges (custom checkout / PaymentIntent flow) ---
+    const chargesRes = await fetch('https://api.stripe.com/v1/charges?limit=100', {
+      headers: { Authorization: authHeader }
     });
-
-    if (!res.ok) {
-      console.error('Stripe charges fetch failed:', res.status);
-      return [];
+    if (chargesRes.ok) {
+      const chargesData = await chargesRes.json();
+      for (const charge of (chargesData.data || [])) {
+        if (charge.status !== 'succeeded') continue;
+        const meta = charge.metadata || {};
+        const chargeEmail = (meta.customer_email || charge.receipt_email || '').toLowerCase().trim();
+        if (chargeEmail !== normalEmail) continue;
+        applyProductToSet(meta.product || '', products);
+      }
+    } else {
+      console.error('Stripe charges fetch failed:', chargesRes.status);
     }
 
-    const data = await res.json();
-    const charges = data.data || [];
-
-    for (const charge of charges) {
-      if (charge.status !== 'succeeded') continue;
-
-      const meta = charge.metadata || {};
-      const chargeEmail = (meta.customer_email || charge.receipt_email || '').toLowerCase().trim();
-
-      if (chargeEmail !== normalEmail) continue;
-
-      const product = meta.product || '';
-      if (COURSE_PRODUCT_IDS.includes(product)) {
-        products.add(product);
+    // --- 2. Check checkout sessions (Stripe Payment Links) ---
+    // Payment link purchases fire checkout.session.completed — metadata lives on the session,
+    // not always on the underlying charge. This covers complete-bundle and any payment-link products.
+    const sessionsRes = await fetch(
+      `https://api.stripe.com/v1/checkout/sessions?limit=100&status=complete`,
+      { headers: { Authorization: authHeader } }
+    );
+    if (sessionsRes.ok) {
+      const sessionsData = await sessionsRes.json();
+      for (const session of (sessionsData.data || [])) {
+        const sessionEmail = (session.customer_details?.email || session.customer_email || '').toLowerCase().trim();
+        if (sessionEmail !== normalEmail) continue;
+        const meta = session.metadata || {};
+        const product = meta.product || meta.product_key || '';
+        applyProductToSet(product, products);
       }
-
-      // complete-bundle includes both
-      if (product === 'complete-bundle') {
-        products.add('build-your-ai-ceo');
-        products.add('cron-job-mastery');
-      }
-
-      // build-your-ai-ceo upsells include the main course
-      if (['ai-ceo-starter-kit'].includes(product) && products.size === 0) {
-        // starter kit alone doesn't grant course access unless main course purchased too
-      }
+    } else {
+      console.error('Stripe sessions fetch failed:', sessionsRes.status);
     }
   } catch (err) {
     console.error('Stripe query error:', err.message);
