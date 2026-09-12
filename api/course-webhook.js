@@ -556,9 +556,8 @@ export default async function handler(req, res) {
         await triggerGHLCronEmail({ email, name });
 
       } else if (product === 'ai-ceo-starter-kit') {
-        const upsellTags = ['cyrushq-customer', 'course-build-your-ai-ceo', 'ai-ceo-starter-kit-purchased'];
-        console.log(`Starter kit tag-only for ${email}`);
-        await addGHLTagsOnly({ email, name, tags: upsellTags });
+        console.log(`Starter kit email + tag for ${email}`);
+        await triggerGHLStarterKitEmail({ email, name });
       }
 
       console.log(`Meta CAPI for ${email} — PI: ${pi.id}`);
