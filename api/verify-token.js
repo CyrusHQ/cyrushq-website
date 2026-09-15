@@ -27,7 +27,7 @@ function loadOverrides() {
     'rwhytemere82@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
     'talent@christyprais.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
     'socialsimplicity4you@gmail.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
-    'info@praisstone.com': ['cron-job-mastery'],
+    'info@praisstone.com': ['build-your-ai-ceo', 'cron-job-mastery'],
     // Complete Bundle $127 — 2026-09-10, Stripe pi_3UEDH3Dl0ECsHFXr47uPAozF (no metadata on charge; manually enrolled)
     'ethalycecloser@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery']
   };
