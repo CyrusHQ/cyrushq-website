@@ -178,60 +178,7 @@
       white-space: nowrap;
     }
 
-    /* Secondary: Password toggle */
-    .gate-pw-toggle {
-      color: #8BA3C4;
-      font-size: 13px;
-      cursor: pointer;
-      text-decoration: underline;
-      background: none;
-      border: none;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-    }
-    .gate-pw-toggle:hover { color: var(--gold); }
-
-    .gate-pw-section {
-      display: none;
-      margin-top: 20px;
-    }
-    .gate-pw-section.open { display: block; }
-    .gate-pw-input {
-      width: 100%;
-      padding: 13px 18px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      color: var(--white);
-      font-size: 15px;
-      text-align: center;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-      outline: none;
-      font-family: 'Inter', sans-serif;
-    }
-    .gate-pw-input:focus { border-color: var(--gold); }
-    .gate-pw-input::placeholder { letter-spacing: 1px; color: #4a6080; }
-    .gate-pw-btn {
-      width: 100%;
-      padding: 13px;
-      background: rgba(201,168,76,0.15);
-      color: var(--gold);
-      border: 1px solid rgba(201,168,76,0.4);
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-family: 'Inter', sans-serif;
-    }
-    .gate-pw-btn:hover { background: rgba(201,168,76,0.25); }
-    .gate-pw-error {
-      color: #f87171;
-      font-size: 13px;
-      margin-top: 10px;
-      display: none;
-    }
+    
 
     /* ─── HEADER ─── */
     .site-header {
@@ -552,19 +499,7 @@
         <div class="gate-feedback" id="emailFeedback"></div>
       </div>
 
-      <!-- Divider -->
-      <div class="gate-divider">
-        <span>or</span>
-      </div>
 
-      <!-- SECONDARY: Password toggle -->
-      <button class="gate-pw-toggle" onclick="togglePasswordForm()">Already have a password?</button>
-
-      <div class="gate-pw-section" id="pwSection">
-        <input type="password" id="pwInput" class="gate-pw-input" placeholder="Enter password" autocomplete="off">
-        <button class="gate-pw-btn" onclick="checkPassword()">Access with Password →</button>
-        <div class="gate-pw-error" id="gateError">Incorrect password. Check your welcome email.</div>
-      </div>
 
     </div>
   </div>
@@ -914,9 +849,6 @@
   </main>
 
   <script>
-    // ─── CONSTANTS ───────────────────────────────────────────────
-    const CORRECT_PASSWORD = 'CyrusAICEO2026';
-
     // ─── UTILITY ─────────────────────────────────────────────────
     function qs(id) { return document.getElementById(id); }
 
@@ -1031,34 +963,7 @@
       }
     }
 
-    // ─── PASSWORD FALLBACK ───────────────────────────────────────
-    function togglePasswordForm() {
-      const section = qs('pwSection');
-      section.classList.toggle('open');
-      if (section.classList.contains('open')) {
-        qs('pwInput').focus();
-      }
-    }
-
-    function checkPassword() {
-      const input = qs('pwInput').value.trim();
-      if (input === CORRECT_PASSWORD) {
-        sessionStorage.setItem('course_access', 'granted');
-        sessionStorage.setItem('course_products', JSON.stringify(['build-your-ai-ceo', 'cron-job-mastery']));
-        sessionStorage.setItem('course_via_token', '0');
-        showPortal(['build-your-ai-ceo', 'cron-job-mastery'], null, false);
-      } else {
-        qs('gateError').style.display = 'block';
-        qs('pwInput').value = '';
-        qs('pwInput').focus();
-      }
-    }
-
-    // Allow Enter key on password
     document.addEventListener('DOMContentLoaded', function() {
-      qs('pwInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') checkPassword();
-      });
       qs('emailInput').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') sendAccessLink();
       });
