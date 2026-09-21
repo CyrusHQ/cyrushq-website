@@ -11,6 +11,11 @@ function generateToken(secret, email) {
     .digest('hex');
 }
 
+// Blocked emails — refunded/fraudulent customers; access permanently revoked
+const BLOCKED_EMAILS = new Set([
+  'tcrouse11@gmail.com'
+]);
+
 function loadOverrides() {
   // Hardcoded confirmed buyers — updated from Stripe on 2026-08-17
   // New buyers are handled via live Stripe lookup; this covers early/legacy buyers
@@ -106,6 +111,11 @@ export default async function handler(req, res) {
   const email = decodeURIComponent(encodedEmail).toLowerCase().trim();
   if (!email || !email.includes('@')) {
     return res.status(400).json({ valid: false, error: 'Invalid email' });
+  }
+
+  // Block refunded / fraudulent accounts
+  if (BLOCKED_EMAILS.has(email)) {
+    return res.status(200).json({ valid: false, error: 'Access revoked' });
   }
 
   const PORTAL_SECRET = process.env.PORTAL_SECRET;
