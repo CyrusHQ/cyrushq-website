@@ -567,8 +567,13 @@
 <script>
   // ── AD SOURCE TRACKING ──
   (function() {
-    const source = new URLSearchParams(window.location.search).get('source') || 'organic';
+    const params = new URLSearchParams(window.location.search);
+    const source = params.get('source') || 'organic';
     sessionStorage.setItem('adSource', source);
+
+    // Persist fbclid for Meta attribution across navigation to checkout
+    const fbclid = params.get('fbclid');
+    if (fbclid) sessionStorage.setItem('fbclid', fbclid);
 
     // Wire up all CTA buttons to pass source param
     function makeCheckoutUrl() {

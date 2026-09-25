@@ -11,7 +11,7 @@ async function hashSHA256(value) {
   return crypto.createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
 }
 
-async function sendMetaCAPIEvent({ email, name, customerId, fbp, fbc, eventSourceUrl, paymentIntentId, amountCents }) {
+async function sendMetaCAPIEvent({ email, name, customerId, fbp, fbc, eventSourceUrl, paymentIntentId, amountCents, productKey, productName }) {
   try {
     const eventTime = Math.floor(Date.now() / 1000);
     const hashedEmail = await hashSHA256(email);
@@ -35,9 +35,9 @@ async function sendMetaCAPIEvent({ email, name, customerId, fbp, fbc, eventSourc
       custom_data: {
         currency: 'USD',
         value: ((amountCents || 4700) / 100).toFixed(2),
-        content_name: 'Build Your AI CEO Course',
-        content_category: 'Online Course',
-        content_ids: ['build-your-ai-ceo'],
+        content_name: productName || 'CyrusHQ Product',
+        content_category: 'Digital Product',
+        content_ids: [productKey || 'cyrushq-product'],
         content_type: 'product'
       }
     };
@@ -560,8 +560,15 @@ export default async function handler(req, res) {
         await triggerGHLStarterKitEmail({ email, name });
       }
 
-      console.log(`Meta CAPI for ${email} — PI: ${pi.id}`);
-      await sendMetaCAPIEvent({ email, name, customerId: pi.customer, fbp, fbc, eventSourceUrl, paymentIntentId: pi.id, amountCents: pi.amount });
+      const productNames = {
+        'build-your-ai-ceo': 'Build Your AI CEO Course',
+        'ai-ceo-starter-kit': 'AI CEO Starter Kit',
+        'cron-job-mastery': 'Cron Job Mastery Module',
+        'complete-bundle': 'Complete Bundle — AI CEO System',
+        'book-bundle': 'AI Agency 2-Book Bundle'
+      };
+      console.log(`Meta CAPI for ${email} — PI: ${pi.id} — product: ${product}`);
+      await sendMetaCAPIEvent({ email, name, customerId: pi.customer, fbp, fbc, eventSourceUrl, paymentIntentId: pi.id, amountCents: pi.amount, productKey: product, productName: productNames[product] || product });
     }
   }
 
@@ -605,6 +612,17 @@ export default async function handler(req, res) {
       await triggerGHL6FigBlueprintEmail({ email, name });
     }
     // Meta CAPI for checkout.session purchases
+    const sessionProductNames = {
+      'build-your-ai-ceo': 'Build Your AI CEO Course',
+      'ai-ceo-starter-kit': 'AI CEO Starter Kit',
+      'cron-job-mastery': 'Cron Job Mastery Module',
+      'complete-bundle': 'Complete Bundle — AI CEO System',
+      'book-bundle': 'AI Agency 2-Book Bundle',
+      '2-book-bundle': 'AI Agency 2-Book Bundle',
+      'ai-agent-playbook': 'AI Agent Playbook',
+      '6fig-blueprint': '6-Figure AI Agency Blueprint',
+      'ai-growth-engine-pack': 'AI Growth Engine Pack'
+    };
     await sendMetaCAPIEvent({
       email, name,
       customerId: session.customer,
@@ -612,7 +630,9 @@ export default async function handler(req, res) {
       fbc: meta.fbc || null,
       eventSourceUrl: meta.event_source_url || 'https://cyrushq.ai',
       paymentIntentId: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id,
-      amountCents: session.amount_total
+      amountCents: session.amount_total,
+      productKey: product,
+      productName: sessionProductNames[product] || product
     });
   }
 

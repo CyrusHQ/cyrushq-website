@@ -495,7 +495,9 @@ async function handleSubmit() {
     const fbp = getCookie('_fbp') || null;
     let fbc = getCookie('_fbc') || null;
     if (!fbc) {
-      const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+      // Check URL first, then sessionStorage (set by books.html from landing URL)
+      const fbclid = new URLSearchParams(window.location.search).get('fbclid')
+        || sessionStorage.getItem('fbclid');
       if (fbclid) fbc = `fb.1.${Date.now()}.${fbclid}`;
     }
 
