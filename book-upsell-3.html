@@ -398,11 +398,15 @@
       }
 
       if (typeof fbq !== 'undefined') {
-        fbq('track', 'Purchase', {
+        var upsellEventData = {
           content_name: 'Cron Job Mastery Module',
           currency: 'USD',
-          value: 9.99
-        });
+          value: 9.99,
+          content_ids: ['cron-job-mastery'],
+          content_type: 'product'
+        };
+        if (data.piId) { fbq('track', 'Purchase', upsellEventData, { eventID: data.piId }); }
+        else { fbq('track', 'Purchase', upsellEventData); }
       }
 
       document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your downloads...';

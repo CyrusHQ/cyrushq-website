@@ -346,11 +346,15 @@
       }
 
       if (typeof fbq !== 'undefined') {
-        fbq('track', 'Purchase', {
+        var upsellEventData = {
           content_name: 'AI CEO Starter Kit — 29 Operating Files',
           currency: 'USD',
-          value: 47.00
-        });
+          value: 47.00,
+          content_ids: ['ai-ceo-starter-kit'],
+          content_type: 'product'
+        };
+        if (data.piId) { fbq('track', 'Purchase', upsellEventData, { eventID: data.piId }); }
+        else { fbq('track', 'Purchase', upsellEventData); }
       }
 
       document.getElementById('loadingText').textContent = 'Starter Kit added! One last thing...';

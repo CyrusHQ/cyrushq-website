@@ -229,14 +229,19 @@
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '898060140812365');
   fbq('track', 'PageView');
-  fbq('track', 'Purchase', {
-    content_name: 'AI Agency Blueprint — 2-Book Bundle',
-    content_category: 'Books',
-    currency: 'USD',
-    value: 17.00,
-    content_type: 'product',
-    content_ids: ['ai-agency-blueprint-book-bundle']
-  });
+  (function() {
+    var sessionId = new URLSearchParams(window.location.search).get('session_id') || '';
+    var purchaseData = {
+      content_name: 'AI Agency Blueprint — 2-Book Bundle',
+      content_category: 'Books',
+      currency: 'USD',
+      value: 17.00,
+      content_type: 'product',
+      content_ids: ['ai-agency-blueprint-book-bundle']
+    };
+    if (sessionId) { fbq('track', 'Purchase', purchaseData, { eventID: sessionId }); }
+    else { fbq('track', 'Purchase', purchaseData); }
+  })();
   </script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"/></noscript>
@@ -365,11 +370,15 @@
       }
 
       if (typeof fbq !== 'undefined') {
-        fbq('track', 'Purchase', {
+        var upsellEventData = {
           content_name: 'Build Your AI CEO Video Course — Book Upsell',
           currency: 'USD',
-          value: 27.00
-        });
+          value: 27.00,
+          content_ids: ['build-your-ai-ceo'],
+          content_type: 'product'
+        };
+        if (data.piId) { fbq('track', 'Purchase', upsellEventData, { eventID: data.piId }); }
+        else { fbq('track', 'Purchase', upsellEventData); }
       }
 
       document.getElementById('loadingText').textContent = 'Course added! One more thing...';

@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     }
 
     console.log(`Book upsell-3 (cron $9.99) succeeded for ${customerEmail} — PI: ${upi.id}`);
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, piId: upi.id });
 
   } catch (err) {
     console.error('book-upsell-3 error:', err);
