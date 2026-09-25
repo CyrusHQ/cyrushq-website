@@ -380,6 +380,9 @@
         if (data.piId) { fbq('track', 'Purchase', upsellEventData, { eventID: data.piId }); }
         else { fbq('track', 'Purchase', upsellEventData); }
       }
+      if (typeof ttq !== 'undefined') {
+        ttq.track('CompletePayment', { content_id: 'build-your-ai-ceo', content_name: 'Build Your AI CEO Video Course — Book Upsell', content_type: 'product', currency: 'USD', value: 27.00 });
+      }
 
       document.getElementById('loadingText').textContent = 'Course added! One more thing...';
       setTimeout(() => { window.location.href = nextUrl('/book-thankyou', true); }, 1500);

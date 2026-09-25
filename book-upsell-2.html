@@ -356,6 +356,9 @@
         if (data.piId) { fbq('track', 'Purchase', upsellEventData, { eventID: data.piId }); }
         else { fbq('track', 'Purchase', upsellEventData); }
       }
+      if (typeof ttq !== 'undefined') {
+        ttq.track('CompletePayment', { content_id: 'ai-ceo-starter-kit', content_name: 'AI CEO Starter Kit — 29 Operating Files', content_type: 'product', currency: 'USD', value: 47.00 });
+      }
 
       document.getElementById('loadingText').textContent = 'Starter Kit added! One last thing...';
       setTimeout(() => { window.location.href = nextUrl('/book-upsell-3', true); }, 1500);

@@ -408,6 +408,9 @@
         if (data.piId) { fbq('track', 'Purchase', upsellEventData, { eventID: data.piId }); }
         else { fbq('track', 'Purchase', upsellEventData); }
       }
+      if (typeof ttq !== 'undefined') {
+        ttq.track('CompletePayment', { content_id: 'cron-job-mastery', content_name: 'Cron Job Mastery Module', content_type: 'product', currency: 'USD', value: 9.99 });
+      }
 
       document.getElementById('loadingText').textContent = 'Cron Module added! Taking you to your downloads...';
       setTimeout(() => { window.location.href = nextUrl(true); }, 1500);
