@@ -111,20 +111,45 @@ async function upsertGHLContact({ email, firstName, lastName, tags }) {
 
 // Merge tags onto existing contact using PUT — safe, non-destructive add
 // GHL POST upsert may not merge tags on existing contacts; PUT is authoritative.
+// KFP-003 fix (2026-09-25): verify-after-write with retry to guard against concurrent
+// webhook race conditions where two simultaneous PUTs overwrite each other's tags.
 async function mergeGHLTags(contactId, tagsToAdd) {
   if (!contactId || !tagsToAdd?.length) return;
-  // GET current tags first
-  const getRes = await fetch(`${GHL_BASE}/contacts/${contactId}`, { headers: ghlHeaders() });
-  const getData = await getRes.json();
-  const existing = getData.contact?.tags || [];
-  const merged = [...new Set([...existing, ...tagsToAdd])];
-  const putRes = await fetch(`${GHL_BASE}/contacts/${contactId}`, {
-    method: 'PUT',
-    headers: ghlHeaders(),
-    body: JSON.stringify({ tags: merged })
-  });
-  const putData = await putRes.json();
-  console.log(`GHL tags merged for ${contactId}:`, putData.contact?.tags);
+
+  const MAX_ATTEMPTS = 3;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    // GET current tags
+    const getRes = await fetch(`${GHL_BASE}/contacts/${contactId}`, { headers: ghlHeaders() });
+    const getData = await getRes.json();
+    const existing = getData.contact?.tags || [];
+    const merged = [...new Set([...existing, ...tagsToAdd])];
+
+    // PUT merged tags
+    await fetch(`${GHL_BASE}/contacts/${contactId}`, {
+      method: 'PUT',
+      headers: ghlHeaders(),
+      body: JSON.stringify({ tags: merged })
+    });
+
+    // Verify all expected tags are present after write
+    const verifyRes = await fetch(`${GHL_BASE}/contacts/${contactId}`, { headers: ghlHeaders() });
+    const verifyData = await verifyRes.json();
+    const finalTags = verifyData.contact?.tags || [];
+    const allPresent = tagsToAdd.every(t => finalTags.includes(t));
+
+    if (allPresent) {
+      console.log(`GHL tags merged for ${contactId} (attempt ${attempt}):`, finalTags);
+      return;
+    }
+
+    if (attempt < MAX_ATTEMPTS) {
+      console.warn(`KFP-003: tag verify failed attempt ${attempt} for ${contactId} — retrying in ${attempt * 500}ms`);
+      await new Promise(r => setTimeout(r, attempt * 500));
+    } else {
+      console.error(`KFP-003: could not verify tags after ${MAX_ATTEMPTS} attempts for ${contactId} — expected: ${tagsToAdd}, got: ${finalTags}`);
+    }
+  }
 }
 
 async function sendGHLEmail({ contactId, to, subject, html }) {
