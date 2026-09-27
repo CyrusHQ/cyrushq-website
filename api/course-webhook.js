@@ -172,12 +172,13 @@ function buildMagicLink(email) {
   return `https://cyrushq.ai/members?t=${token}&e=${encodeURIComponent(email.toLowerCase().trim())}`;
 }
 
-async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit, isBundle = false }) {
+async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKit, isBundle = false, isPro = false }) {
   const firstName = (name || 'Friend').split(' ')[0];
   const lastName  = (name || '').split(' ').slice(1).join(' ') || '';
   const magicLink = buildMagicLink(email);
 
   const tags = ['cyrushq-customer', 'course-build-your-ai-ceo'];
+  if (isPro)         tags.push('course-pro-97-purchased');
   if (hasCronBump)   tags.push('course-cron-bump-purchased');
   if (hasStarterKit) tags.push('ai-ceo-starter-kit-purchased');
   if (isBundle)      tags.push('complete-bundle-97-purchased');
@@ -238,7 +239,10 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
   </div>
 </div>`.trim();
 
-  await sendGHLEmail({ contactId, to: email, subject: `Your AI CEO course is ready, ${firstName} 👑`, html: emailBody });
+  const emailSubject = isPro
+    ? `Your AI CEO Implementation Program is ready, ${firstName} 👑`
+    : `Your AI CEO course is ready, ${firstName} 👑`;
+  await sendGHLEmail({ contactId, to: email, subject: emailSubject, html: emailBody });
   return true;
 }
 
@@ -565,12 +569,16 @@ export default async function handler(req, res) {
     const fbc           = meta.fbc || null;
     const eventSourceUrl = meta.event_source_url || null;
 
-    const courseProducts = ['build-your-ai-ceo', 'ai-ceo-starter-kit', 'cron-job-mastery', 'complete-bundle', 'book-bundle'];
+    const courseProducts = ['build-your-ai-ceo', 'build-your-ai-ceo-pro', 'ai-ceo-starter-kit', 'cron-job-mastery', 'complete-bundle', 'book-bundle'];
 
     if (courseProducts.includes(product)) {
       if (isBookBundle) {
         console.log(`Book bundle for ${email}`);
         await triggerGHLBookBundleWorkflow({ email, name });
+
+      } else if (product === 'build-your-ai-ceo-pro') {
+        console.log(`Course PRO ($97) welcome for ${email}`);
+        await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false, isPro: true });
 
       } else if (product === 'build-your-ai-ceo' || isBundle) {
         console.log(`Course welcome for ${email} — product:${product}`);
@@ -587,6 +595,7 @@ export default async function handler(req, res) {
 
       const productNames = {
         'build-your-ai-ceo': 'Build Your AI CEO Course',
+        'build-your-ai-ceo-pro': 'Build Your AI CEO — Implementation Program ($97)',
         'ai-ceo-starter-kit': 'AI CEO Starter Kit',
         'cron-job-mastery': 'Cron Job Mastery Module',
         'complete-bundle': 'Complete Bundle — AI CEO System',
@@ -621,6 +630,9 @@ export default async function handler(req, res) {
     } else if (isBookBundle || product === '2-book-bundle') {
       console.log(`Book bundle (payment link) for ${email}`);
       await triggerGHLBookBundleWorkflow({ email, name });
+    } else if (product === 'build-your-ai-ceo-pro') {
+      console.log(`Course PRO ($97) payment link for ${email}`);
+      await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false, isPro: true });
     } else if (product === 'build-your-ai-ceo') {
       await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false });
     } else if (product === 'ai-ceo-starter-kit') {
@@ -639,6 +651,7 @@ export default async function handler(req, res) {
     // Meta CAPI for checkout.session purchases
     const sessionProductNames = {
       'build-your-ai-ceo': 'Build Your AI CEO Course',
+      'build-your-ai-ceo-pro': 'Build Your AI CEO — Implementation Program ($97)',
       'ai-ceo-starter-kit': 'AI CEO Starter Kit',
       'cron-job-mastery': 'Cron Job Mastery Module',
       'complete-bundle': 'Complete Bundle — AI CEO System',

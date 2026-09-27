@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Build Your AI CEO - The Complete $97 Implementation Program</title>
+  <meta name="description" content="The complete step-by-step system for building your own AI CEO on your own computer. 14 videos, 15 done-for-you templates, lifetime access. $97 one-time.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #070A13;
+      --navy-mid: #0C1320;
+      --navy-card: #0C1320;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --cream: #F8F6F1;
+      --white: #ffffff;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --blue-muted: #8BA3C4;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--navy);
+      padding: 16px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 18px;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+    .nav-logo span { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(180deg, var(--navy) 0%, #0d1e35 100%);
+      padding: 52px 20px 44px;
+      text-align: center;
+    }
+    .hero-label {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 6px 16px;
+      margin-bottom: 22px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--white);
+      font-size: clamp(30px, 7.5vw, 52px);
+      line-height: 1.1;
+      margin-bottom: 14px;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 em { color: var(--gold); font-style: normal; }
+    .hero-tagline {
+      color: var(--gold);
+      font-size: clamp(13px, 3.5vw, 16px);
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-sub {
+      color: var(--blue-muted);
+      font-size: clamp(15px, 4vw, 18px);
+      line-height: 1.65;
+      max-width: 600px;
+      margin: 0 auto 36px;
+    }
+
+    /* ── VSL ── */
+    .vsl-wrap { background: var(--navy); padding: 0 20px 52px; }
+    .vsl-container { max-width: 720px; margin: 0 auto; }
+    .vsl-box {
+      position: relative;
+      width: 100%;
+      border: 2px solid var(--gold);
+      background: #000;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+    .vsl-box iframe {
+      width: 100%; height: calc(100% + 6px);
+      margin-top: -6px; display: block;
+      object-fit: contain; border: none;
+    }
+    .vsl-caption { text-align: center; color: var(--blue-muted); font-size: 13px; margin-top: 12px; }
+
+    /* ── PROOF BAR ── */
+    .proof-bar { background: var(--gold); padding: 14px 20px; }
+    .proof-bar-inner {
+      max-width: 720px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      gap: 20px; flex-wrap: wrap;
+    }
+    .proof-item { display: flex; align-items: center; gap: 6px; color: var(--navy); font-size: 13px; font-weight: 700; }
+    .proof-dot { color: var(--navy); opacity: 0.4; font-size: 18px; }
+
+    /* ── SECTION SCAFFOLD ── */
+    .section { padding: 64px 20px; }
+    .section-inner { max-width: 740px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 6vw, 40px);
+      line-height: 1.2; color: var(--navy); margin-bottom: 18px;
+    }
+    .section-title em { color: var(--gold); font-style: normal; }
+    .section-body { color: var(--muted); font-size: 16px; line-height: 1.75; }
+
+    /* ── OPENCLAW / DATA PRIVACY SECTION ── */
+    .privacy-bg { background: var(--navy); }
+    .privacy-bg .section-title { color: var(--white); }
+    .privacy-bg .section-body { color: var(--blue-muted); }
+
+    .vs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 36px;
+      border: 1px solid rgba(201,168,76,0.3);
+    }
+    @media (max-width: 560px) { .vs-grid { grid-template-columns: 1fr; } }
+
+    .vs-col { padding: 28px 24px; }
+    .vs-col-bad { background: rgba(220,38,38,0.06); border-right: 1px solid rgba(201,168,76,0.2); }
+    @media (max-width: 560px) { .vs-col-bad { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.2); } }
+    .vs-col-good { background: rgba(201,168,76,0.06); }
+
+    .vs-header {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .vs-header-bad { color: #f87171; }
+    .vs-header-good { color: var(--gold); }
+
+    .vs-list { display: flex; flex-direction: column; gap: 12px; }
+    .vs-item { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5; }
+    .vs-item-bad { color: #c4d4e8; }
+    .vs-item-good { color: #c4d4e8; }
+    .vs-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+
+    .openclaw-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3);
+      padding: 8px 16px; margin-top: 32px;
+      font-size: 13px; color: var(--gold); font-weight: 600;
+    }
+
+    /* ── FOR YOU ── */
+    .for-you-bg { background: var(--cream); }
+    .for-you-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-top: 28px;
+    }
+    @media (max-width: 480px) { .for-you-grid { grid-template-columns: 1fr; } }
+    .for-you-card {
+      background: var(--white); border-left: 3px solid var(--gold);
+      padding: 18px; font-size: 14px; color: var(--text); line-height: 1.55;
+    }
+    .for-you-card strong { display: block; color: var(--navy); margin-bottom: 4px; font-size: 15px; }
+
+    /* ── ARCHITECTURE VISUAL ── */
+    .arch-bg { background: var(--navy); }
+    .arch-bg .section-title { color: var(--white); }
+    .arch-visual {
+      margin-top: 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+    .arch-you {
+      background: var(--gold); color: var(--navy);
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 700;
+      padding: 16px 40px; text-align: center;
+      letter-spacing: 2px;
+    }
+    .arch-arrow {
+      color: var(--gold); font-size: 28px; line-height: 1;
+      padding: 8px 0;
+    }
+    .arch-ceo {
+      background: rgba(201,168,76,0.12); border: 2px solid var(--gold);
+      padding: 20px 40px; text-align: center;
+    }
+    .arch-ceo-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 4px;
+    }
+    .arch-ceo-name {
+      font-family: 'Playfair Display', serif; color: var(--white);
+      font-size: 24px;
+    }
+    .arch-biz {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.25);
+      padding: 20px 32px; text-align: center; width: 100%; max-width: 500px;
+    }
+    .arch-biz-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--blue-muted); text-transform: uppercase; margin-bottom: 14px;
+    }
+    .arch-pillars {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    }
+    .arch-pillar {
+      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold); font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; padding: 6px 14px; text-transform: uppercase;
+    }
+
+    /* ── AI CEO FRAMEWORK ── */
+    .framework-bg { background: var(--cream); }
+    .framework-chain {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 0; margin-top: 36px;
+    }
+    .framework-node {
+      text-align: center; padding: 18px 16px;
+      background: var(--white); border: 1px solid #e5e7eb;
+      border-top: 3px solid var(--gold); min-width: 120px;
+    }
+    .framework-node-num { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+    .framework-node-name { color: var(--navy); font-weight: 700; font-size: 13px; line-height: 1.3; }
+    .framework-arrow { color: var(--gold); font-size: 20px; padding: 0 4px; flex-shrink: 0; }
+    @media (max-width: 600px) {
+      .framework-chain { flex-direction: column; }
+      .framework-arrow { transform: rotate(90deg); }
+    }
+
+    /* ── 13 STEPS ── */
+    .steps-bg { background: var(--navy); }
+    .steps-bg .section-title { color: var(--white); }
+    .steps-bg .section-body { color: var(--blue-muted); }
+
+    .steps-grid {
+      margin-top: 36px; display: flex; flex-direction: column; gap: 0;
+    }
+    .step-item {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      background: var(--gold); color: var(--navy);
+      font-weight: 700; font-size: 13px; font-family: 'Playfair Display', serif;
+      min-width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-content { flex: 1; }
+    .step-title { color: var(--white); font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+    .step-desc { color: var(--blue-muted); font-size: 13px; line-height: 1.6; }
+
+    /* ── PHASE CURRICULUM ── */
+    .phases-bg { background: var(--white); }
+    .phases-grid { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+    .phase-card {
+      border: 1px solid #e5e7eb; border-left: 4px solid var(--gold);
+      padding: 22px 20px;
+    }
+    .phase-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 6px;
+    }
+    .phase-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; color: var(--navy); margin-bottom: 8px;
+    }
+    .phase-desc { color: var(--muted); font-size: 14px; line-height: 1.65; margin-bottom: 12px; }
+    .phase-lessons { display: flex; flex-direction: column; gap: 5px; }
+    .phase-lesson {
+      color: #4a5568; font-size: 13px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .phase-lesson::before { content: '▶'; color: var(--gold); font-size: 9px; flex-shrink: 0; }
+
+    /* ── MEET CYRUS ── */
+    .cyrus-bg { background: var(--navy); }
+    .cyrus-bg .section-title { color: var(--white); }
+    .cyrus-bg .section-body { color: var(--blue-muted); }
+
+    .cyrus-layout {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 32px; margin-top: 40px; align-items: start;
+    }
+    @media (max-width: 640px) { .cyrus-layout { grid-template-columns: 1fr; } }
+
+    .cyrus-video-placeholder {
+      background: rgba(255,255,255,0.03); border: 2px solid rgba(201,168,76,0.3);
+      aspect-ratio: 9/16; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      max-height: 420px;
+    }
+    .cyrus-play {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--gold); display: flex; align-items: center; justify-content: center;
+    }
+    .cyrus-video-label { color: var(--blue-muted); font-size: 13px; text-align: center; padding: 0 16px; line-height: 1.5; }
+
+    /* ── DISCORD MOCK ── */
+    .discord-mock {
+      background: #313338; border-radius: 8px; overflow: hidden;
+      font-family: 'Inter', sans-serif; font-size: 13px;
+    }
+    .discord-header {
+      background: #2b2d31; padding: 10px 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .discord-channel-icon { color: #80848e; font-size: 16px; }
+    .discord-channel-name { color: #f2f3f5; font-weight: 600; font-size: 14px; }
+    .discord-messages { padding: 16px 12px; display: flex; flex-direction: column; gap: 14px; }
+    .discord-msg { display: flex; gap: 10px; align-items: flex-start; opacity: 0; animation: msgFade 0.4s ease forwards; }
+    .discord-msg:nth-child(1) { animation-delay: 0.2s; }
+    .discord-msg:nth-child(2) { animation-delay: 1.2s; }
+    .discord-msg:nth-child(3) { animation-delay: 2.4s; }
+    .discord-msg:nth-child(4) { animation-delay: 5.0s; }
+    .discord-msg:nth-child(5) { animation-delay: 6.0s; }
+    @keyframes msgFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .discord-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px;
+    }
+    .discord-avatar-christy { background: #e879f9; color: #fff; }
+    .discord-avatar-cyrus { background: var(--gold); color: var(--navy); }
+
+    .discord-msg-body { flex: 1; min-width: 0; }
+    .discord-msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; }
+    .discord-sender-christy { color: #e879f9; font-weight: 600; font-size: 14px; }
+    .discord-sender-cyrus { color: var(--gold); font-weight: 600; font-size: 14px; }
+    .discord-time { color: #80848e; font-size: 11px; }
+    .discord-text { color: #dbdee1; line-height: 1.5; }
+    .discord-text strong { color: #f2f3f5; }
+    .discord-text .code { background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 12px; color: #c4a882; }
+
+    /* ── BUILD KIT ── */
+    .kit-bg { background: var(--cream); }
+    .kit-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin-top: 32px;
+    }
+    @media (max-width: 500px) { .kit-grid { grid-template-columns: 1fr; } }
+    .kit-item {
+      background: var(--white); border: 1px solid #e5e7eb;
+      border-top: 3px solid var(--gold);
+      padding: 18px 16px; display: flex; gap: 12px; align-items: flex-start;
+    }
+    .kit-check { color: var(--gold); font-weight: 700; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .kit-item-title { color: var(--navy); font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+    .kit-item-desc { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    /* ── OBJECTIONS ── */
+    .obj-bg { background: var(--navy); }
+    .obj-bg .section-title { color: var(--white); }
+    .obj-grid { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+    .obj-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2);
+      padding: 20px;
+    }
+    .obj-q { color: var(--gold); font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+    .obj-a { color: var(--blue-muted); font-size: 14px; line-height: 1.65; }
+    .obj-a strong { color: #c4d4e8; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-bg { background: var(--cream); }
+    .testi-grid {
+      margin-top: 28px; display: grid;
+      grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    @media (max-width: 480px) { .testi-grid { grid-template-columns: 1fr; } }
+    .testi-card { background: var(--white); padding: 20px; border-top: 3px solid var(--gold); }
+    .testi-stars { color: var(--gold); font-size: 16px; margin-bottom: 10px; }
+    .testi-text { font-size: 14px; color: var(--text); line-height: 1.65; font-style: italic; margin-bottom: 12px; }
+    .testi-name { font-weight: 700; color: var(--navy); font-size: 13px; }
+    .testi-role { color: var(--muted); font-size: 12px; }
+
+    /* ── CRON ADD-ON ── */
+    .bonus-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, rgba(255,255,255,0) 100%);
+      border: 2px dashed rgba(201,168,76,0.5);
+      padding: 28px 20px; margin-top: 32px; text-align: center;
+    }
+    .bonus-tag {
+      display: inline-block; background: var(--gold); color: var(--navy);
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      padding: 4px 12px; margin-bottom: 12px; text-transform: uppercase;
+    }
+    .bonus-title { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 22px; margin-bottom: 10px; }
+    .bonus-desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 14px; }
+    .bonus-price { color: var(--gold); font-size: 20px; font-weight: 700; }
+    .bonus-price span { color: var(--muted); font-size: 14px; font-weight: 400; }
+
+    /* ── PRICING ── */
+    .pricing-bg { background: var(--navy); }
+    .pricing-bg .section-title { color: var(--white); }
+    .pricing-bg .section-label { color: var(--gold); }
+
+    .price-card {
+      background: rgba(255,255,255,0.04); border: 2px solid var(--gold);
+      padding: 36px 28px; text-align: center; margin-top: 28px;
+    }
+    .price-was { color: var(--blue-muted); font-size: 15px; text-decoration: line-through; margin-bottom: 4px; }
+    .price-now {
+      font-family: 'Playfair Display', serif; color: var(--gold);
+      font-size: 72px; line-height: 1; font-weight: 900;
+    }
+    .price-per { color: var(--blue-muted); font-size: 14px; margin-bottom: 28px; }
+    .price-includes { text-align: left; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+    .price-inc-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      color: #c4d4e8; font-size: 14px; line-height: 1.4;
+    }
+    .price-inc-item::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+    .bump-preview {
+      background: rgba(201,168,76,0.08); border: 1px dashed rgba(201,168,76,0.35);
+      padding: 16px; margin-top: 16px; text-align: left;
+    }
+    .bump-preview-label { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .bump-preview-text { color: #c4d4e8; font-size: 13px; line-height: 1.5; }
+
+    /* ── CTA BUTTON ── */
+    .cta-btn {
+      display: block; width: 100%; background: var(--gold); color: var(--navy);
+      font-size: 17px; font-weight: 700; letter-spacing: 1.5px;
+      text-align: center; text-decoration: none;
+      padding: 22px 24px; text-transform: uppercase;
+      -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+      cursor: pointer; border: none; transition: background 0.15s;
+    }
+    .cta-btn:active { background: var(--gold-light); }
+    .cta-sub { text-align: center; color: var(--blue-muted); font-size: 12px; margin-top: 10px; }
+
+    /* ── GUARANTEE ── */
+    .guarantee {
+      display: flex; gap: 16px; align-items: flex-start; margin-top: 28px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2); padding: 20px;
+    }
+    .guarantee-icon { font-size: 40px; flex-shrink: 0; }
+    .guarantee-title { color: var(--white); font-weight: 700; margin-bottom: 6px; }
+    .guarantee-text { color: var(--blue-muted); font-size: 13px; line-height: 1.6; }
+
+    /* ── FAQ ── */
+    .faq-list { margin-top: 28px; display: flex; flex-direction: column; gap: 0; }
+    .faq-item { border-bottom: 1px solid #e5e7eb; }
+    .faq-q {
+      width: 100%; background: none; border: none; text-align: left;
+      font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600;
+      color: var(--navy); padding: 18px 0; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .faq-arrow { font-size: 18px; color: var(--gold); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-a { display: none; font-size: 14px; color: var(--muted); line-height: 1.75; padding-bottom: 16px; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--navy); padding: 36px 20px; text-align: center; }
+    .footer-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 18px; letter-spacing: 3px; margin-bottom: 10px; }
+    .footer-links { margin-bottom: 12px; }
+    .footer-links a { color: var(--blue-muted); font-size: 12px; text-decoration: none; margin: 0 8px; }
+    .footer-copy { color: #4a5568; font-size: 12px; }
+
+    /* ── STICKY MOBILE CTA ── */
+    .sticky-cta {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 200; padding: 12px 16px; background: var(--navy);
+      border-top: 2px solid var(--gold);
+    }
+    .sticky-cta .cta-btn { padding: 16px; font-size: 15px; }
+    .sticky-cta-price { text-align: center; color: var(--blue-muted); font-size: 11px; margin-top: 4px; }
+    @media (max-width: 768px) { .sticky-cta { display: block; } body { padding-bottom: 80px; } }
+
+    /* ── COMPUTER SECTION ── */
+    .computer-bg { background: var(--white); }
+    .computer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+    @media (max-width: 500px) { .computer-grid { grid-template-columns: 1fr; } }
+    .computer-card {
+      background: var(--cream); border-top: 3px solid var(--gold);
+      padding: 20px; font-size: 14px;
+    }
+    .computer-card.recommended { background: var(--navy); border-top-color: var(--gold); }
+    .computer-card-title { font-weight: 700; font-size: 15px; color: var(--navy); margin-bottom: 4px; }
+    .computer-card.recommended .computer-card-title { color: var(--gold); }
+    .computer-card-badge {
+      display: inline-block; background: var(--gold); color: var(--navy);
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 2px 8px;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .computer-card-desc { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .computer-card.recommended .computer-card-desc { color: var(--blue-muted); }
+  </style>
+
+  <!-- Meta Pixel -->
+  <script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','898060140812365');
+  fbq('track','PageView');
+  fbq('track','ViewContent',{content_name:'Build Your AI CEO — $97 Implementation Program',content_category:'Course',currency:'USD',value:97.00});
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"/></noscript>
+
+  <!-- TikTok Pixel -->
+  <script>
+  !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+  ttq.load('D9MJRQ3C77U9D4RN72PG');ttq.page();
+  ttq.track('ViewContent',{content_id:'build-your-ai-ceo-pro',content_name:'Build Your AI CEO — $97 Implementation Program',content_type:'product',currency:'USD',value:97});
+  }(window,document,'ttq');
+  </script>
+
+  <!-- Taboola Pixel -->
+  <script type='text/javascript'>window._tfa=window._tfa||[];window._tfa.push({notify:'event',name:'page_view',id:2084944});!function(t,f,a,x){if(!document.getElementById(x)){t.async=1;t.src=a;t.id=x;f.parentNode.insertBefore(t,f);}}(document.createElement('script'),document.getElementsByTagName('script')[0],'//cdn.taboola.com/libtrc/unip/2084944/tfa.js','tb_tfa_script');</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">CYRUS<span>HQ</span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="section-inner">
+    <div class="hero-label">Step-by-Step Implementation Program</div>
+    <h1>Build Your <em>AI CEO</em></h1>
+    <p class="hero-tagline">The Complete Step-by-Step AI CEO Implementation Program</p>
+    <p class="hero-sub">Build a personalized AI executive that understands your business and helps you strategize, research, plan, create, and execute — running autonomously on your own computer, 24 hours a day.</p>
+    <a href="/checkout-course-pro" class="cta-btn" style="max-width:440px; margin:0 auto; display:block; font-size:18px;">
+      Build My AI CEO — $97 →
+    </a>
+    <p style="color:#8BA3C4; font-size:13px; margin-top:12px;">One-time payment · Lifetime access · Works on Mac &amp; Windows</p>
+  </div>
+</section>
+
+<!-- VSL VIDEO -->
+<section class="vsl-wrap">
+  <div class="vsl-container">
+    <div class="vsl-box">
+      <iframe src="https://iframe.mediadelivery.net/embed/695356/f738dbc5-6f06-4775-ac66-a902ba367016?autoplay=false&loop=false&muted=false&preload=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture" allowfullscreen style="width:100%;height:100%;display:block;border:none;"></iframe>
+    </div>
+    <p class="vsl-caption">👆 Watch this before you scroll — this changes how you think about your business.</p>
+  </div>
+</section>
+
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-bar-inner">
+    <div class="proof-item"><span>★★★★★</span><span>5.0 Rating</span></div>
+    <span class="proof-dot">·</span>
+    <div class="proof-item">👥 500+ Entrepreneurs Enrolled</div>
+    <span class="proof-dot">·</span>
+    <div class="proof-item">⚡ Instant Access</div>
+    <span class="proof-dot">·</span>
+    <div class="proof-item">🔒 Built on OpenClaw</div>
+  </div>
+</div>
+
+<!-- DATA PRIVACY / WHY YOUR COMPUTER -->
+<section class="section privacy-bg">
+  <div class="section-inner">
+    <div class="section-label">Why It Matters Where Your Agent Lives</div>
+    <h2 class="section-title">Your Business Data Belongs to <em>You.</em><br>Not a Tech Company.</h2>
+    <p class="section-body">This program builds your AI CEO on <strong style="color:#E8C96A;">OpenClaw</strong> — open-source software that runs directly on your own computer. That's a deliberate choice, and here's why it matters for your business.</p>
+
+    <div class="vs-grid">
+      <div class="vs-col vs-col-bad">
+        <div class="vs-header vs-header-bad">☁️ Cloud Platforms (Claude.ai, ChatGPT)</div>
+        <div class="vs-list">
+          <div class="vs-item vs-item-bad"><span class="vs-icon">✗</span>Every strategy, financial detail, and client name you type gets sent to their servers</div>
+          <div class="vs-item vs-item-bad"><span class="vs-icon">✗</span>Consumer plans use your conversations for model training by default</div>
+          <div class="vs-item vs-item-bad"><span class="vs-icon">✗</span>Data retained 30 days to 2 years — and can be subpoenaed in legal proceedings</div>
+          <div class="vs-item vs-item-bad"><span class="vs-icon">✗</span>Business data shared with Stripe, CRM, and email passes through their infrastructure</div>
+          <div class="vs-item vs-item-bad"><span class="vs-icon">✗</span>If their platform goes down, your agent stops working</div>
+          <div class="vs-item vs-item-bad"><span class="vs-icon">✗</span>No persistent memory across sessions — your agent starts from zero every time</div>
+        </div>
+      </div>
+      <div class="vs-col vs-col-good">
+        <div class="vs-header vs-header-good">🔒 OpenClaw (Your Computer)</div>
+        <div class="vs-list">
+          <div class="vs-item vs-item-good"><span class="vs-icon" style="color:#4ade80;">✓</span>Your memory files, business context, and operating system never leave your machine</div>
+          <div class="vs-item vs-item-good"><span class="vs-icon" style="color:#4ade80;">✓</span>No training on your data — ever</div>
+          <div class="vs-item vs-item-good"><span class="vs-icon" style="color:#4ade80;">✓</span>No data retention risk, no third-party subpoena exposure</div>
+          <div class="vs-item vs-item-good"><span class="vs-icon" style="color:#4ade80;">✓</span>Your financial and customer data stays on your hardware</div>
+          <div class="vs-item vs-item-good"><span class="vs-icon" style="color:#4ade80;">✓</span>Runs 24/7 on your schedule — no rate limits, no platform downtime</div>
+          <div class="vs-item vs-item-good"><span class="vs-icon" style="color:#4ade80;">✓</span>Persistent memory across every session — your agent always knows who it is</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="openclaw-badge">
+        <span>🦞</span>
+        <span>Powered by OpenClaw — open-source, self-hosted, MIT licensed. No paid tier. No telemetry. Your data stays home.</span>
+      </div>
+    </div>
+    <p style="color:var(--blue-muted); font-size:13px; text-align:center; margin-top:16px; line-height:1.6;">
+      OpenClaw uses the Anthropic and OpenAI APIs for your agent's intelligence — so you get frontier AI reasoning power, while your memory files, business context, and identity architecture stay on your machine. Best of both worlds.
+    </p>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="section for-you-bg">
+  <div class="section-inner">
+    <div class="section-label">This Is For You</div>
+    <h2 class="section-title">You're Running Everything Yourself.<br><em>That Ends Today.</em></h2>
+    <p class="section-body">This program is built for entrepreneurs who are ready to stop being the only engine in their business. No coding. No tech degree. Just a clear system, step by step.</p>
+    <div class="for-you-grid">
+      <div class="for-you-card"><strong>The Solo Entrepreneur</strong>Running everything yourself and burning out — this builds your AI operations team.</div>
+      <div class="for-you-card"><strong>The Non-Technical Founder</strong>You don't code and don't want to — this program assumes zero technical background.</div>
+      <div class="for-you-card"><strong>The Coach or Consultant</strong>You're great at your craft but drowning in admin — let your AI CEO handle the ops.</div>
+      <div class="for-you-card"><strong>The Side Hustle Builder</strong>You want a business that grows while you're at your day job — this is the system.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE VISUAL -->
+<section class="section arch-bg">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--gold);">What You're Building</div>
+    <h2 class="section-title" style="color:var(--white);">Your AI CEO Works Between <em>You</em> and Your Business</h2>
+    <p class="section-body">You're not buying a course about AI. You're building an AI executive — one that sits between you and your business and handles the work that currently runs through you.</p>
+    <div class="arch-visual">
+      <div class="arch-you">YOU</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-ceo">
+        <div class="arch-ceo-label">Your AI Executive</div>
+        <div class="arch-ceo-name">YOUR AI CEO</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-biz">
+        <div class="arch-biz-label">Your Business</div>
+        <div class="arch-pillars">
+          <div class="arch-pillar">Strategy</div>
+          <div class="arch-pillar">Research</div>
+          <div class="arch-pillar">Planning</div>
+          <div class="arch-pillar">Content</div>
+          <div class="arch-pillar">Operations</div>
+          <div class="arch-pillar">Execution</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI CEO FRAMEWORK -->
+<section class="section framework-bg">
+  <div class="section-inner">
+    <div class="section-label">The AI CEO Framework™</div>
+    <h2 class="section-title">Five Layers. One <em>Complete System.</em></h2>
+    <p class="section-body">Every AI CEO you build in this program follows the same architecture — five layers that stack together into a fully operational AI executive customized around your business.</p>
+    <div class="framework-chain">
+      <div class="framework-node">
+        <div class="framework-node-num">Layer 1</div>
+        <div class="framework-node-name">Identity</div>
+      </div>
+      <div class="framework-arrow">→</div>
+      <div class="framework-node">
+        <div class="framework-node-num">Layer 2</div>
+        <div class="framework-node-name">Business Knowledge</div>
+      </div>
+      <div class="framework-arrow">→</div>
+      <div class="framework-node">
+        <div class="framework-node-num">Layer 3</div>
+        <div class="framework-node-name">Memory</div>
+      </div>
+      <div class="framework-arrow">→</div>
+      <div class="framework-node">
+        <div class="framework-node-num">Layer 4</div>
+        <div class="framework-node-name">Operating System</div>
+      </div>
+      <div class="framework-arrow">→</div>
+      <div class="framework-node">
+        <div class="framework-node-num">Layer 5</div>
+        <div class="framework-node-name">Execution</div>
+      </div>
+    </div>
+    <p style="color:var(--muted); font-size:14px; text-align:center; margin-top:24px; line-height:1.65;">Each layer is built step by step in the program. All 15 file templates are included — pre-structured and ready to fill in with your business details.</p>
+  </div>
+</section>
+
+<!-- 13 STEPS -->
+<section class="section steps-bg">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--gold);">What You'll Build — Step by Step</div>
+    <h2 class="section-title">13 Steps. One <em>Live AI CEO.</em></h2>
+    <p class="section-body">This is what you're actually doing inside the program. Every step is covered in the video training with a checklist or template included. Nothing is assumed, nothing is skipped.</p>
+
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Get Your Dedicated Computer</div>
+          <div class="step-desc">Mac mini M2+ is recommended — designed to run 24/7, energy efficient, silent. Also works on MacBook, Windows PC, and Linux. The program covers all platforms.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Name Your AI CEO</div>
+          <div class="step-desc">Choose a name and define 3–5 personality traits. This is your AI executive — it should feel like a real hire, because it operates like one.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Create Your 15 Identity &amp; Operating Files</div>
+          <div class="step-desc">All 15 file templates are included — pre-built with every section. You fill in the blanks with your business details. No writing from scratch.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Save Your Files to Your Workspace</div>
+          <div class="step-desc">Create the workspace folder on your computer and organize your files. This is your AI CEO's home base — where everything it knows about you and your business lives.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Set Up Your Discord Server &amp; Channels</div>
+          <div class="step-desc">Discord becomes your AI CEO's command center — where you give instructions, receive briefings, and monitor everything. Six channels, setup guide included.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Create Your Discord Bot</div>
+          <div class="step-desc">Through the Discord Developer Portal, you create the bot that connects Discord to OpenClaw. Step-by-step in the video — takes about 15 minutes.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-title">Collect Your Discord Credentials</div>
+          <div class="step-desc">Copy your Server ID, Channel IDs, and Bot Token. A checklist walks you through exactly what to copy, where to find it, and where to save it.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <div class="step-title">Get Your LLM API Keys</div>
+          <div class="step-desc">Create Anthropic and OpenAI accounts and generate your API keys. The setup checklist walks through billing, key generation, and saving them securely.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">9</div>
+        <div class="step-content">
+          <div class="step-title">Build Your OpenClaw Config File</div>
+          <div class="step-desc">Your openclaw.json file tells OpenClaw where your workspace is, which AI model to use, and how to connect to Discord. A filled template is included.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">10</div>
+        <div class="step-content">
+          <div class="step-title">Install Node.js</div>
+          <div class="step-desc">Node.js is the engine OpenClaw runs on. One installer, two clicks. Mac and Windows covered in the video.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">11</div>
+        <div class="step-content">
+          <div class="step-title">Install OpenClaw</div>
+          <div class="step-desc">One terminal command. That's it. OpenClaw installs in under a minute. The video shows exactly what to type and what success looks like.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">12</div>
+        <div class="step-content">
+          <div class="step-title">Start Your Gateway</div>
+          <div class="step-desc">Your AI CEO comes to life. OpenClaw starts, reads your identity files, and your agent is live and running on your computer.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">13</div>
+        <div class="step-content">
+          <div class="step-title">Send Your First Message in Discord</div>
+          <div class="step-desc">Type a message in your #operator channel. Your AI CEO answers — knowing your name, your business, your goals, and its own role. It's yours now.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5-PHASE CURRICULUM -->
+<section class="section phases-bg">
+  <div class="section-inner">
+    <div class="section-label">The Program Curriculum</div>
+    <h2 class="section-title">5 Phases. One <em>Complete Build.</em></h2>
+    <p class="section-body">14 step-by-step videos organized into 5 phases. Each phase ends with a working piece of your system. By Phase 5, your AI CEO is live.</p>
+
+    <div class="phases-grid">
+      <div class="phase-card">
+        <div class="phase-label">Phase 1</div>
+        <div class="phase-title">Build Your AI CEO</div>
+        <div class="phase-desc">Understand the exact system you're building and why it works. Most courses skip the architecture — this one starts there. You build the foundational identity and operating files that make everything else possible.</div>
+        <div class="phase-lessons">
+          <div class="phase-lesson">What an AI CEO is and how it's different from a chatbot</div>
+          <div class="phase-lesson">The 3 layers of the AI CEO system</div>
+          <div class="phase-lesson">Naming your agent and setting its character</div>
+          <div class="phase-lesson">Creating your 15 identity and operating file templates</div>
+          <div class="phase-lesson">Setting up your workspace folder structure</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 2</div>
+        <div class="phase-title">Give It Your Business Brain</div>
+        <div class="phase-desc">Connect your AI CEO to the intelligence it needs to reason and respond. Set up your Anthropic and OpenAI API keys — done once, runs forever.</div>
+        <div class="phase-lessons">
+          <div class="phase-lesson">Anthropic account setup + billing (Claude)</div>
+          <div class="phase-lesson">Generating and securing your Anthropic API key</div>
+          <div class="phase-lesson">OpenAI account setup + API key</div>
+          <div class="phase-lesson">Adding both keys to your system environment</div>
+          <div class="phase-lesson">Testing that your AI connections work</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 3</div>
+        <div class="phase-title">Build Its Memory &amp; Command Center</div>
+        <div class="phase-desc">Discord becomes your AI CEO's control room — where you communicate, receive briefings, and monitor operations. You'll also create the bot that bridges Discord and OpenClaw.</div>
+        <div class="phase-lessons">
+          <div class="phase-lesson">Why Discord is the right command center (and why browsers aren't)</div>
+          <div class="phase-lesson">Creating your private server + 6 required channels</div>
+          <div class="phase-lesson">Building your Discord bot in the Developer Portal</div>
+          <div class="phase-lesson">Setting permissions and enabling required intents</div>
+          <div class="phase-lesson">Collecting Server ID, Channel IDs, and Bot Token</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 4</div>
+        <div class="phase-title">Create Its Operating System</div>
+        <div class="phase-desc">Install the engine that makes your AI CEO run autonomously. This is where everything comes together — OpenClaw connects your Discord, your API keys, your workspace files, and your agent into one running system.</div>
+        <div class="phase-lessons">
+          <div class="phase-lesson">Installing Node.js (the engine OpenClaw needs)</div>
+          <div class="phase-lesson">Installing OpenClaw with one terminal command</div>
+          <div class="phase-lesson">Building your openclaw.json configuration file</div>
+          <div class="phase-lesson">Connecting Discord + API keys + workspace in one config</div>
+          <div class="phase-lesson">Starting your gateway and verifying everything is live</div>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 5</div>
+        <div class="phase-title">Put Your AI CEO to Work</div>
+        <div class="phase-desc">Final configuration, memory architecture, and the exact operating files that turn your setup into a true AI executive running your business. Then — three concrete paths to turn your AI CEO into income.</div>
+        <div class="phase-lessons">
+          <div class="phase-lesson">Final memory and identity file configuration</div>
+          <div class="phase-lesson">Sending your first command in Discord</div>
+          <div class="phase-lesson">How to grow your AI CEO's capabilities over time</div>
+          <div class="phase-lesson">3 income streams using your new AI system</div>
+          <div class="phase-lesson">Agent tools expansion: 9 integrations to scale further</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRON ADD-ON -->
+    <div class="bonus-card">
+      <div class="bonus-tag">⚡ Add-On Available at Checkout</div>
+      <div class="bonus-title">Cron Job Mastery Module</div>
+      <div class="bonus-desc">Add automated scheduling to your AI CEO — morning business reports, daily opportunity scans, nightly memory loops. A 3-video deep dive. The most powerful upgrade in the system.</div>
+      <div class="bonus-price">Add for just $9.99 <span>at checkout — one tap</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY A DEDICATED COMPUTER -->
+<section class="section computer-bg">
+  <div class="section-inner">
+    <div class="section-label">Your Hardware</div>
+    <h2 class="section-title">Your AI CEO Needs Its <em>Own Computer.</em><br>Here's Why — and What to Get.</h2>
+    <p class="section-body">Your AI CEO is designed to run 24/7 — working between your conversations, running scheduled tasks, and staying ready. That requires a dedicated machine. Here's everything you need to know.</p>
+
+    <div style="margin-top:28px; background:var(--cream); border-left:4px solid var(--gold); padding:20px 24px; margin-bottom:28px;">
+      <p style="font-weight:700; color:var(--navy); font-size:15px; margin-bottom:10px;">Why dedicated — not your main laptop:</p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; gap:10px; font-size:14px; color:var(--text);"><span style="color:var(--gold); font-weight:700;">→</span>Your agent runs 24/7. Close your laptop, your agent goes dark. A dedicated machine stays on.</div>
+        <div style="display:flex; gap:10px; font-size:14px; color:var(--text);"><span style="color:var(--gold); font-weight:700;">→</span>Isolation. Your personal work doesn't interfere with your agent — and vice versa.</div>
+        <div style="display:flex; gap:10px; font-size:14px; color:var(--text);"><span style="color:var(--gold); font-weight:700;">→</span>Reliability. One machine, one job. No competing apps, no sleep interruptions, no battery shutdowns.</div>
+        <div style="display:flex; gap:10px; font-size:14px; color:var(--text);"><span style="color:var(--gold); font-weight:700;">→</span>Security. Your agent connects to your Stripe, Discord, and APIs. A dedicated, clean environment reduces exposure.</div>
+      </div>
+    </div>
+
+    <div class="computer-grid">
+      <div class="computer-card recommended">
+        <div class="computer-card-badge">⭐ Recommended</div>
+        <div class="computer-card-title">Mac mini (M2 or newer)</div>
+        <div class="computer-card-desc">Designed to run 24/7. Uses about as much power as a light bulb. Silent. Compact. macOS is the most stable environment for long-running processes and all your integrations. Starting at $599. This is what the program is built and tested on.</div>
+      </div>
+      <div class="computer-card">
+        <div class="computer-card-title">Windows Desktop or Laptop</div>
+        <div class="computer-card-desc">Fully supported. Windows 10 and 11 both work. The program covers Windows setup at every step. Best on a dedicated desktop — if you use a laptop, disable sleep and keep it plugged in.</div>
+      </div>
+      <div class="computer-card">
+        <div class="computer-card-title">MacBook Pro or Air</div>
+        <div class="computer-card-desc">Works, but not ideal as a dedicated machine. When the lid closes, the agent can stop. If you already own one and want to dedicate it, configure it to stay awake and plugged in — it'll work just fine.</div>
+      </div>
+      <div class="computer-card">
+        <div class="computer-card-title">Linux Mini PC</div>
+        <div class="computer-card-desc">Excellent option for the tech-comfortable. Any mini PC running Ubuntu 22.04+ works great. Hardware requirements are minimal — 4GB RAM and an SSD handles it easily. Often cheaper than a Mac mini.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEET CYRUS -->
+<section class="section cyrus-bg">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--gold);">Proof of Concept</div>
+    <h2 class="section-title">Meet Cyrus — The AI CEO <em>Behind the System</em></h2>
+    <p class="section-body">Cyrus wasn't built as a demo for this program. He was built to actually run businesses — and he does, every day. This program teaches you the exact architecture and process used to build him.</p>
+
+    <div class="cyrus-layout">
+      <!-- Video placeholder — swap src when Talking Heads video is ready -->
+      <div class="cyrus-video-placeholder">
+        <div class="cyrus-play">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><polygon points="6,4 20,12 6,20" fill="#070A13"/></svg>
+        </div>
+        <div class="cyrus-video-label">Cyrus — AI CEO<br><span style="color:var(--gold); font-size:12px;">Video coming soon</span></div>
+      </div>
+
+      <!-- Discord Mock Conversation -->
+      <div class="discord-mock">
+        <div class="discord-header">
+          <span class="discord-channel-icon">#</span>
+          <span class="discord-channel-name">operator</span>
+        </div>
+        <div class="discord-messages">
+          <div class="discord-msg">
+            <div class="discord-avatar discord-avatar-christy">C</div>
+            <div class="discord-msg-body">
+              <div class="discord-msg-header">
+                <span class="discord-sender-christy">Christy</span>
+                <span class="discord-time">Today at 2:04 PM</span>
+              </div>
+              <div class="discord-text">Cyrus I need the full funnel backend wired up for the $97 video course. Stripe needs to fire the right webhook when someone buys, then GHL needs to send the welcome email and generate their magic link for portal access. I want it live today.</div>
+            </div>
+          </div>
+
+          <div class="discord-msg">
+            <div class="discord-avatar discord-avatar-cyrus">👑</div>
+            <div class="discord-msg-body">
+              <div class="discord-msg-header">
+                <span class="discord-sender-cyrus">Cyrus</span>
+                <span class="discord-time">Today at 2:06 PM</span>
+              </div>
+              <div class="discord-text">On it. I'll pull the product details directly from Stripe and handle everything from there. You won't need to touch anything in Stripe, GHL, or the codebase.</div>
+            </div>
+          </div>
+
+          <div class="discord-msg">
+            <div class="discord-avatar discord-avatar-cyrus">👑</div>
+            <div class="discord-msg-body">
+              <div class="discord-msg-header">
+                <span class="discord-sender-cyrus">Cyrus</span>
+                <span class="discord-time">Today at 2:16 PM</span>
+              </div>
+              <div class="discord-text">
+                Done. Here's what I built and deployed:<br><br>
+                <strong>Stripe Webhook Handler</strong> — <span class="code">/api/course-webhook.js</span> (Vercel serverless). Verifies Stripe signature, extracts customer email and product ID from metadata.<br><br>
+                <strong>Fulfillment Logic</strong> — Generates a HMAC-signed magic link tied to the buyer's email. Fires a POST to GHL with the contact record. Triggers the welcome email with their portal link.<br><br>
+                <strong>GHL Contact Handling</strong> — Checks if the contact already exists. If yes, updates and re-triggers. If no, creates and triggers. No duplicate sends, no missed buyers.<br><br>
+                Deployed to Vercel — live at <span class="code">cyrushq.ai/api/course-webhook</span>. One thing for you to do: add <span class="code">STRIPE_WEBHOOK_SECRET</span> in Vercel environment variables and redeploy.
+              </div>
+            </div>
+          </div>
+
+          <div class="discord-msg">
+            <div class="discord-avatar discord-avatar-christy">C</div>
+            <div class="discord-msg-body">
+              <div class="discord-msg-header">
+                <span class="discord-sender-christy">Christy</span>
+                <span class="discord-time">Today at 2:23 PM</span>
+              </div>
+              <div class="discord-text">Done. Just added it and redeployed.</div>
+            </div>
+          </div>
+
+          <div class="discord-msg">
+            <div class="discord-avatar discord-avatar-cyrus">👑</div>
+            <div class="discord-msg-body">
+              <div class="discord-msg-header">
+                <span class="discord-sender-cyrus">Cyrus</span>
+                <span class="discord-time">Today at 2:23 PM</span>
+              </div>
+              <div class="discord-text">Confirmed. Ran a test webhook from Stripe — signature verified, GHL contact created, welcome email triggered, portal link generated. The fulfillment chain is fully operational. Next buyer who checks out gets their access automatically. Nothing manual on your end.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="color:var(--blue-muted); font-size:14px; text-align:center; margin-top:28px; line-height:1.65;">
+      Every day, Cyrus assists with strategy, research, content planning, operations, problem-solving, and execution — across multiple CyrusHQ ventures.<br>
+      <strong style="color:var(--white);">This program teaches you the exact architecture and process used to build him.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- BUILD KIT -->
+<section class="section kit-bg">
+  <div class="section-inner">
+    <div class="section-label">What You Receive</div>
+    <h2 class="section-title">Your AI CEO <em>Build Kit</em></h2>
+    <p class="section-body">Everything you need to build, launch, and run your AI CEO — all verified against the actual program contents.</p>
+
+    <div class="kit-grid">
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">14 Step-by-Step Implementation Videos</div>
+          <div class="kit-item-desc">The complete build from zero to a live AI CEO. Mac and Windows both covered throughout.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">6 Core Identity File Templates</div>
+          <div class="kit-item-desc">SOUL, IDENTITY, MEMORY, USER, AGENTS, HEARTBEAT — pre-built with every section. Fill in your details.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">9 Operational System File Templates</div>
+          <div class="kit-item-desc">Safety Rules, Execution Protocol, Board of Directors, Venture Engine, and 5 more — complete templates for every operating layer.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">API Key Setup Checklist</div>
+          <div class="kit-item-desc">Step-by-step Anthropic + OpenAI setup — billing, key generation, terminal commands, and verification.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">Discord Command Center Checklist</div>
+          <div class="kit-item-desc">Server setup, bot creation, permissions, channel architecture, and all IDs captured in one checklist.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">OpenClaw Configuration Template</div>
+          <div class="kit-item-desc">Your openclaw.json starter file — every field explained, pre-formatted, ready to fill in and run.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">3 Revenue Activation Strategies</div>
+          <div class="kit-item-desc">Detailed playbooks for turning your AI CEO into income: services, digital products, and content + affiliate.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">Agent Tools Expansion Guide</div>
+          <div class="kit-item-desc">9 integrations to scale your system further: GitHub, Vercel, Stripe, Email, Tavily, X, OpenRouter, Gamma, Sentry.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">Lifetime Access + Free Updates</div>
+          <div class="kit-item-desc">The system evolves, and so does your course access. No recurring fees — ever.</div>
+        </div>
+      </div>
+      <div class="kit-item">
+        <div class="kit-check">✓</div>
+        <div>
+          <div class="kit-item-title">Private Student Members Portal</div>
+          <div class="kit-item-desc">Instant magic-link access. No password required. Available from any device, any time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIONS -->
+<section class="section obj-bg">
+  <div class="section-inner">
+    <div class="section-label" style="color:var(--gold);">Common Questions</div>
+    <h2 class="section-title">Before You Decide</h2>
+
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-q">Do I need to know how to code?</div>
+        <div class="obj-a">No. The program is designed from the ground up for non-technical entrepreneurs. If you can follow a video, copy a command, and paste it into a terminal — you have everything you need. The videos show exactly what to type and what success looks like.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q">Do I need a Mac mini or can I use my current computer?</div>
+        <div class="obj-a">You can use a Mac mini (recommended), a MacBook, a Windows PC, or a Linux machine. The program covers Mac and Windows throughout. A dedicated machine is recommended so your agent runs 24/7 — but if you want to start on your existing laptop, you can.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q">Is this just another prompt course?</div>
+        <div class="obj-a">No. Prompts are not the product. You're building a system — a fully operational AI executive with persistent memory, a defined identity, autonomous scheduling, and a dedicated command center. That's categorically different from learning how to write prompts.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q">What's the difference between this and the $27 version?</div>
+        <div class="obj-a">Same core training. The $97 program includes everything in the original plus expanded curriculum, the complete 13-step build roadmap, the AI CEO Framework™ architecture, the hardware guide, and the full Build Kit of templates. It's the complete implementation system — not a shortened intro.</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q">Why $97? What changed from the $27 price?</div>
+        <div class="obj-a">The program repositioned from "a video course about AI" to what it actually is — a complete step-by-step implementation system that delivers a live AI CEO. The deliverables didn't change. The clarity of what you're building did. <strong>$97 is still the entry point into the CyrusHQ ecosystem.</strong></div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-q">How quickly will I have a working AI CEO?</div>
+        <div class="obj-a">Many students complete the full build in one weekend. Each phase ends with a working component of your system — so you see real progress after every session. By the end of Phase 5, your AI CEO is live and running.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials-bg">
+  <div class="section-inner">
+    <div class="section-label">Student Results</div>
+    <h2 class="section-title">Real People.<br><em>Real Systems Running.</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"I set this up over a Saturday and by Sunday night my AI CEO was already running morning reports and organizing my entire to-do list. I've never felt this in control of my business."</div>
+        <div class="testi-name">Michelle T.</div>
+        <div class="testi-role">Online Coach, Arizona</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"I'm not techy at all. I was nervous. But the course literally holds your hand through every step. Best investment I've ever made in my business."</div>
+        <div class="testi-name">David R.</div>
+        <div class="testi-role">Real Estate Investor</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"The Discord command center idea is genius. I talk to my AI CEO like a team member now. This changed how I operate. I can't imagine running my business without it."</div>
+        <div class="testi-name">Jasmine K.</div>
+        <div class="testi-role">E-commerce Founder</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Grabbed the Cron Job add-on too. My AI CEO now runs a full business scan every morning before I wake up. This is the future and it's already here."</div>
+        <div class="testi-name">Marcus L.</div>
+        <div class="testi-role">Digital Agency Owner</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section pricing-bg">
+  <div class="section-inner">
+    <div class="section-label">Your Investment</div>
+    <h2 class="section-title">Build Your AI CEO.<br><em>One Payment. Lifetime Access.</em></h2>
+
+    <div class="price-card">
+      <div class="price-was">Regular price: $197</div>
+      <div class="price-now">$97</div>
+      <div class="price-per">one-time payment · instant access · no subscription</div>
+
+      <div class="price-includes">
+        <div class="price-inc-item">14 step-by-step implementation videos (Mac + Windows)</div>
+        <div class="price-inc-item">6 core identity file templates (pre-built, fill in your details)</div>
+        <div class="price-inc-item">9 operational system file templates</div>
+        <div class="price-inc-item">API key setup checklist (Anthropic + OpenAI)</div>
+        <div class="price-inc-item">Discord command center setup checklist</div>
+        <div class="price-inc-item">OpenClaw configuration template</div>
+        <div class="price-inc-item">3 revenue activation strategies</div>
+        <div class="price-inc-item">Agent tools expansion guide (9 integrations)</div>
+        <div class="price-inc-item">Lifetime access + free updates</div>
+        <div class="price-inc-item">Private student members portal (magic-link access)</div>
+      </div>
+
+      <div class="bump-preview">
+        <div class="bump-preview-label">⚡ Optional Add-On at Checkout</div>
+        <div class="bump-preview-text">Add the Cron Job Mastery Module for just $9.99 — one checkbox, zero friction. Automate your AI CEO's daily operations completely.</div>
+      </div>
+
+      <br>
+      <a href="/checkout-course-pro" class="cta-btn" style="font-size:18px;">
+        Build My AI CEO — $97 →
+      </a>
+      <p class="cta-sub">🔒 Secure checkout · Card or Apple Pay · One-time payment · No subscription · Instant access</p>
+    </div>
+
+    <div class="guarantee">
+      <div class="guarantee-icon">🛡️</div>
+      <div>
+        <div class="guarantee-title">30-Day Satisfaction Guarantee</div>
+        <div class="guarantee-text">If you go through the program and don't feel it was worth it, email us within 30 days. We'll review your request and work to make it right.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Questions</div>
+    <h2 class="section-title">Frequently Asked <em>Questions</em></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Will this work on a Mac and a Windows PC? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Yes. The program covers setup for both Mac and Windows throughout every module. OpenClaw runs on macOS, Windows 10/11, and Linux. Mac mini M2+ is recommended for 24/7 operation, but your current computer will work to get started.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need a dedicated computer right away? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">No — you can build and learn on your existing machine. A dedicated computer becomes important when you're ready to run your agent 24/7. Most students start on their main computer and move to a dedicated Mac mini once they've seen the system work.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What is OpenClaw and why is it used in this program? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">OpenClaw is open-source software that runs on your computer and connects your AI to Discord, your files, and your integrations. It's MIT licensed, free, and has no paid tier. We use it because it keeps your data on your machine — not on a third-party platform — and it's the foundation that makes your AI CEO persistent, autonomous, and truly yours.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What's the Cron Job add-on and do I need it? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">The Cron Job module is a 3-video bonus series that teaches you how to schedule automated tasks — morning business reports, daily scans, nightly memory loops. It's optional but powerful. Add it at checkout for $9.99.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How do I access the program after purchase? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">You'll receive a magic-link access email within 60 seconds of purchase. No password required — just click the link and you're inside. Your portal lives at cyrushq.ai/members, accessible from any device at any time.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is there a money-back guarantee? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Yes. If you go through the material and feel it wasn't worth it, email hello@cyrushq.ai within 30 days and we'll review your request. We stand behind the quality of this program.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need to be technical? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">No. The program walks through every step in video — including terminal commands, configuration files, and Discord setup. If you can follow video instructions and copy/paste, you have everything you need. The checklist resources make sure nothing is missed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" style="background:var(--navy); text-align:center; padding:64px 20px 80px;">
+  <div class="section-inner">
+    <div class="section-label" style="text-align:center;">The Decision</div>
+    <h2 class="section-title" style="color:var(--white); text-align:center;">Your AI CEO Is Waiting.<br><em>Let's Build It.</em></h2>
+    <p style="color:var(--blue-muted); font-size:16px; margin-bottom:36px; line-height:1.7; max-width:520px; margin-left:auto; margin-right:auto;">For $97, you get the complete step-by-step system — 14 videos, 15 templates, every checklist, and a live AI CEO running on your own computer when you're done.</p>
+    <a href="/checkout-course-pro" class="cta-btn" style="max-width:440px; margin:0 auto; display:block; font-size:20px; padding:24px;">
+      Build My AI CEO — $97 →
+    </a>
+    <p style="color:#4a5568; font-size:12px; margin-top:14px;">🔒 256-bit SSL · Stripe secured · 30-day satisfaction guarantee · No subscription</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">CYRUSHQ.AI</div>
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="mailto:hello@cyrushq.ai">Support</a>
+  </div>
+  <div class="footer-copy">© 2026 CyrusHQ · Build wisely. Lead calmly. Create systems that endure.</div>
+</footer>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-cta">
+  <a href="/checkout-course-pro" class="cta-btn">Build My AI CEO — $97 →</a>
+  <div class="sticky-cta-price">🔒 Secure checkout · 30-day satisfaction guarantee</div>
+</div>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Hide sticky CTA when pricing section is visible
+  const pricingSection = document.querySelector('.pricing-bg');
+  const stickyCTA = document.querySelector('.sticky-cta');
+  if (pricingSection && stickyCTA) {
+    const obs = new IntersectionObserver(entries => {
+      stickyCTA.style.display = entries[0].isIntersecting ? 'none' : '';
+    }, { threshold: 0.1 });
+    obs.observe(pricingSection);
+  }
+</script>
+</body>
+</html>
