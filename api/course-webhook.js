@@ -3,6 +3,107 @@
 // Fires GHL automation: course access email + conditional cron bonus + optional starter kit
 // Also fires Meta Conversions API (CAPI) Purchase event for ad attribution
 
+// ============================================================
+// KFP-003 FULL IDEMPOTENCY — Deployed 2026-09-29
+// Four-layer protection against duplicate and concurrent processing:
+//
+//   Layer 1: In-process event deduplication (same Vercel instance)
+//            Prevents the same Stripe event ID from being processed twice
+//            within a single function instance lifetime.
+//
+//   Layer 2: Distributed event deduplication via Vercel KV (cross-instance)
+//            Blocks concurrent Vercel instances from double-processing the
+//            same Stripe event. Requires env vars:
+//              KV_REST_API_URL  — from Vercel KV dashboard
+//              KV_REST_API_TOKEN — from Vercel KV dashboard
+//            If not configured, Layer 1 + 3 + 4 still protect.
+//
+//   Layer 3: In-process per-contact serialization (same Vercel instance)
+//            Queues concurrent webhooks for the same customer email within
+//            one Vercel instance so GHL PUTs never race each other locally.
+//
+//   Layer 4: Verify-after-write retry in mergeGHLTags (already in place)
+//            After PUT, verifies all expected tags exist. Retries up to 3x
+//            with backoff. Guards against cross-instance concurrent overwrites
+//            that Layers 1-3 cannot fully prevent.
+// ============================================================
+
+// Layer 1: in-process event ID cache
+const _processedEventIds = new Set();
+
+// Layer 3: in-process per-contact serialization queue
+const _contactLocks = new Map();
+
+// Layer 2: Vercel KV REST helper (Upstash Redis REST API)
+// Uses SET NX (set-if-not-exists) for atomic distributed locking.
+async function _kvSetNX(key, ttlSeconds = 86400) {
+  const kvUrl   = process.env.KV_REST_API_URL;
+  const kvToken = process.env.KV_REST_API_TOKEN;
+  if (!kvUrl || !kvToken) return null; // KV not configured — skip
+  try {
+    const res = await fetch(kvUrl, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${kvToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(['SET', key, '1', 'NX', 'EX', String(ttlSeconds)])
+    });
+    const data = await res.json();
+    // Upstash: result='OK' if newly set, result=null if already existed
+    return data.result; // 'OK' = newly set | null = already existed
+  } catch (err) {
+    console.warn('KFP-003 KV error:', err.message, '— falling back to in-process only');
+    return undefined; // undefined = KV error, cannot determine
+  }
+}
+
+// Acquire an idempotency lock for a Stripe event ID.
+// Returns true if event should be processed, false if it's a duplicate.
+async function _acquireEventLock(eventId) {
+  // Layer 1: in-process cache
+  if (_processedEventIds.has(eventId)) {
+    console.log(`KFP-003: Duplicate event skipped (in-process): ${eventId}`);
+    return false;
+  }
+
+  // Layer 2: distributed KV lock
+  const kvResult = await _kvSetNX(`stripe:event:${eventId}`, 86400);
+  if (kvResult === null) {
+    // KV confirmed this event was already processed by another instance
+    console.log(`KFP-003: Duplicate event skipped (KV distributed): ${eventId}`);
+    return false;
+  }
+  if (kvResult === undefined) {
+    // KV error — proceed conservatively (Layer 4 retry still guards us)
+    console.warn(`KFP-003: KV error on event ${eventId} — processing anyway, Layer 4 guards active`);
+  }
+
+  // Mark in-process
+  _processedEventIds.add(eventId);
+  // Prevent unbounded growth in long-lived instances
+  if (_processedEventIds.size > 500) {
+    const toRemove = [..._processedEventIds].slice(0, 100);
+    toRemove.forEach(id => _processedEventIds.delete(id));
+  }
+
+  return true; // safe to process
+}
+
+// Layer 3: serialize GHL operations per customer email within a Vercel instance.
+// Prevents two concurrent invocations for the same customer from racing on GHL PUT.
+async function _withContactLock(emailKey, fn) {
+  const key = emailKey.toLowerCase().trim();
+  const existing = _contactLocks.get(key) || Promise.resolve();
+  let release;
+  const next = new Promise(r => { release = r; });
+  _contactLocks.set(key, next);
+  try {
+    await existing; // wait for any prior operation on this contact
+    return await fn();
+  } finally {
+    release();
+    if (_contactLocks.get(key) === next) _contactLocks.delete(key);
+  }
+}
+
 const PIXEL_ID = '898060140812365';
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 
@@ -548,7 +649,13 @@ export default async function handler(req, res) {
   }
 
   const event = JSON.parse(rawBody.toString('utf8'));
-  console.log('Course webhook event:', event.type);
+  console.log('Course webhook event:', event.type, '| id:', event.id);
+
+  // KFP-003 Layer 1+2: Distributed idempotency — skip if this event was already processed
+  const shouldProcess = await _acquireEventLock(event.id);
+  if (!shouldProcess) {
+    return res.status(200).json({ received: true, note: 'duplicate_event_skipped' });
+  }
 
   // Handle payment_intent.succeeded — funnel/custom checkout purchases (metadata on PI)
   if (event.type === 'payment_intent.succeeded') {
@@ -572,26 +679,29 @@ export default async function handler(req, res) {
     const courseProducts = ['build-your-ai-ceo', 'build-your-ai-ceo-pro', 'ai-ceo-starter-kit', 'cron-job-mastery', 'complete-bundle', 'book-bundle'];
 
     if (courseProducts.includes(product)) {
-      if (isBookBundle) {
-        console.log(`Book bundle for ${email}`);
-        await triggerGHLBookBundleWorkflow({ email, name });
+      // KFP-003 Layer 3: serialize GHL operations per customer within this Vercel instance
+      await _withContactLock(email, async () => {
+        if (isBookBundle) {
+          console.log(`Book bundle for ${email}`);
+          await triggerGHLBookBundleWorkflow({ email, name });
 
-      } else if (product === 'build-your-ai-ceo-pro') {
-        console.log(`Course PRO ($97) welcome for ${email}`);
-        await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false, isPro: true });
+        } else if (product === 'build-your-ai-ceo-pro') {
+          console.log(`Course PRO ($97) welcome for ${email}`);
+          await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false, isPro: true });
 
-      } else if (product === 'build-your-ai-ceo' || isBundle) {
-        console.log(`Course welcome for ${email} — product:${product}`);
-        await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: isBundle, isBundle });
+        } else if (product === 'build-your-ai-ceo' || isBundle) {
+          console.log(`Course welcome for ${email} — product:${product}`);
+          await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: isBundle, isBundle });
 
-      } else if (product === 'cron-job-mastery') {
-        console.log(`Cron email + tag for ${email}`);
-        await triggerGHLCronEmail({ email, name });
+        } else if (product === 'cron-job-mastery') {
+          console.log(`Cron email + tag for ${email}`);
+          await triggerGHLCronEmail({ email, name });
 
-      } else if (product === 'ai-ceo-starter-kit') {
-        console.log(`Starter kit email + tag for ${email}`);
-        await triggerGHLStarterKitEmail({ email, name });
-      }
+        } else if (product === 'ai-ceo-starter-kit') {
+          console.log(`Starter kit email + tag for ${email}`);
+          await triggerGHLStarterKitEmail({ email, name });
+        }
+      });
 
       const productNames = {
         'build-your-ai-ceo': 'Build Your AI CEO Course',
@@ -624,30 +734,34 @@ export default async function handler(req, res) {
     const isBundle     = product === 'complete-bundle';
     const isBookBundle = product === 'book-bundle';
 
-    if (isBundle) {
-      console.log(`Complete Bundle (payment link) for ${email}`);
-      await triggerGHLCourseWorkflow({ email, name, hasCronBump: true, hasStarterKit: true, isBundle: true });
-    } else if (isBookBundle || product === '2-book-bundle') {
-      console.log(`Book bundle (payment link) for ${email}`);
-      await triggerGHLBookBundleWorkflow({ email, name });
-    } else if (product === 'build-your-ai-ceo-pro') {
-      console.log(`Course PRO ($97) payment link for ${email}`);
-      await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false, isPro: true });
-    } else if (product === 'build-your-ai-ceo') {
-      await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false });
-    } else if (product === 'ai-ceo-starter-kit') {
-      console.log(`Starter kit email + tag for ${email}`);
-      await triggerGHLStarterKitEmail({ email, name });
-    } else if (product === 'ai-growth-engine-pack') {
-      console.log(`Growth engine email + tag for ${email}`);
-      await triggerGHLGrowthEngineEmail({ email, name });
-    } else if (product === 'ai-agent-playbook') {
-      console.log(`Playbook email + tag for ${email}`);
-      await triggerGHLPlaybookEmail({ email, name });
-    } else if (product === '6fig-blueprint') {
-      console.log(`6-Figure Blueprint email + tag for ${email}`);
-      await triggerGHL6FigBlueprintEmail({ email, name });
-    }
+    // KFP-003 Layer 3: serialize GHL operations per customer within this Vercel instance
+    await _withContactLock(email, async () => {
+      if (isBundle) {
+        console.log(`Complete Bundle (payment link) for ${email}`);
+        await triggerGHLCourseWorkflow({ email, name, hasCronBump: true, hasStarterKit: true, isBundle: true });
+      } else if (isBookBundle || product === '2-book-bundle') {
+        console.log(`Book bundle (payment link) for ${email}`);
+        await triggerGHLBookBundleWorkflow({ email, name });
+      } else if (product === 'build-your-ai-ceo-pro') {
+        console.log(`Course PRO ($97) payment link for ${email}`);
+        await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false, isPro: true });
+      } else if (product === 'build-your-ai-ceo') {
+        await triggerGHLCourseWorkflow({ email, name, hasCronBump: false, hasStarterKit: false, isBundle: false });
+      } else if (product === 'ai-ceo-starter-kit') {
+        console.log(`Starter kit email + tag for ${email}`);
+        await triggerGHLStarterKitEmail({ email, name });
+      } else if (product === 'ai-growth-engine-pack') {
+        console.log(`Growth engine email + tag for ${email}`);
+        await triggerGHLGrowthEngineEmail({ email, name });
+      } else if (product === 'ai-agent-playbook') {
+        console.log(`Playbook email + tag for ${email}`);
+        await triggerGHLPlaybookEmail({ email, name });
+      } else if (product === '6fig-blueprint') {
+        console.log(`6-Figure Blueprint email + tag for ${email}`);
+        await triggerGHL6FigBlueprintEmail({ email, name });
+      }
+    });
+
     // Meta CAPI for checkout.session purchases
     const sessionProductNames = {
       'build-your-ai-ceo': 'Build Your AI CEO Course',
