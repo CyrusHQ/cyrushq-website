@@ -39,7 +39,7 @@ const _contactLocks = new Map();
 async function _kvSetNX(key, ttlSeconds = 86400) {
   const kvUrl   = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
-  if (!kvUrl || !kvToken) return null; // KV not configured — skip
+  if (!kvUrl || !kvToken) return undefined; // KV not configured — bypass Layer 2, treat same as KV unavailable
   try {
     const res = await fetch(kvUrl, {
       method: 'POST',
