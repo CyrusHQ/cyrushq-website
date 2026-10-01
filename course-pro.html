@@ -137,6 +137,98 @@
     .section-title em { color: var(--gold); font-style: normal; }
     .section-body { color: var(--muted); font-size: 16px; line-height: 1.75; }
 
+    /* ── CHATBOT VS AGENT SECTION ── */
+    .agent-vs-bg { background: var(--cream); }
+    .agent-vs-bg .section-label { color: var(--gold); }
+    .agent-vs-bg .section-title { color: var(--navy); }
+    .agent-vs-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 24px; margin-top: 36px;
+    }
+    @media (max-width: 640px) { .agent-vs-grid { grid-template-columns: 1fr; } }
+    .agent-card {
+      border-radius: 8px; padding: 28px 24px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .agent-card-bad {
+      background: #fff; border: 2px solid #D1D5DB;
+    }
+    .agent-card-good {
+      background: #fff; border: 2px solid var(--gold);
+    }
+    .agent-card-header {
+      font-size: 13px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .agent-card-bad .agent-card-header { color: #6B7280; }
+    .agent-card-good .agent-card-header { color: var(--gold); }
+    .agent-bubble-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .agent-bubble {
+      padding: 10px 14px; border-radius: 8px;
+      font-size: 14px; line-height: 1.5;
+    }
+    .agent-bubble-you {
+      background: #F3F4F6; color: #374151;
+      align-self: flex-end; max-width: 90%;
+    }
+    .agent-bubble-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: #9CA3AF; margin-bottom: 2px;
+    }
+    .agent-bubble-ai {
+      background: #EEF2FF; color: #374151; max-width: 90%;
+    }
+    .agent-then {
+      font-size: 13px; color: #6B7280; line-height: 1.7;
+    }
+    .agent-then span { display: block; }
+    .agent-verdict {
+      font-size: 13px; font-style: italic;
+      padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .agent-card-bad .agent-verdict { color: #9CA3AF; }
+    .agent-card-good .agent-verdict { color: var(--navy); font-weight: 600; }
+    .agent-checklist { display: flex; flex-direction: column; gap: 7px; }
+    .agent-check {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 14px; color: var(--navy); line-height: 1.4;
+    }
+    .agent-check-icon { color: #22C55E; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .agent-bridge {
+      text-align: center; margin: 36px 0 0;
+      font-size: 18px; font-weight: 700; color: var(--navy);
+      line-height: 1.5;
+    }
+    .agent-bridge em { color: var(--gold); font-style: normal; }
+    .agent-cap-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px; margin-top: 36px;
+    }
+    @media (max-width: 700px) { .agent-cap-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 440px) { .agent-cap-grid { grid-template-columns: 1fr; } }
+    .agent-cap-card {
+      background: #fff; border-left: 3px solid var(--gold);
+      padding: 20px 18px; border-radius: 4px;
+    }
+    .agent-cap-icon { font-size: 22px; margin-bottom: 8px; }
+    .agent-cap-title {
+      font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--navy); margin-bottom: 8px;
+    }
+    .agent-cap-body { font-size: 13px; color: #4B5563; line-height: 1.6; }
+    .agent-closing {
+      text-align: center; margin-top: 48px;
+      padding: 32px; background: var(--navy); border-radius: 8px;
+    }
+    .agent-closing p {
+      font-size: 16px; color: var(--blue-muted); line-height: 1.7; margin: 0 0 8px;
+    }
+    .agent-closing strong {
+      display: block; font-size: 18px; color: var(--gold);
+      margin-top: 16px; line-height: 1.5;
+    }
+
     /* ── OPENCLAW / DATA PRIVACY SECTION ── */
     .privacy-bg { background: var(--navy); }
     .privacy-bg .section-title { color: var(--white); }
@@ -601,6 +693,103 @@
       Build My AI CEO — $97 →
     </a>
     <p style="color:#8BA3C4; font-size:13px; margin-top:14px;">One-time payment · Lifetime access · 30-day satisfaction guarantee</p>
+  </div>
+</section>
+
+<!-- CHATBOT VS AGENT -->
+<section class="section agent-vs-bg">
+  <div class="section-inner">
+    <div class="section-label">The Difference That Changes Everything</div>
+    <h2 class="section-title">ChatGPT Can Answer Your Questions.<br><em>An AI Agent Can Do the Work.</em></h2>
+    <p class="section-body" style="color:#4B5563;">Most people's first experience with AI starts the same way. You open ChatGPT or Claude. You type a question. It gives you an answer. That's genuinely powerful. But that's only the beginning.<br><br>An AI agent combines AI intelligence with tools, business context, permissions, and automation — so it can do more than tell you what to do. It can be built to take action.</p>
+
+    <div class="agent-vs-grid">
+      <!-- CHATBOT CARD -->
+      <div class="agent-card agent-card-bad">
+        <div class="agent-card-header">💬 AI Chatbot Experience</div>
+        <div class="agent-bubble-wrap">
+          <div class="agent-bubble-label">You</div>
+          <div class="agent-bubble agent-bubble-you">"Write a follow-up email for this lead."</div>
+          <div class="agent-bubble-label">AI</div>
+          <div class="agent-bubble agent-bubble-ai">"Here's your email…"</div>
+        </div>
+        <div class="agent-then">
+          Then you:<br>
+          <span>→ Copy it</span>
+          <span>→ Send it yourself</span>
+          <span>→ Update the CRM yourself</span>
+          <span>→ Schedule the follow-up yourself</span>
+        </div>
+        <div class="agent-verdict">You got a great answer. You're still doing the work.</div>
+      </div>
+
+      <!-- AGENT CARD -->
+      <div class="agent-card agent-card-good">
+        <div class="agent-card-header">⚡ AI Agent</div>
+        <div class="agent-bubble-wrap">
+          <div class="agent-bubble-label">You</div>
+          <div class="agent-bubble agent-bubble-you">"Handle this lead."</div>
+          <div class="agent-bubble-label">Your Agent</div>
+        </div>
+        <div class="agent-checklist">
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Pulls the lead's information from your CRM</span></div>
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Reviews previous interactions</span></div>
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Drafts the appropriate response</span></div>
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Sends the authorized email</span></div>
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Updates the CRM record</span></div>
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Schedules the next follow-up</span></div>
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Logs what it did</span></div>
+          <div class="agent-check"><span class="agent-check-icon">✓</span><span>Reports the outcome back to you</span></div>
+        </div>
+        <div class="agent-verdict">The AI doesn't just tell you what to do. It executes the workflow.</div>
+      </div>
+    </div>
+
+    <div class="agent-bridge">That's the difference between an AI you talk to<br>and an <em>AI CEO you put to work.</em></div>
+
+    <div style="margin-top:56px;">
+      <div class="section-label" style="text-align:center;">What Your AI CEO Can Be Built Around</div>
+      <p style="text-align:center; color:#4B5563; font-size:15px; margin:8px 0 0;">Your AI CEO isn't just another chat window. You build it around your business.</p>
+    </div>
+
+    <div class="agent-cap-grid">
+      <div class="agent-cap-card">
+        <div class="agent-cap-icon">🧠</div>
+        <div class="agent-cap-title">Business Context</div>
+        <div class="agent-cap-body">Give it your SOPs, files, policies, pricing, and brand voice. The difference between asking an intelligent stranger for help and onboarding someone into your company.</div>
+      </div>
+      <div class="agent-cap-card">
+        <div class="agent-cap-icon">🔌</div>
+        <div class="agent-cap-title">Tools &amp; Connections</div>
+        <div class="agent-cap-body">Connect authorized systems through APIs, MCP servers, and integrations. Stripe · GoHighLevel · Email · Calendars · Databases · Custom software.</div>
+      </div>
+      <div class="agent-cap-card">
+        <div class="agent-cap-icon">⚡</div>
+        <div class="agent-cap-title">Actions</div>
+        <div class="agent-cap-body">Let it perform approved tasks instead of explaining how you could perform them. The difference between advice and execution.</div>
+      </div>
+      <div class="agent-cap-card">
+        <div class="agent-cap-icon">⏰</div>
+        <div class="agent-cap-title">Automations</div>
+        <div class="agent-cap-body">Schedule recurring responsibilities so work happens without you remembering to ask. Every morning: check sales. Every Monday: generate the report. Every night: review open tasks.</div>
+      </div>
+      <div class="agent-cap-card">
+        <div class="agent-cap-icon">📋</div>
+        <div class="agent-cap-title">Responsibilities</div>
+        <div class="agent-cap-body">Give it defined roles, operating instructions, permissions, and escalation rules. Not "answer this question." This is your job.</div>
+      </div>
+      <div class="agent-cap-card">
+        <div class="agent-cap-icon">🤖</div>
+        <div class="agent-cap-title">A Full AI Team</div>
+        <div class="agent-cap-body">Your AI CEO doesn't have to work alone. Build specialized agents for customer success, marketing, operations, and sales — each with their own role, knowledge, and tools.</div>
+      </div>
+    </div>
+
+    <div class="agent-closing">
+      <p>A chatbot is something you talk to.</p>
+      <p>An AI CEO is something you put to work.</p>
+      <strong>When you give it the right context, tools, responsibilities, and automations —<br>you're no longer just using AI. You're building an AI workforce.</strong>
+    </div>
   </div>
 </section>
 
