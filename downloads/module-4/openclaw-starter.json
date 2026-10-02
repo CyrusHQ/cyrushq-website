@@ -1,0 +1,50 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "/Users/YOUR_MAC_USERNAME/YOUR_WORKSPACE_FOLDER",
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-6"
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "identity": {
+          "name": "YOUR_AI_NAME",
+          "theme": "YOUR_AI_NAME is your AI Chief Executive. It manages your ventures, coordinates your agents, and keeps your system running.",
+          "emoji": "👑"
+        }
+      }
+    ]
+  },
+
+  "gateway": {
+    "bind": "127.0.0.1",
+    "port": 18789,
+    "auth": {
+      "mode": "token"
+    }
+  },
+
+  "channels": {
+    "discord": {
+      "token": "YOUR_DISCORD_BOT_TOKEN",
+      "channels": {
+        "operator": "YOUR_OPERATOR_CHANNEL_ID",
+        "morning-brief": "YOUR_MORNING_BRIEF_CHANNEL_ID",
+        "bugs": "YOUR_BUGS_CHANNEL_ID",
+        "content": "YOUR_CONTENT_CHANNEL_ID",
+        "strategy": "YOUR_STRATEGY_CHANNEL_ID",
+        "nightly-review": "YOUR_NIGHTLY_REVIEW_CHANNEL_ID"
+      }
+    }
+  },
+
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+
+  "tools": {
+    "profile": "coding"
+  }
+}
