@@ -333,13 +333,13 @@
     /* ── AI CEO FRAMEWORK ── */
     .framework-bg { background: var(--cream); }
     .framework-chain {
-      display: flex; align-items: center; justify-content: center;
-      flex-wrap: wrap; gap: 0; margin-top: 36px;
+      display: flex; align-items: stretch; justify-content: center;
+      flex-wrap: nowrap; gap: 0; margin-top: 36px;
     }
     .framework-node {
-      text-align: center; padding: 18px 16px;
+      text-align: center; padding: 18px 12px;
       background: var(--white); border: 1px solid #e5e7eb;
-      border-top: 3px solid var(--gold); min-width: 120px;
+      border-top: 3px solid var(--gold); flex: 1; min-width: 0;
     }
     .framework-node-num { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
     .framework-node-name { color: var(--navy); font-weight: 700; font-size: 13px; line-height: 1.3; }
