@@ -329,7 +329,16 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       <a href="${magicLink}" style="background:#C9A84C; color:#0A1628; padding:18px 36px; text-decoration:none; font-weight:700; font-size:16px; display:inline-block; letter-spacing:1.5px; text-transform:uppercase;">Access My Course Portal &rarr;</a>
     </div>
     ${isBundle ? bundleSection : bonusNote}
-    <p style="color:#555; font-size:14px; line-height:1.6; margin-top:20px;"><strong>What to do first:</strong><br>Start with Module 1 — it's under 20 minutes and gives you the complete picture before you build. Most students have a live AI CEO by the end of the weekend.</p>
+    <p style="color:#555; font-size:14px; line-height:1.6; margin-top:20px;"><strong>What to do first:</strong><br>Start with Module 1 — it's under 20 minutes and gives you the complete picture before you build. Most students have a live AI CEO by the end of the week.</p>
+    ${isPro ? `<div style="background:#fffbeb; border:1px solid #C9A84C; border-radius:8px; padding:16px 20px; margin:24px 0;">
+      <p style="color:#0A1628; font-weight:700; font-size:14px; margin:0 0 10px;">📦 Your Module 4 Resources</p>
+      <p style="color:#555; font-size:13px; margin:0 0 12px; line-height:1.6;">When you reach Module 4 (OpenClaw install), these two files will save you hours:</p>
+      <ul style="color:#555; font-size:13px; line-height:2; margin:0; padding-left:20px;">
+        <li><a href="https://cyrushq.ai/downloads/module-4/Module-4-OpenClaw-Config-Template.pdf" style="color:#C9A84C;">OpenClaw Config Template (PDF)</a> — every field explained</li>
+        <li><a href="https://cyrushq.ai/downloads/module-4/openclaw-starter.json" style="color:#C9A84C;">openclaw-starter.json</a> — copy-ready config file</li>
+        <li><a href="https://cyrushq.ai/downloads/module-4/Module-4-OpenClaw-Terminal-Setup-Cheatsheet.pdf" style="color:#C9A84C;">Terminal Setup Cheat Sheet</a> — all 18 install prompts with recommended answers</li>
+      </ul>
+    </div>` : ''}
     <div style="background:#f8f6f1; border:1px solid #e5e7eb; border-radius:8px; padding:14px 18px; margin-top:20px; text-align:center;">
       <p style="color:#555; font-size:13px; margin:0;">🔖 <strong>Bookmark this link for instant access anytime — no password needed.</strong></p>
     </div>
