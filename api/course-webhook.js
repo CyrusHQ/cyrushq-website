@@ -27,6 +27,29 @@
 //            with backoff. Guards against cross-instance concurrent overwrites
 //            that Layers 1-3 cannot fully prevent.
 // ============================================================
+// SOFI ALERT — Deployed 2026-10-04
+// Fires a Discord alert when critical fulfillment steps fail silently.
+// Requires env var: DISCORD_ALERT_WEBHOOK (Discord incoming webhook URL)
+// Set up in Discord: Channel Settings → Integrations → Webhooks → New Webhook
+// Paste the webhook URL as DISCORD_ALERT_WEBHOOK in Vercel environment variables.
+// ============================================================
+
+async function sendSofiAlert(message) {
+  const webhookUrl = process.env.DISCORD_ALERT_WEBHOOK;
+  if (!webhookUrl) return; // Silently skip if not configured
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'Sofi Alert 🔴',
+        content: message
+      })
+    });
+  } catch (err) {
+    console.error('Sofi alert delivery failed:', err.message);
+  }
+}
 
 // Layer 1: in-process event ID cache
 const _processedEventIds = new Set();
@@ -206,7 +229,19 @@ async function upsertGHLContact({ email, firstName, lastName, tags }) {
   });
   const d = await res.json();
   const contactId = d.contact?.id || d.meta?.contactId;
-  if (!contactId) console.error('GHL upsert failed for', email, JSON.stringify(d));
+  if (!contactId) {
+    const statusCode = d.statusCode || res.status;
+    const errMsg = d.message || JSON.stringify(d);
+    console.error('GHL upsert failed for', email, JSON.stringify(d));
+    await sendSofiAlert(
+      `🛑 **GHL Contact Creation Failed** \n` +
+      `**Customer:** ${email}\n` +
+      `**HTTP Status:** ${statusCode}\n` +
+      `**Error:** ${errMsg}\n` +
+      `**Action Required:** Customer has NO GHL contact, NO tags, NO fulfillment email. Manual recovery needed immediately.\n` +
+      `**Check:** GHL → Settings → Integrations → Private Integrations — verify contacts.write scope is enabled.`
+    );
+  }
   return contactId || null;
 }
 
@@ -249,6 +284,13 @@ async function mergeGHLTags(contactId, tagsToAdd) {
       await new Promise(r => setTimeout(r, attempt * 500));
     } else {
       console.error(`KFP-003: could not verify tags after ${MAX_ATTEMPTS} attempts for ${contactId} — expected: ${tagsToAdd}, got: ${finalTags}`);
+      await sendSofiAlert(
+        `⚠️ **GHL Tag Verification Failed (KFP-003)** \n` +
+        `**Contact ID:** ${contactId}\n` +
+        `**Expected tags:** ${tagsToAdd.join(', ')}\n` +
+        `**Actual tags:** ${finalTags.join(', ')}\n` +
+        `**Action Required:** Tags may be missing after ${MAX_ATTEMPTS} attempts. Verify contact in GHL manually.`
+      );
     }
   }
 }
