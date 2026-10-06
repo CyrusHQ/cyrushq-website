@@ -2,14 +2,67 @@
 // Creates a Stripe PaymentIntent for the AI Agency Blueprint 2-book bundle ($17)
 // Returns { clientSecret, redirectUrl } or { requiresAction, clientSecret }
 
+const PIXEL_ID = '898060140812365';
+const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
+
+async function hashSHA256(value) {
+  const crypto = await import('crypto');
+  return crypto.createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
+}
+
+async function sendMetaCAPIInitiateCheckout({ email, fbp, fbc, eventSourceUrl, eventId, amountCents, productKey, productName }) {
+  if (!META_ACCESS_TOKEN || !eventId) return;
+  try {
+    const hashedEmail = await hashSHA256(email);
+    const userData = { em: [hashedEmail], external_id: [hashedEmail], client_user_agent: 'Mozilla/5.0 (server-side event)' };
+    if (fbp) userData.fbp = fbp;
+    if (fbc) userData.fbc = fbc;
+    const payload = { data: [{
+      event_name: 'InitiateCheckout',
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId,
+      action_source: 'website',
+      event_source_url: eventSourceUrl || 'https://cyrushq.ai/checkout-books',
+      user_data: userData,
+      custom_data: {
+        currency: 'USD',
+        value: ((amountCents || 0) / 100).toFixed(2),
+        content_name: productName || 'CyrusHQ Product',
+        content_category: 'Digital Product',
+        content_ids: [productKey || 'cyrushq-product'],
+        content_type: 'product',
+        num_items: 2
+      }
+    }]};
+    const res = await fetch(
+      `https://graph.facebook.com/v21.0/${PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }
+    );
+    const result = await res.json();
+    if (result.error) { console.error('Meta CAPI InitiateCheckout error:', JSON.stringify(result.error)); return; }
+    console.log('Meta CAPI InitiateCheckout sent — events_received:', result.events_received, '| event_id:', eventId);
+  } catch (err) {
+    console.error('Meta CAPI InitiateCheckout exception:', err.message);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { paymentMethodId, email, name, source, fbp, fbc, eventSourceUrl } = req.body;
+  const { paymentMethodId, email, name, source, fbp, fbc, eventSourceUrl, initiateCheckoutEventId } = req.body;
 
   if (!paymentMethodId || !email || !name) {
     return res.status(400).json({ error: 'Missing required fields.' });
   }
+
+  // Fire CAPI InitiateCheckout — mirrors browser pixel event for iOS14+ / ad-blocker coverage
+  sendMetaCAPIInitiateCheckout({
+    email, fbp, fbc, eventSourceUrl,
+    eventId: initiateCheckoutEventId,
+    amountCents: 1700,
+    productKey: 'book-bundle',
+    productName: 'AI Agency Blueprint — 2-Book Bundle'
+  }).catch(e => console.error('CAPI InitiateCheckout non-fatal:', e.message));
 
   const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
   const STRIPE_BASE   = 'https://api.stripe.com/v1';

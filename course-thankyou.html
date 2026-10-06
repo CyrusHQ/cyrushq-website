@@ -206,12 +206,18 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
+  var _pyParams = new URLSearchParams(window.location.search);
+  var _pySessionId = _pyParams.get('session_id') || null;
   fbq('init', '898060140812365');
   fbq('track', 'PageView');
-  fbq('track', 'CompleteRegistration', {
+  fbq('track', 'Purchase', {
     content_name: 'Build Your AI CEO Course',
-    status: 'confirmed'
-  });
+    content_category: 'Course',
+    currency: 'USD',
+    value: 27.00,
+    content_ids: ['build-your-ai-ceo'],
+    content_type: 'product'
+  }, _pySessionId ? { eventID: _pySessionId } : {});
   </script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"

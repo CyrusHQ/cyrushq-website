@@ -318,6 +318,12 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
+  var checkoutEventId = (function() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  })();
   fbq('init', '898060140812365');
   fbq('track', 'PageView');
   fbq('track', 'InitiateCheckout', {
@@ -326,7 +332,7 @@
     currency: 'USD',
     value: 27.00,
     num_items: 1
-  });
+  }, { eventID: checkoutEventId });
   </script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=898060140812365&ev=PageView&noscript=1"
@@ -587,6 +593,7 @@ async function handleSubmit() {
         fbp,
         fbc,
         eventSourceUrl: window.location.href,
+        initiateCheckoutEventId: checkoutEventId,
         adPlatform:  AD_PLATFORM,
         utmSource:   UTM_SOURCE,
         utmMedium:   UTM_MEDIUM,
