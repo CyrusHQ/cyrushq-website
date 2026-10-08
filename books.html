@@ -323,12 +323,27 @@
     /* ── FOOTER ── */
     footer {
       background: #060f1a;
-      padding: 20px;
+      padding: 28px 20px;
       text-align: center;
       color: #4a5568;
       font-size: 12px;
       border-top: 1px solid #1a2a40;
     }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      color: #C9A84C;
+      font-size: 16px;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+    .footer-links { margin-bottom: 10px; }
+    .footer-links a {
+      color: #8BA3C4;
+      font-size: 12px;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    .footer-links a:hover { color: #C9A84C; }
   </style>
 
   <!-- Meta Pixel Code -->
@@ -561,7 +576,13 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  © 2026 Cyrus Systems. All rights reserved.
+  <div class="footer-logo">CYRUSHQ.AI</div>
+  <div class="footer-links">
+    <a href="/privacy-policy">Privacy</a>
+    <a href="/terms-and-conditions">Terms</a>
+    <a href="mailto:hello@cyrushq.ai">Support</a>
+  </div>
+  <div>© 2026 CyrusHQ · Build wisely. Lead calmly. Create systems that endure.</div>
 </footer>
 
 <script>
