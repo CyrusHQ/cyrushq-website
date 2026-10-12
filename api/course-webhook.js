@@ -402,7 +402,7 @@ async function triggerGHLCronEmail({ email, name }) {
   const firstName = (name || 'Friend').split(' ')[0];
   const lastName  = (name || '').split(' ').slice(1).join(' ') || '';
   const magicLink = buildMagicLink(email);
-  const tags = ['cyrushq-customer', 'course-build-your-ai-ceo', 'course-cron-bump-purchased'];
+  const tags = ['cyrushq-customer', 'course-cron-bump-purchased'];
 
   const contactId = await upsertGHLContact({ email, firstName, lastName, tags });
   if (!contactId) return false;
