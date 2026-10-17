@@ -324,7 +324,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
   if (isPro)         tags.push('course-pro-97-purchased');
   if (hasCronBump)   tags.push('course-cron-bump-purchased');
   if (hasStarterKit) tags.push('ai-ceo-starter-kit-purchased');
-  if (isBundle)      tags.push('complete-bundle-97-purchased');
+  if (isBundle)      tags.push('complete-bundle-127-purchased');
 
   const contactId = await upsertGHLContact({ email, firstName, lastName, tags });
   if (!contactId) return false;
