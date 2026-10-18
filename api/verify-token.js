@@ -2,6 +2,8 @@
 // Validates HMAC magic link token and returns purchased products
 
 import { createHmac, timingSafeEqual } from 'crypto';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 const COURSE_PRODUCT_IDS = ['build-your-ai-ceo', 'cron-job-mastery'];
 
@@ -16,29 +18,17 @@ const BLOCKED_EMAILS = new Set([
   'tcrouse11@gmail.com'
 ]);
 
-function loadOverrides() {
-  // Hardcoded confirmed buyers — updated from Stripe on 2026-08-17
-  // New buyers are handled via live Stripe lookup; this covers early/legacy buyers
-  return {
-    'beth.shaffer66@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'wmp@journeydigital.net': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
-    'y.a.j.w84@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'bwhit54@yahoo.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'omnath81@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'tools@omegabreweronline.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'gessick@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'pgarduque1@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery'],
-    'oburg004@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'rwhytemere82@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    'talent@christyprais.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
-    'socialsimplicity4you@gmail.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
-    'info@praisstone.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
-    // Complete Bundle $127 — 2026-09-10, Stripe pi_3UEDH3Dl0ECsHFXr47uPAozF (no metadata on charge; manually enrolled)
-    'ethalycecloser@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery'],
-    // Typo email at checkout (wbasquiat@tahoo.com → yahoo.com) — Cyrus approval 2026-10-18
-    // Charges: ch_3URwKKDl0ECsHFXr197udvmZ + ch_3URwKYDl0ECsHFXr4blvxIfj + ch_3URwKrDl0ECsHFXr08LZ5gTO
-    'wbasquiat@yahoo.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit']
-  };
+// Single source of truth for manual overrides — edit api/portal-overrides.json, not this file.
+// Covers: early/legacy buyers (pre-Stripe metadata), corrected typo emails, and manual enrollments.
+async function loadOverrides() {
+  try {
+    const filePath = join(process.cwd(), 'api', 'portal-overrides.json');
+    const raw = await readFile(filePath, 'utf8');
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error('Failed to load portal-overrides.json:', err.message);
+    return {};
+  }
 }
 
 function applyProductToSet(product, products) {
@@ -147,7 +137,7 @@ export default async function handler(req, res) {
   }
 
   // Token is valid — load products (overrides first, then Stripe live lookup)
-  const overrides = loadOverrides();
+  const overrides = await loadOverrides();
   const overrideProducts = overrides[email] || overrides[email.toLowerCase()] || [];
   const stripeProducts = await getStripeProducts(email);
   const allProducts = [...new Set([...overrideProducts, ...stripeProducts])];
