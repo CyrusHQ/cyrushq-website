@@ -34,7 +34,10 @@ function loadOverrides() {
     'socialsimplicity4you@gmail.com': ['build-your-ai-ceo', 'ai-ceo-starter-kit'],
     'info@praisstone.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit'],
     // Complete Bundle $127 — 2026-09-10, Stripe pi_3UEDH3Dl0ECsHFXr47uPAozF (no metadata on charge; manually enrolled)
-    'ethalycecloser@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery']
+    'ethalycecloser@gmail.com': ['build-your-ai-ceo', 'cron-job-mastery'],
+    // Typo email at checkout (wbasquiat@tahoo.com → yahoo.com) — Cyrus approval 2026-10-18
+    // Charges: ch_3URwKKDl0ECsHFXr197udvmZ + ch_3URwKYDl0ECsHFXr4blvxIfj + ch_3URwKrDl0ECsHFXr08LZ5gTO
+    'wbasquiat@yahoo.com': ['build-your-ai-ceo', 'cron-job-mastery', 'ai-ceo-starter-kit']
   };
 }
 
