@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Advanced AI Systems Course — Early Access Waitlist | CyrusHQ</title>
+  <meta name="description" content="The next CyrusHQ course goes deeper: multi-agent orchestration, deep tool integration, and full autonomous system builds. Join the waitlist for early access.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #070A13;
+      --navy-mid:  #0C1320;
+      --gold:      #C9A84C;
+      --gold-light:#E8C96A;
+      --cream:     #F8F6F1;
+      --white:     #ffffff;
+      --muted:     #6b7280;
+      --blue-muted:#8BA3C4;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--navy);
+      padding: 18px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(201,168,76,0.18);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 17px;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+    .nav-logo span { color: var(--white); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(180deg, var(--navy) 0%, #0d1e35 100%);
+      padding: 60px 20px 52px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      display: inline-block;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      padding: 7px 18px;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+      border-radius: 2px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--white);
+      font-size: clamp(30px, 7vw, 54px);
+      line-height: 1.1;
+      margin-bottom: 10px;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 em { color: var(--gold); font-style: normal; }
+    .hero-sub {
+      color: var(--blue-muted);
+      font-size: clamp(15px, 4vw, 18px);
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 20px auto 0;
+    }
+
+    /* ── DIVIDER ── */
+    .gold-rule {
+      width: 48px; height: 2px;
+      background: var(--gold);
+      margin: 36px auto;
+    }
+
+    /* ── COMING SECTION ── */
+    .coming {
+      padding: 0 20px 52px;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .coming-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 5vw, 34px);
+      color: var(--white);
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+    .coming-title em { color: var(--gold); font-style: normal; }
+    .coming-body {
+      color: var(--blue-muted);
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+
+    /* ── PILLARS ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 0;
+    }
+    @media (max-width: 600px) {
+      .pillars { grid-template-columns: 1fr; }
+    }
+    .pillar {
+      background: var(--navy-mid);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-top: 2px solid var(--gold);
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .pillar-icon {
+      font-size: 26px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .pillar-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .pillar-body {
+      color: var(--blue-muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    /* ── FORM SECTION ── */
+    .form-section {
+      background: var(--navy-mid);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      padding: 56px 20px;
+      text-align: center;
+    }
+    .form-inner { max-width: 520px; margin: 0 auto; }
+    .form-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 5.5vw, 36px);
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .form-sub {
+      color: var(--blue-muted);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    /* ── FORM ITSELF ── */
+    .waitlist-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .form-field label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue-muted);
+      margin-bottom: 7px;
+    }
+    .form-field input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      border-radius: 2px;
+      -webkit-appearance: none;
+    }
+    .form-field input::placeholder { color: rgba(139,163,196,0.5); }
+    .form-field input:focus {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.05);
+    }
+    .submit-btn {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 17px 32px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 6px;
+      border-radius: 2px;
+    }
+    .submit-btn:hover { background: var(--gold-light); }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+    .form-privacy {
+      color: rgba(139,163,196,0.6);
+      font-size: 12px;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ── SUCCESS STATE ── */
+    .success-state {
+      display: none;
+      padding: 36px 24px;
+      text-align: center;
+    }
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    .success-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+    .success-body {
+      color: var(--blue-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── ERROR ── */
+    .form-error {
+      color: #f87171;
+      font-size: 13px;
+      margin-top: -4px;
+      display: none;
+    }
+
+    /* ── WHAT SECTION ── */
+    .what-section {
+      padding: 60px 20px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .what-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .what-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 5vw, 36px);
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 32px;
+    }
+    .what-title em { color: var(--gold); font-style: normal; }
+    .what-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .what-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px 22px;
+      background: var(--navy-mid);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-left: 3px solid var(--gold);
+    }
+    .what-item-num {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 22px;
+      font-weight: 700;
+      flex-shrink: 0;
+      line-height: 1;
+      padding-top: 2px;
+    }
+    .what-item-text strong {
+      display: block;
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .what-item-text span {
+      color: var(--blue-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── WHO SECTION ── */
+    .who-section {
+      background: var(--navy-mid);
+      border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 52px 20px;
+      text-align: center;
+    }
+    .who-inner { max-width: 600px; margin: 0 auto; }
+    .who-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 12px;
+    }
+    .who-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 5vw, 32px);
+      color: var(--white);
+      margin-bottom: 28px;
+      line-height: 1.25;
+    }
+    .who-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      text-align: left;
+    }
+    @media (max-width: 520px) { .who-grid { grid-template-columns: 1fr; } }
+    .who-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--blue-muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .who-check { color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 28px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .footer p {
+      color: rgba(139,163,196,0.5);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .footer a { color: var(--gold); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-logo">CYRUS<span>HQ</span></div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">Advanced Course — Coming Soon</div>
+    <h1>You Built Your AI CEO.<br>Now Build the <em>Empire</em> Around It.</h1>
+    <p class="hero-sub">The next CyrusHQ course goes deeper than any system we've taught before. Multi-agent orchestration. Full autonomous pipelines. Production-grade AI architecture — built by you, running without you.</p>
+  </section>
+
+  <!-- COMING -->
+  <div style="padding:52px 20px 0;">
+    <div class="gold-rule"></div>
+  </div>
+
+  <section style="padding:0 20px 52px;">
+    <div class="coming" style="padding:0;">
+      <h2 class="coming-title">Deep integration. Real autonomy.<br><em>No hand-holding.</em></h2>
+      <p class="coming-body">The $97 course gave you your AI CEO. This is where you build the systems that run beneath it — the tool chains, decision loops, and autonomous agent networks that handle complexity you currently handle yourself.</p>
+      <!-- PILLARS -->
+      <div class="pillars">
+        <div class="pillar">
+          <span class="pillar-icon">🔗</span>
+          <div class="pillar-title">Deep Tool Integration</div>
+          <p class="pillar-body">Connect your AI agents to real-world APIs, databases, and workflows — not demos. Actual production integrations.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">🤝</span>
+          <div class="pillar-title">Agent Orchestration</div>
+          <p class="pillar-body">Build multi-agent systems that coordinate, delegate, and hand off — without you in the loop for every decision.</p>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">⚙️</span>
+          <div class="pillar-title">Full Autonomous Builds</div>
+          <p class="pillar-body">End-to-end autonomous system architecture. From trigger to outcome — no babysitting, no bottlenecks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S INSIDE -->
+  <section class="what-section">
+    <div class="what-label">What's Inside</div>
+    <h2 class="what-title">The curriculum is built<br>for <em>operators</em>, not beginners.</h2>
+    <div class="what-list">
+      <div class="what-item">
+        <div class="what-item-num">01</div>
+        <div class="what-item-text">
+          <strong>Production Tool Chains</strong>
+          <span>Connect AI agents to external APIs, real data sources, and live business systems — not toy examples.</span>
+        </div>
+      </div>
+      <div class="what-item">
+        <div class="what-item-num">02</div>
+        <div class="what-item-text">
+          <strong>Multi-Agent Architecture</strong>
+          <span>Design systems where specialized agents collaborate, check each other, and escalate intelligently.</span>
+        </div>
+      </div>
+      <div class="what-item">
+        <div class="what-item-num">03</div>
+        <div class="what-item-text">
+          <strong>Autonomous Decision Loops</strong>
+          <span>Build agents that reason, act, verify, and iterate — handling complexity without human checkpoints.</span>
+        </div>
+      </div>
+      <div class="what-item">
+        <div class="what-item-num">04</div>
+        <div class="what-item-text">
+          <strong>Failure Handling & Recovery</strong>
+          <span>Production-grade resilience: retry logic, fallback paths, monitoring, and self-healing systems.</span>
+        </div>
+      </div>
+      <div class="what-item">
+        <div class="what-item-num">05</div>
+        <div class="what-item-text">
+          <strong>Full System Capstone Build</strong>
+          <span>Deploy a complete autonomous system — end to end. Something real you can run and expand.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="form-section">
+    <div class="form-inner">
+      <div class="form-eyebrow">Founding Waitlist</div>
+      <h2 class="form-title">Be First When Doors Open</h2>
+      <p class="form-sub">Waitlist members get priority access and first notification — before the public announcement. No spam. One email when it's ready.</p>
+
+      <!-- FORM STATE -->
+      <form class="waitlist-form" id="waitlistForm">
+        <div class="form-field">
+          <label for="wl-name">First Name</label>
+          <input type="text" id="wl-name" name="name" placeholder="Your first name" autocomplete="given-name" required>
+        </div>
+        <div class="form-field">
+          <label for="wl-email">Email Address</label>
+          <input type="email" id="wl-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="form-error" id="formError">Something went wrong. Please try again.</div>
+        <button type="submit" class="submit-btn" id="submitBtn">Join the Waitlist →</button>
+        <p class="form-privacy">🔒 No spam. No sharing. Just an early access notification when the course is ready.</p>
+      </form>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">🏛️</div>
+        <h3 class="success-title">You're on the list.</h3>
+        <p class="success-body">Check your inbox — we just sent you a confirmation. You'll hear from us first when the Advanced Course opens. Build wisely.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IS THIS FOR -->
+  <section class="who-section">
+    <div class="who-inner">
+      <div class="who-label">Who This Is For</div>
+      <h2 class="who-title">You've deployed your AI CEO.<br>You're ready for what's next.</h2>
+      <div class="who-grid">
+        <div class="who-item"><span class="who-check">✦</span> You've completed the $97 AI CEO course</div>
+        <div class="who-item"><span class="who-check">✦</span> You want agents that handle full workflows</div>
+        <div class="who-item"><span class="who-check">✦</span> You're building beyond simple automation</div>
+        <div class="who-item"><span class="who-check">✦</span> You think in systems, not individual tasks</div>
+        <div class="who-item"><span class="who-check">✦</span> You want production-grade, not just functional</div>
+        <div class="who-item"><span class="who-check">✦</span> You're ready to build something that runs itself</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>
+      © 2026 CyrusHQ · <a href="https://cyrushq.ai">cyrushq.ai</a><br>
+      <a href="https://cyrushq.ai/privacy-policy">Privacy</a> · <a href="https://cyrushq.ai/terms-and-conditions">Terms</a><br>
+      Build wisely. Lead calmly. Create systems that endure.
+    </p>
+  </footer>
+
+  <script>
+    const form     = document.getElementById('waitlistForm');
+    const btn      = document.getElementById('submitBtn');
+    const errEl    = document.getElementById('formError');
+    const success  = document.getElementById('successState');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Joining…';
+
+      const name  = document.getElementById('wl-name').value.trim();
+      const email = document.getElementById('wl-email').value.trim();
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          form.style.display = 'none';
+          success.style.display = 'block';
+        } else {
+          throw new Error(data.error || 'Submission failed');
+        }
+      } catch (err) {
+        errEl.textContent = err.message || 'Something went wrong. Please try again.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Join the Waitlist →';
+      }
+    });
+  </script>
+
+</body>
+</html>
