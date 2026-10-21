@@ -371,7 +371,7 @@ async function triggerGHLCourseWorkflow({ email, name, hasCronBump, hasStarterKi
       <a href="${magicLink}" style="background:#C9A84C; color:#0A1628; padding:18px 36px; text-decoration:none; font-weight:700; font-size:16px; display:inline-block; letter-spacing:1.5px; text-transform:uppercase;">Access My Course Portal &rarr;</a>
     </div>
     ${isBundle ? bundleSection : bonusNote}
-    <p style="color:#555; font-size:14px; line-height:1.6; margin-top:20px;"><strong>What to do first:</strong><br>Start with Module 1 — it's under 20 minutes and gives you the complete picture before you build. Most students have a live AI CEO by the end of the week.</p>
+    <p style="color:#555; font-size:14px; line-height:1.6; margin-top:20px;"><strong>What to do first:</strong><br>Your best starting point is <strong>Welcome — What You're About to Build</strong> — it's a short orientation that gives you the complete picture before you dive in. From there you'll move into hardware selection, then Module 1 — and most students have a live AI CEO by the end of the week.</p>
     ${isPro ? `<div style="background:#fffbeb; border:1px solid #C9A84C; border-radius:8px; padding:16px 20px; margin:24px 0;">
       <p style="color:#0A1628; font-weight:700; font-size:14px; margin:0 0 10px;">📦 Your Module 4 Resources</p>
       <p style="color:#555; font-size:13px; margin:0 0 12px; line-height:1.6;">When you reach Module 4 (OpenClaw install), these two files will save you hours:</p>
